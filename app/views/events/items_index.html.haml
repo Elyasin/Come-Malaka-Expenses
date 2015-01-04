@@ -1,0 +1,16 @@
+%h1 All event items
+%p= link_to 'Back to event', events_path
+- if @items.empty?
+	%p You don't have any items.
+- else
+	%hr
+	- @items.each do |item|
+		%p #{item.name} at the #{item.value_date.strftime('%d %b %Y')}
+		Description: #{item.description}
+		%br/
+		Base amount: #{item.base_amount.format}
+		%br/
+		Foreign amount: #{item.foreign_amount.format}
+		%br/
+		Beneficiaries: #{item.beneficiaries.map { |b| b.name }.join(", ") }
+		%hr

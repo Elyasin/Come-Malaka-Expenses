@@ -1,0 +1,29 @@
+%h2 Edit Event
+= form_for(@event) do |f|
+  .field
+    = f.label :name
+    %br/
+    = f.text_field :name
+  .field
+    = f.label :description
+    %br/
+    = f.text_field :description
+  .field
+    = f.label :from_date
+    %br/
+    = f.date_field :from_date, size: 10
+  .field
+    = f.label :to_date
+    %br/
+    = f.date_field :to_date, size: 10
+    %br/
+    = f.label :event_currency
+    %br/
+    = f.select :event_currency, options_from_collection_for_select(Money::Currency.all, :id, :iso_code, @event.event_currency), prompt: "Select event currency"
+    %br/
+    = f.label "Change the organizer"
+    %br/
+    = f.select :organizer_id, options_from_collection_for_select(@event.users, :id, :name, @event.organizer_id)
+    %br/
+  .actions
+    = f.submit "Save event"

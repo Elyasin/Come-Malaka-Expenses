@@ -1,0 +1,19 @@
+%h1 Your items
+%p= link_to "Back to event", events_path
+%p= link_to "Create new item", new_event_item_path
+- if @items.empty?
+	%p You don't have any items.
+- else
+	%hr
+	- @items.each do |item|
+		%p #{item.name} at the #{item.value_date.strftime('%d %b %Y')} - #{link_to "Edit", edit_item_path(item)} - #{link_to "Delete", item_path(item), :data => {:confirm => 'Are you sure?'}, method: :delete}
+		Description: #{item.description}
+		%br/
+		Base amount: #{item.base_amount.format}
+		%br/
+		Foreign amount: #{item.foreign_amount.format}
+		%br/
+		Beneficiaries: #{item.beneficiaries.map { |b| b.name }.join(", ") }
+		%br/
+		Cost per beneficiary: #{item.cost_per_beneficiary.format}
+		%hr

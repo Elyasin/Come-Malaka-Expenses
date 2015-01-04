@@ -1,0 +1,22 @@
+%h2 Expense Report
+
+%br/
+
+%table
+  %caption Expense Report (base currency is #{@event.event_currency.upcase})
+  %thead
+    %tr
+      %th Participant
+      %th Total Paid
+      %th Total Benefited
+      %th Balance
+  %tbody
+    -@participants.each do |participant|
+      %tr
+        %td= participant.name
+        %td= @event.total_expenses_amount_for(participant).format
+        %td= @event.total_benefited_amount_for(participant).format
+        %td= @event.balance_for(participant).format
+        
+%br
+=link_to 'Go to events page', events_path

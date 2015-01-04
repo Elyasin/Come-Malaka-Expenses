@@ -1,0 +1,50 @@
+%h2 Item details
+%p= link_to 'Back to your items', event_items_path(@item.event)
+= form_for [@event, @item] do |f|
+  .field
+    = f.label :name
+    %br/
+    = f.text_field :name
+  .field
+    = f.label :description
+    %br/
+    = f.text_field :description
+  .field
+    = f.label :value_date
+    %br/
+    = f.date_field :value_date, size: 10
+  .field
+    = f.hidden_field :payer_id
+    %br/
+  .field
+    =f.label :base_amount
+    %br/
+    = number_field_tag :base_amount, @item.base_amount.amount, min: 0, step: :any, readonly: true
+    %br/
+  .field
+    = f.label :base_currency
+    %br/
+    = text_field_tag :base_currency, @item.event.event_currency.upcase, readonly: true
+    %br/
+  .field
+    = f.label :exchange_rate
+    %br/
+    = f.number_field :exchange_rate, step: :any
+    %br/
+  .field
+    = f.label :foreign_amount
+    %br/
+    = number_field_tag :foreign_amount, @item.foreign_amount.amount, min: 0, step: :any
+  .field
+    = f.label :foreign_currency
+    %br/
+    = select_tag :foreign_currency, options_from_collection_for_select(Money::Currency.all, :id, :iso_code, @item.foreign_amount.currency.id), prompt: "Select foreign currency"
+    %br/
+    %br/
+    = f.label :beneficiaries
+    %br/
+    = f.collection_check_boxes(:beneficiary_ids, @item.event.users, :id, :name)
+    %br/
+    %br/
+  .actions
+    = f.submit "Post item"
