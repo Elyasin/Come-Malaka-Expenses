@@ -11,9 +11,12 @@ class EventsController < ApplicationController
   end
 
   def create
-  	event = Event.create(event_params)
-    event.add_participant current_user
-    event.save
+  	@event = Event.create(event_params)
+    @event.add_participant current_user
+    if @event.invalid? then
+      render :new and return
+    end
+    @event.save
   	flash[:notice] = "Event created"
   	redirect_to events_path
   end
@@ -25,6 +28,9 @@ class EventsController < ApplicationController
   def update
     event = Event.find params[:id]
     event.update_attributes event_params
+    if @event.invalid? then
+      render :new and return
+    end
     redirect_to event_path(event.id)
   end
 

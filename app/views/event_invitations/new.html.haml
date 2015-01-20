@@ -9,9 +9,11 @@
   = f.label :first_name
   %br/
   = f.text_field :first_name
+  %small Leave blank if not known
   %br/
   = f.label :last_name
   %br/
   = f.text_field :last_name
+  %small Leave blank if not known
   = f.hidden_field :event_id
   %p= f.submit t("devise.invitations.new.submit_button")

@@ -57,9 +57,9 @@ class User
 
 
   #Add the user to the event after accepting invitation
-  after_invitation_accepted :add_to_event
+  after_invitation_accepted :add_to_invited_event
 
-  def add_to_event
+  def add_to_invited_event
      event = Event.find(self.event_id)
      event.add_participant self
      self.event_id = nil

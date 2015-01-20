@@ -9,11 +9,11 @@
 		%p #{item.name} at the #{item.value_date.strftime('%d %b %Y')} - #{link_to "Edit", edit_item_path(item)} - #{link_to "Delete", item_path(item), :data => {:confirm => 'Are you sure?'}, method: :delete}
 		Description: #{item.description}
 		%br/
-		Base amount: #{item.base_amount.format}
+		Base amount: #{money_format(item.base_amount, item.base_currency)}
 		%br/
-		Foreign amount: #{item.foreign_amount.format}
+		Foreign amount: #{money_format(item.foreign_amount, item.foreign_currency)}
 		%br/
 		Beneficiaries: #{item.beneficiaries.map { |b| b.name }.join(", ") }
 		%br/
-		Cost per beneficiary: #{item.cost_per_beneficiary.format}
+		Cost per beneficiary: #{money_format(item.cost_per_beneficiary, item.base_currency)}
 		%hr

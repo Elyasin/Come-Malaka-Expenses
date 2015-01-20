@@ -8,6 +8,7 @@ class EventInvitationsController < Devise::InvitationsController
 	def create
 		event = Event.find(params[:user][:event_id])
 		user = User.where(email: params[:user][:email].downcase)
+		#candidate for refactoring: put logic into User model
 		if user.exists? then
 			invitee = user.first
 			if event.add_participant invitee

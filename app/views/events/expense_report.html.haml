@@ -3,7 +3,7 @@
 %br/
 
 %table
-  %caption Expense Report (base currency is #{@event.event_currency.upcase})
+  %caption Expense Report* (base currency is #{@event.event_currency.upcase})
   %thead
     %tr
       %th Participant
@@ -14,9 +14,12 @@
     -@participants.each do |participant|
       %tr
         %td= participant.name
-        %td= @event.total_expenses_amount_for(participant).format
-        %td= @event.total_benefited_amount_for(participant).format
-        %td= @event.balance_for(participant).format
+        %td= money_format(@event.total_expenses_amount_for(participant), @event.event_currency)
+        %td= money_format(@event.total_benefited_amount_for(participant), @event.event_currency)
+        %td= money_format(@event.balance_for(participant), @event.event_currency)
         
-%br
+%br/
+%small *Amounts are rounded for display
+%br/
+%br/
 =link_to 'Go to events page', events_path

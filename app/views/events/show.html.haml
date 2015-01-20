@@ -3,7 +3,7 @@
 %p Description: #{@event.description}
 %p From date: #{@event.from_date}
 %p To Date: #{@event.to_date}
-%p Event currency: #{@event.event_currency}
+%p Event currency: #{@event.event_currency.upcase}
 %p Organizer: #{@event.organizer}
 %p Participants: #{@event.users.map { |u| u.name }.join(", ") }
 %p Back to #{link_to 'Your events', events_path}

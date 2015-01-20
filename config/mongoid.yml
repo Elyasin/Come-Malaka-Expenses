@@ -13,7 +13,7 @@ development:
       # Since this database points at a session connected to MongoHQ, we must
       # provide the authentication details.
       username: developer
-      password: developer
+      password: <%= ENV['DEV_DB'] %>
       options:
         # Change the default write concern. (default = { w: 1 })
         # write:
@@ -66,7 +66,7 @@ test:
       hosts:
         - localhost:27017
       username: tester
-      password: tester
+      password: <%= ENV['TEST_DB'] %>
       options:
         read: primary
         # In the test environment we lower the retries and retry interval to

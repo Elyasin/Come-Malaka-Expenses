@@ -1,6 +1,10 @@
 source 'https://rubygems.org'
 
 
+#Store config in .env file using env vars
+gem 'dotenv-rails', :groups => [:development, :test]
+
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails'
 # Use SCSS for stylesheets
@@ -36,6 +40,7 @@ gem 'spring',        group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+
 #Mongoid
 gem "mongoid", "~> 4.0.0"
 
@@ -52,3 +57,5 @@ gem 'html2haml'
 
 #Implements currencies for rails
 gem 'mongoid_money_field'
+
+

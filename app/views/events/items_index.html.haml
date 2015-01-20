@@ -8,9 +8,9 @@
 		%p #{item.name} at the #{item.value_date.strftime('%d %b %Y')}
 		Description: #{item.description}
 		%br/
-		Base amount: #{item.base_amount.format}
+		Base amount: #{money_format(item.base_amount, item.base_currency)}
 		%br/
-		Foreign amount: #{item.foreign_amount.format}
+		Foreign amount: #{money_format(item.foreign_amount, item.foreign_currency)}
 		%br/
 		Beneficiaries: #{item.beneficiaries.map { |b| b.name }.join(", ") }
 		%hr
