@@ -2,13 +2,17 @@ class ItemsController < ApplicationController
 
 	before_action :authenticate_user!
 
+  authorize_actions_for Item
+
   def index
     event = Event.find params[:event_id]
+    authorize_action_for event
   	@items = event.items.in(payer_id: current_user.id)
   end
 
   def new
     @event = Event.find params[:event_id]
+    authorize_action_for @event
     @item = @event.items.build(payer_id: current_user.id, value_date: @event.from_date)
   end
 
@@ -16,6 +20,7 @@ class ItemsController < ApplicationController
   def create
     @item = Item.new(item_params)
     @item.event_id = params[:event_id]
+    authorize_action_for @item.event
     if @item.exchange_rate.to_d.zero? then
       get_exchange_rate_for @item
       @item.valid?
@@ -24,11 +29,14 @@ class ItemsController < ApplicationController
     @item.base_amount = @item.foreign_amount * @item.exchange_rate
     if @item.invalid? then (render :new and return) end
     @item.save
+    current_user.add_role :item_owner, @item
+    current_user.add_role :item_owner, Item
     redirect_to(event_items_path, :notice => "Item created")
   end
 
   def edit
     @item = Item.find params[:id]
+    authorize_action_for @item
     @event = @item.event
   end
 
@@ -43,19 +51,20 @@ class ItemsController < ApplicationController
     end
     @item.base_amount = @item.foreign_amount * @item.exchange_rate
     if @item.invalid? then (render :edit and return) end
-    @item.save
+    @item.save if authorize_action_for @item
     redirect_to event_items_path(event_id: @item.event), :notice => "Item updated"
   end
 
   def destroy
     item = Item.find(params[:id])
     event = item.event
-    item.destroy
+    item.destroy if authorize_action_for item
     redirect_to event_items_path(event_id: event), :notice => "Item deleted"
   end
 
   def show
     @item = Item.find params[:id]
+    authorize_action_for @item
   end
 
   private

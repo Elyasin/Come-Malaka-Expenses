@@ -2,13 +2,18 @@ class EventsController < ApplicationController
 
 	before_action :authenticate_user!
 
+  authorize_actions_for Event, :except => [:new, :create, :index]
+
+
   def index
-  	@events = Event.in(user_ids: current_user.id)
+    @events = Event.with_role(:event_participant, current_user)
   end
+
 
   def new																			
   	@event = Event.new(from_date: Date.today, to_date: Date.today+3.days, organizer_id: current_user.id)
   end
+
 
   def create
   	@event = Event.create(event_params)
@@ -21,38 +26,55 @@ class EventsController < ApplicationController
   	redirect_to events_path
   end
 
+
   def edit
     @event = Event.find params[:id]
+    authorize_action_for(@event)
   end
+
 
   def update
     event = Event.find params[:id]
-    event.update_attributes event_params
-    if @event.invalid? then
+    event.update_attributes event_params if authorize_action_for(event)
+    if event.invalid? then
       render :new and return
     end
-    redirect_to event_path(event.id)
+    redirect_to events_path
   end
 
+
   def destroy
-    Event.find(params[:id]).destroy
-  	flash[:notice] = "Event deleted"
+    event = Event.find(params[:id])
+    if event.items.count == 0 then
+      event.destroy if authorize_action_for(event)
+      flash[:notice] = "Event deleted"
+    else
+      flash[:notice] = "Event cannot be deleted. Posted items exist."
+    end
 	  redirect_to events_path
   end
 
+
   def show
     @event = Event.find params[:id]
+    authorize_action_for(@event)
   end
 
-  def items_index
-    @items = Event.find(params[:event_id]).items
+
+  def event_all_items
+    event = Event.find(params[:event_id])
+    authorize_action_for(event)
+    @items = event.items
   end
+
 
   def expense_report
     @event = Event.find(params[:event_id])
+    authorize_action_for(@event)
     @participants = @event.users
     @items = @event.items
   end
+
 
   private
 

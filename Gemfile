@@ -49,6 +49,11 @@ gem "devise"
 #Invitation functionlity
 gem "devise_invitable"
 
+#Authorization
+gem 'authority'
+#Roles for authorization
+gem 'rolify'
+
 #Use HAML for views
 gem "haml-rails"
 

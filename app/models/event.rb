@@ -1,5 +1,7 @@
 class Event
   include Mongoid::Document
+  include Authority::Abilities
+  resourcify
 
   field :name, type: String
   field :from_date, type: Date
@@ -16,9 +18,9 @@ class Event
   #true		user successfully added
   #false	user already participant of event
   def add_participant(user)
-  	if not users.include? user then
-	  	self.users << user
-  	end
+    user.add_role :event_participant, self
+    user.add_role :event_participant, self.class
+  	self.users << user unless users.include? user
   end
 
   # returns items that were paid by participant

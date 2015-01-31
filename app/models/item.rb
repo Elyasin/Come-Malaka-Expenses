@@ -1,5 +1,7 @@
 class Item
 	include Mongoid::Document
+  include Authority::Abilities
+  resourcify
 
   require 'open-uri'
 

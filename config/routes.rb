@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   resources :events do
     resources :items, shallow: true
   end
-  get 'event_items/:event_id' => 'events#items_index', as: :event_all_items
+  get 'event_items/:event_id' => 'events#event_all_items', as: :event_all_items
   get 'expense_report/:event_id' => 'events#expense_report', as: :expense_report
 
   # Example of regular route:
