@@ -5,7 +5,10 @@
 - else
 	%hr
 	- @items.each do |item|
-		%p #{item.name} at the #{item.value_date.strftime('%d %b %Y')}
+		- if current_user.can_update?(item)
+			%p #{item.name} at the #{item.value_date.strftime('%d %b %Y')} - #{link_to "Edit", edit_item_path(item)} - #{link_to "Delete", item_path(item), :data => {:confirm => 'Are you sure?'}, method: :delete}
+		- else
+			%p #{item.name} at the #{item.value_date.strftime('%d %b %Y')}
 		Description: #{item.description}
 		%br/
 		Base amount: #{money_format(item.base_amount, item.base_currency)}
