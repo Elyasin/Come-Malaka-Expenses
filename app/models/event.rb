@@ -12,7 +12,7 @@ class Event
   has_many :items
   field :organizer_id, type: BSON::ObjectId
 
-  validates :name, :from_date, :to_date, :description, :event_currency, presence: true
+  validates :name, :from_date, :to_date, :description, :event_currency, :organizer_id, presence: true
 
   #add user to event if user not already participant
   #true		user successfully added
@@ -23,12 +23,12 @@ class Event
   	self.users << user unless users.include? user
   end
 
-  # returns items that were paid by participant
+  # returns items that were paid by participant (base amount)
   def paid_expense_items_by participant
     self.items.where(payer_id: participant.id)
   end
   
-  # returns the total amount of items paid by participant
+  # returns the total amount of items paid by participant (base amount)
   def total_expenses_amount_for participant
     total = 0.to_d
     self.paid_expense_items_by(participant).each do |item|
@@ -37,7 +37,7 @@ class Event
     total
   end
 
-  # returns the total amount of items of which participant is a beneficiary (based on base amount)
+  # returns the total amount of items of which participant is a beneficiary (base amount)
   def total_benefited_amount_for participant
     benefited_amount = 0.to_d
     self.items.each do |item|
@@ -53,6 +53,7 @@ class Event
     total_expenses_amount_for(participant) - total_benefited_amount_for(participant)
   end
 
+  #returns the organizer's name
   def organizer
     User.find(self.organizer_id).name
   end

@@ -1,15 +1,12 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  from_date: 2014-11-21
-  to_date: 2014-11-21
-  description: MyText
-  user_id: 
+randers:
+  name: Randers
+  from_date: <%= Date.today %>
+  to_date: <%= Date.today+3 %>
+  description: First Come Malaka event
+  event_currency: <%= Money::Currency.new(:eur) %>
+  user_ids: 
+  item_ids: 
+  organizer_id: 
 
-two:
-  name: MyString
-  from_date: 2014-11-21
-  to_date: 2014-11-21
-  description: MyText
-  user_id: 

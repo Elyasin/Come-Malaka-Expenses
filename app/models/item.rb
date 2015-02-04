@@ -20,11 +20,12 @@ class Item
   validates :name, :description, :value_date, :base_currency, :foreign_amount, :foreign_currency, :beneficiaries, presence: true
   validates :foreign_amount, :exchange_rate, numericality: {greater_than_or_equal_to: 0}
 
-  # returns a big decimal for better accuracy
+
   def cost_per_beneficiary
     self.base_amount / self.beneficiaries.count
   end
 
+  #rework the method to catch exceptions
   def apply_exchange_rate
     begin
       rate = JSON.parse(open("http://devel.farebookings.com/api/curconversor/" + self.foreign_currency + "/" + self.base_currency + "/1/json").read)[self.base_currency]
