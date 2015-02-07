@@ -20,7 +20,7 @@ class Event
   def add_participant(user)
     user.add_role :event_participant, self
     user.add_role :event_participant, self.class
-  	self.users << user unless users.include? user
+    self.users = (Set.new(self.users) << user).to_a
   end
 
   # returns items that were paid by participant (base amount)

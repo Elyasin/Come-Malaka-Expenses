@@ -58,9 +58,13 @@ gem 'rolify'
 gem "haml-rails"
 
 #Used to convert HTML/ERB into HAML
-gem 'html2haml'
+gem 'html2haml', group: :development
 
 #Implements currencies for rails
 gem 'mongoid_money_field'
 
+#Database cleaner for testing
+gem 'database_cleaner', "~> 1.3.0", group: :test
 
+#mocking external requests
+gem 'webmock', group: :test

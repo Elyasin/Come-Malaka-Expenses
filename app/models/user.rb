@@ -54,7 +54,7 @@ class User
 
 
   def name
-    self.first_name.empty? ? self.email : self.first_name + " " +self.last_name
+    self.first_name.blank? ? self.email : self.first_name + " " +self.last_name
   end
 
 
@@ -62,9 +62,7 @@ class User
   after_invitation_accepted :add_to_invited_event
 
   def add_to_invited_event
-     event = Event.find(self.event_id)
-     event.add_participant self
-     self.event_id = nil
+    Event.find(self.event_id).add_participant self
   end
 
 end
