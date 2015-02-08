@@ -3,6 +3,8 @@ class Item
   include Authority::Abilities
   resourcify
 
+  #uses ItemAuthorizer by default
+
   require 'open-uri'
 
 	field :name, type: String
@@ -21,6 +23,12 @@ class Item
     :foreign_amount, :foreign_currency, :payer_id, :beneficiaries, presence: true
   validates :base_amount, :foreign_amount, :exchange_rate, numericality: {greater_than_or_equal_to: 0}
 
+
+  def initialize_roles
+    self.beneficiaries.each do |beneficiary|
+      beneficiary.add_role :event_participant, self
+    end
+  end
 
   def cost_per_beneficiary
     self.base_amount / self.beneficiaries.count

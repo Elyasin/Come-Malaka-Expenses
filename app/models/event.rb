@@ -3,6 +3,8 @@ class Event
   include Authority::Abilities
   resourcify
 
+  #uses EventAuthorzier by default
+
   field :name, type: String
   field :from_date, type: Date
   field :to_date, type: Date
@@ -19,7 +21,6 @@ class Event
   #false	user already participant of event
   def add_participant(user)
     user.add_role :event_participant, self
-    user.add_role :event_participant, self.class
     self.users = (Set.new(self.users) << user).to_a
   end
 

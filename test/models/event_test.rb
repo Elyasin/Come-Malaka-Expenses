@@ -2,7 +2,8 @@ require 'test_helper'
 
 class EventTest < ActiveSupport::TestCase
 
-	#Test data initialized in test_helper.rb
+	#Test data initialized in test_helper.rb#setup
+	#and truncated while teardown
 
 	test "do not save event without name" do
 		@event.name = nil
@@ -35,15 +36,13 @@ class EventTest < ActiveSupport::TestCase
 	end
 
 	test "add new participant to event" do
-		new_user = User.create!(first_name: "Javier", last_name: "Ductor", email: "user6@event.com", password: "user6789")
 		expected_size = @event.users.length + 1
-		expected_users = @event.users << new_user
-		@event.add_participant(new_user)
+		expected_users = @event.users << @non_participant_user
+		@event.add_participant(@non_participant_user)
 		assert_equal expected_users, @event.users
 		assert_equal expected_size, @event.users.length
-		assert_includes @event.users, new_user
-		assert new_user.has_role?(:event_participant, @event)
-		assert new_user.has_role?(:event_participant, Event)
+		assert_includes @event.users, @non_participant_user
+		assert @non_participant_user.has_role?(:event_participant, @event)
 	end
 
 	test "add already existing participant to event" do
@@ -92,6 +91,93 @@ class EventTest < ActiveSupport::TestCase
 		assert_equal(-125.79, @event.balance_for(@user3).round(2))
 		assert_equal(-115.07, @event.balance_for(@user4).round(2))
 		assert_equal(-88.92, @event.balance_for(@user5).round(2))
+	end
+
+
+	#Test classe level authorization
+
+	test "event user role can create event" do
+		assert EventAuthorizer.creatable_by?(@organizer)
+		assert EventAuthorizer.creatable_by?(@user1)
+	end
+
+	test "user without event user role cannot create event" do
+		assert EventAuthorizer.creatable_by?(@user1)
+		@user1.revoke :event_user
+		assert_not EventAuthorizer.creatable_by?(@user1)
+	end
+
+	test "event user can read event" do
+		assert EventAuthorizer.readable_by?(@organizer)
+		assert EventAuthorizer.readable_by?(@user1)
+	end
+
+	test "user without event user role cannot read event" do
+		assert EventAuthorizer.readable_by?(@user1)
+		@user1.revoke :event_user
+		assert_not EventAuthorizer.readable_by?(@user1)
+	end
+
+	test "event user can update event" do
+		assert EventAuthorizer.updatable_by?(@organizer)
+		assert EventAuthorizer.updatable_by?(@user1)
+	end
+
+	test "user without event user role cannot update event" do
+		assert EventAuthorizer.updatable_by?(@user1)
+		@user1.revoke :event_user
+		assert_not EventAuthorizer.updatable_by?(@user1)
+	end
+
+	test "event user can delete event" do
+		assert EventAuthorizer.deletable_by?(@organizer)
+		assert EventAuthorizer.deletable_by?(@user1)
+	end
+
+	test "user without event user role cannot delete event" do
+		assert EventAuthorizer.deletable_by?(@user1)
+		@user1.revoke :event_user
+		assert_not EventAuthorizer.deletable_by?(@user1)
+	end
+
+
+	#Test instance level authorization (review event_user, event_participant, item_owner)
+
+	test "event users can create event instance" do
+		assert @event.authorizer.creatable_by?(@organizer)
+		assert @event.authorizer.creatable_by?(@non_participant_user)
+	end
+
+	test "event participant can read event instance" do
+		assert @event.authorizer.readable_by?(@organizer)
+	end
+
+	test "event user cannot read event instance" do
+		assert_not @event.authorizer.readable_by?(@non_participant_user)
+	end
+
+	test "event organizer can update event instance" do
+		assert @event.authorizer.updatable_by?(@organizer)
+	end
+
+	test "event participant cannot update event instance" do
+		assert_not @event.authorizer.updatable_by?(@user1)
+	end
+
+	test "event user cannot update event instance" do
+		assert_not @event.authorizer.updatable_by?(@non_participant_user)
+	end
+
+	test "event organizer can delete event instance" do
+		assert @event.authorizer.deletable_by?(@organizer)
+	end
+
+	test "event participant cannot delete event instance" do
+		assert_not @event.authorizer.deletable_by?(@user1)
+	end
+
+	test "event user cannot delete event instance" do
+		assert_not @event.authorizer.deletable_by?(@non_participant_user)
 	end
 
 end

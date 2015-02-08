@@ -29,8 +29,7 @@ class ItemsController < ApplicationController
     @item.base_amount = @item.foreign_amount * @item.exchange_rate
     if @item.invalid? then (render :new and return) end
     @item.save
-    current_user.add_role :item_owner, @item
-    current_user.add_role :item_owner, Item
+    @item.initialize_roles
     redirect_to(event_items_path, :notice => "Item created")
   end
 

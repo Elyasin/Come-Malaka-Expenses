@@ -2,7 +2,7 @@ class EventsController < ApplicationController
 
 	before_action :authenticate_user!
 
-  authorize_actions_for Event, :except => [:new, :create, :index]
+  authorize_actions_for Event
 
 
   def index
@@ -45,11 +45,11 @@ class EventsController < ApplicationController
 
   def destroy
     event = Event.find(params[:id])
-    if event.items.count == 0 then
+    if event.items.count == 0  or event.users.count == 0 then
       event.destroy if authorize_action_for(event)
       flash[:notice] = "Event deleted"
     else
-      flash[:notice] = "Event cannot be deleted. Posted items exist."
+      flash[:notice] = "Event cannot be deleted. Posted items or users exist."
     end
 	  redirect_to events_path
   end

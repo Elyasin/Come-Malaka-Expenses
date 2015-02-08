@@ -4,7 +4,9 @@ require 'open-uri'
 
 class ItemTest < ActiveSupport::TestCase
 
-	#Test data initialized in test_helper.rb
+	#Test data initialized in test_helper.rb#setup
+	#and truncated while teardown
+
 
 	test "do not save item without name" do
 		@item1.name = nil
@@ -104,4 +106,90 @@ class ItemTest < ActiveSupport::TestCase
 		assert_equal 1, @item1.errors[:exchange_rate].length
 	end
 
+
+	#Test classe level authorization
+
+	test "event user role can create item" do
+		assert ItemAuthorizer.creatable_by?(@organizer)
+		assert ItemAuthorizer.creatable_by?(@user1)
+	end
+
+	test "user without event user role cannot create item" do
+		assert ItemAuthorizer.creatable_by?(@user1)
+		@user1.revoke :event_user
+		assert_not ItemAuthorizer.creatable_by?(@user1)
+	end
+
+	test "event user can read item" do
+		assert ItemAuthorizer.readable_by?(@organizer)
+		assert ItemAuthorizer.readable_by?(@user1)
+	end
+
+	test "user without event user role cannot read item" do
+		assert ItemAuthorizer.readable_by?(@user1)
+		@user1.revoke :event_user
+		assert_not ItemAuthorizer.readable_by?(@user1)
+	end
+
+	test "event user can update item" do
+		assert ItemAuthorizer.updatable_by?(@organizer)
+		assert ItemAuthorizer.updatable_by?(@user1)
+	end
+
+	test "user without event user role cannot update item" do
+		assert ItemAuthorizer.updatable_by?(@user1)
+		@user1.revoke :event_user
+		assert_not ItemAuthorizer.updatable_by?(@user1)
+	end
+
+	test "event user can delete item" do
+		assert ItemAuthorizer.deletable_by?(@organizer)
+		assert ItemAuthorizer.deletable_by?(@user1)
+	end
+
+	test "user without event user role cannot delete item" do
+		assert ItemAuthorizer.deletable_by?(@user1)
+		@user1.revoke :event_user
+		assert_not ItemAuthorizer.deletable_by?(@user1)
+	end
+
+
+	#Test instance level authorization (review event_user, event_participant, item_owner)
+
+	test "event participants can create item instance" do
+		assert @item1.authorizer.creatable_by?(@organizer, @item1.event), "Organizer is event participant and must have create access"
+		assert @item1.authorizer.creatable_by?(@user1, @item1.event), "User1 is event participant and must have create access"
+	end
+
+	test "non event participants cannot create item instance" do
+		assert_not @item1.authorizer.creatable_by?(@non_participant_user, @item1.event), "Non participant must create access"
+	end
+
+	test "event participants can read item instance" do
+		assert @item1.authorizer.readable_by?(@organizer), "Organizer is item owner and must have read access"
+		assert @item1.authorizer.readable_by?(@user1), "User1 is event participant and must have read access"
+	end
+
+	test "event user cannot read item instance" do
+		assert_not @item1.authorizer.readable_by?(@non_participant_user), "Non participant must not have read access"
+	end
+
+	test "item owner can update item instance" do
+		assert @item1.authorizer.updatable_by?(@organizer), "Organizer is item owner and must have write access"
+	end
+
+	test "non item owners cannot update item instance" do
+		assert_not @item1.authorizer.updatable_by?(@user1), "User1 is not item owner and must not have updated access"
+		assert_not @item1.authorizer.updatable_by?(@non_participant_user), "User is not event participant and must not have update access"
+	end
+
+	test "item owner can delete item instance" do
+		assert @item1.authorizer.deletable_by?(@organizer), "Organizer is item owner and must have write access"
+	end
+
+	test "non item owners cannot delete item instance" do
+		assert_not @item1.authorizer.deletable_by?(@user1), "User1 is not item owner and must not have delete access"
+		assert_not @item1.authorizer.deletable_by?(@non_participant_user), "User is not event participant and must not have delete access"
+	end
+	
 end 

@@ -65,4 +65,10 @@ class User
     Event.find(self.event_id).add_participant self
   end
 
+  after_create :assign_default_role
+
+  def assign_default_role
+    add_role(:event_user)
+  end
+
 end
