@@ -25,8 +25,8 @@ class Item
 
 
   def initialize_roles
-    self.beneficiaries.each do |beneficiary|
-      beneficiary.add_role :event_participant, self
+    self.event.users.each do |participant|
+      participant.add_role :event_participant, self
     end
   end
 

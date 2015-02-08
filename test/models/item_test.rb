@@ -156,6 +156,21 @@ class ItemTest < ActiveSupport::TestCase
 
 	#Test instance level authorization (review event_user, event_participant, item_owner)
 
+	test "roles initilization at item creation" do
+		assert @organizer.has_role? :event_participant, @item1
+		assert @organizer.has_role? :event_participant, @item2
+		assert @organizer.has_role? :event_participant, @item3
+		assert @organizer.has_role? :event_participant, @item4
+		assert @organizer.has_role? :event_participant, @item5
+		assert @organizer.has_role? :event_participant, @item6
+		assert @user2.has_role? :event_participant, @item1
+		assert @user2.has_role? :event_participant, @item2
+		assert @user2.has_role? :event_participant, @item3
+		assert @user2.has_role? :event_participant, @item4
+		assert @user2.has_role? :event_participant, @item5
+		assert @user2.has_role? :event_participant, @item6
+	end
+
 	test "event participants can create item instance" do
 		assert @item1.authorizer.creatable_by?(@organizer, @item1.event), "Organizer is event participant and must have create access"
 		assert @item1.authorizer.creatable_by?(@user1, @item1.event), "User1 is event participant and must have create access"
@@ -167,7 +182,8 @@ class ItemTest < ActiveSupport::TestCase
 
 	test "event participants can read item instance" do
 		assert @item1.authorizer.readable_by?(@organizer), "Organizer is item owner and must have read access"
-		assert @item1.authorizer.readable_by?(@user1), "User1 is event participant and must have read access"
+		assert @item1.authorizer.readable_by?(@user1), "User1 is beneficiary and must have read access"
+		assert @item4.authorizer.readable_by?(@user2), "User2, although not beneficiary, is event participant and must have read access"
 	end
 
 	test "event user cannot read item instance" do
