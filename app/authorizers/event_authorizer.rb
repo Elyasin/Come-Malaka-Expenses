@@ -12,7 +12,7 @@ class EventAuthorizer < ApplicationAuthorizer
 
   # event organizer can delete
   def deletable_by?(user)
-    user.has_role?(:event_participant, resource) and resource.organizer_id == user.id
+    user.has_role?(:event_participant, resource) and resource.organizer_id == user.id# and resource.items.empty? and resource.users.empty?
   end
 
 end
