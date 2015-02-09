@@ -2,6 +2,8 @@ class EventsController < ApplicationController
 
 	before_action :authenticate_user!
 
+  ensure_authorization_performed
+
   authorize_actions_for Event
 
 
