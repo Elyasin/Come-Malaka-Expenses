@@ -40,10 +40,8 @@ class Item
       rate = JSON.parse(open("http://devel.farebookings.com/api/curconversor/" + self.foreign_currency + "/" + self.base_currency + "/1/json").read)
       self.exchange_rate = rate[self.base_currency]
       self.base_amount = self.foreign_amount * self.exchange_rate
-    rescue Timeout::Error => ex
-      self.errors[:exchange_rate] = " The request for the exchange rate timed out. #{ex.message}"
-    rescue OpenURI::HTTPError => ex
-      self.errors[:exchange_rate] = " cannot get exchange rate. Choose a currency or try to type a rate manually. #{ex.message}"
+    rescue
+      self.errors[:exchange_rate] = " cannot get exchange rate. If problem persists choose a currency or try to type a rate manually."
     end
   end
 

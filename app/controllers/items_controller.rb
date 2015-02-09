@@ -21,7 +21,7 @@ class ItemsController < ApplicationController
     @item = Item.new(item_params)
     @item.event_id = params[:event_id]
     authorize_action_for @item.event
-    if @item.exchange_rate.to_d.zero? then
+    if @item.exchange_rate.blank? or @item.exchange_rate.to_d.zero? then
       get_exchange_rate_for @item
       @item.valid?
       render :new and return
