@@ -6,9 +6,12 @@
 	= link_to "Create new event", new_event_path
 	%hr
 	- @events.each do |event|
-		%p{:title => "#{event.description}"} #{event.name} from #{event.from_date.strftime('%d %b %Y')} to #{event.to_date.strftime('%d %b %Y')} - #{link_to('Delete event', event_path(event), :data => {:confirm => 'Are you sure?'}, :method => :delete)} - #{link_to 'Edit event', edit_event_path(event)}
+		- if current_user.can_update?(event) or current_user.can_delete?(event)
+			%p{:title => "#{event.description}"} #{event.name} from #{event.from_date.strftime('%d %b %Y')} to #{event.to_date.strftime('%d %b %Y')} - #{link_to('Delete event', event_path(event), :data => {:confirm => 'Are you sure?'}, :method => :delete)} - #{link_to 'Edit event', edit_event_path(event)}
+		-else
+			%p{:title => "#{event.description}"} #{event.name} from #{event.from_date.strftime('%d %b %Y')} to #{event.to_date.strftime('%d %b %Y')}
 		Participants: #{event.users.map { |u| u.name }.join(", ") }
-		%p= link_to 'Invite participant', invite_to_event_path(event)
+		%p= link_to('Invite participant', invite_to_event_path(event)) if current_user.id == event.organizer_id
 		%p= link_to 'See your posted items', event_items_path(event)
 		%p= link_to 'See all posted items', event_all_items_path(event)
 		%p= link_to 'View Expense Report', expense_report_path(event)

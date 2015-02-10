@@ -68,16 +68,31 @@ class ItemTest < ActiveSupport::TestCase
 		assert_not @item1.save, "Item's base amount must be >= 0"
 	end
 
-	test "exchange rate mus be positive" do
+	test "base amount must be a number" do
+		@item1.base_amount = "NaN"
+		assert_not @item1.save, "Item's base amount must be a number"
+	end
+
+	test "exchange rate must be positive" do
 		@item1.exchange_rate = -1
 		assert_not @item1.save, "Item's exchange rate must be >= 0"
+	end
+
+	test "exchange rate must be a number" do
+		@item1.exchange_rate = "NaN"
+		assert_not @item1.save, "Item's exchange rate must be a number"
 	end
 
 	test "foreign amount must be positive" do
 		@item1.foreign_amount = -1
 		assert_not @item1.save, "Item's foreign amount must be >= 0"
 	end
-
+	
+	test "foreign amount must be a number" do
+		@item1.foreign_amount = "NaN"
+		assert_not @item1.save, "Item's foreign amount must be a number"
+	end
+	
 	test "item's cost per beneficiary" do
 		assert_equal 40.22, @item1.cost_per_beneficiary.round(2), "Item 1 cpb must be 40.22"
 		assert_equal 11.17, @item2.cost_per_beneficiary.round(2), "Item 2 cpb must be 11.17"
@@ -161,18 +176,23 @@ class ItemTest < ActiveSupport::TestCase
 	#Test instance level authorization (review event_user, event_participant, item_owner)
 
 	test "roles initilization at item creation" do
-		assert @organizer.has_role? :event_participant, @item1, "Initializing organizer's items accesses for testing"
-		assert @organizer.has_role? :event_participant, @item2, "Initializing organizer's items accesses for testing"
-		assert @organizer.has_role? :event_participant, @item3, "Initializing organizer's items accesses for testing"
-		assert @organizer.has_role? :event_participant, @item4, "Initializing organizer's items accesses for testing"
-		assert @organizer.has_role? :event_participant, @item5, "Initializing organizer's items accesses for testing"
-		assert @organizer.has_role? :event_participant, @item6, "Initializing organizer's items accesses for testing"
-		assert @user2.has_role? :event_participant, @item1, "Initializing user's items accesses for testing"
-		assert @user2.has_role? :event_participant, @item2, "Initializing user's items accesses for testing"
-		assert @user2.has_role? :event_participant, @item3, "Initializing user's items accesses for testing"
-		assert @user2.has_role? :event_participant, @item4, "Initializing user's items accesses for testing"
-		assert @user2.has_role? :event_participant, @item5, "Initializing user's items accesses for testing"
-		assert @user2.has_role? :event_participant, @item6, "Initializing user's items accesses for testing"
+		assert @organizer.has_role?(:event_participant, @item1), "Initializing organizer's items accesses for testing"
+		assert @organizer.has_role?(:event_participant, @item2), "Initializing organizer's items accesses for testing"
+		assert @organizer.has_role?(:event_participant, @item3), "Initializing organizer's items accesses for testing"
+		assert @organizer.has_role?(:event_participant, @item4), "Initializing organizer's items accesses for testing"
+		assert @organizer.has_role?(:event_participant, @item5), "Initializing organizer's items accesses for testing"
+		assert @organizer.has_role?(:event_participant, @item6), "Initializing organizer's items accesses for testing"
+		assert @user2.has_role?(:event_participant, @item1), "Initializing user's items accesses for testing"
+		assert @user2.has_role?(:event_participant, @item2), "Initializing user's items accesses for testing"
+		assert @user2.has_role?(:event_participant, @item3), "Initializing user's items accesses for testing"
+		assert @user2.has_role?(:event_participant, @item4), "Initializing user's items accesses for testing"
+		assert @user2.has_role?(:event_participant, @item5), "Initializing user's items accesses for testing"
+		assert @user2.has_role?(:event_participant, @item6), "Initializing user's items accesses for testing"
+	end
+
+	test "initilialize role for a participant" do
+		@item1.initialize_role_for @non_participant_user
+		assert @non_participant_user.has_role? :event_participant, @item1
 	end
 
 	test "event participants can create item instance" do

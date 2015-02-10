@@ -21,6 +21,7 @@ class EventsController < ApplicationController
   	@event = Event.create(event_params)
     @event.add_participant current_user
     if @event.invalid? then
+      flash[:notice] = "Event is invalid. Please correct"
       render :new and return
     end
     @event.save

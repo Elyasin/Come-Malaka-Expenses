@@ -36,21 +36,17 @@ class EventTest < ActiveSupport::TestCase
 	end
 
 	test "add new participant to event" do
-		expected_size = @event.users.length + 1
-		expected_users = @event.users << @non_participant_user
-		@event.add_participant(@non_participant_user)
-		assert_equal expected_users, @event.users, "New user must be event particpant"
-		assert_equal expected_size, @event.users.length, "New user must be event particpant"
+		assert @event.add_participant(@non_participant_user),"New user must be event particpant" 
 		assert_includes @event.users, @non_participant_user, "New user must be event particpant"
-		assert @non_participant_user.has_role?(:event_participant, @event), "New user must be event particpant"
+		assert @non_participant_user.has_role?(:event_participant, @event), "New user must have event participant access"
+		assert_nil @non_participant_user.event
+		@event.items.each do |item|
+			assert @non_participant_user.has_role?(:event_participant, item), "New user must have access to event's items"
+		end
 	end
 
 	test "add already existing participant to event" do
-		expected_size = @event.users.length
-		expected_users = @event.users
-		@event.add_participant(@organizer)
-		assert_equal expected_users, @event.users, "Adding existing participant must not have any effect"
-		assert_equal expected_size, @event.users.length, "Adding existing participant must not have any effect"
+		assert_not @event.add_participant(@organizer), "Adding existing participant must not have any effect"
 	end
 
 	test "organizer's name" do

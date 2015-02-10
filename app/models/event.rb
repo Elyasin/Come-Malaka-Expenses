@@ -20,8 +20,11 @@ class Event
   #true		user successfully added
   #false	user already participant of event
   def add_participant(user)
+    return false if self.users.include?(user)
     user.add_role :event_participant, self
-    self.users = (Set.new(self.users) << user).to_a
+    self.users << user
+    self.items.each do |item| item.initialize_role_for user end
+    true
   end
 
   # returns items that were paid by participant (base amount)

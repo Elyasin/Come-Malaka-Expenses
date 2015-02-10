@@ -24,7 +24,8 @@ class ItemsController < ApplicationController
     @item.event_id = params[:event_id]
     authorize_action_for @item.event
     if @item.exchange_rate.blank? or @item.exchange_rate.to_d.zero? then
-      get_exchange_rate_for @item
+      @item.apply_exchange_rate
+      flash[:notice] = "Currency exchange updated..."
       @item.valid?
       render :new and return
     end
@@ -45,8 +46,9 @@ class ItemsController < ApplicationController
   def update
     @item = Item.find params[:id]
     @item.update_attributes item_params
-    if @item.exchange_rate.to_d.zero? then
-      get_exchange_rate_for @item
+    if @item.exchange_rate.blank? or @item.exchange_rate.to_d.zero? then
+      @item.apply_exchange_rate
+      flash[:notice] = "Currency exchange updated..."
       @item.valid?
       render :edit and return
     end
@@ -64,20 +66,14 @@ class ItemsController < ApplicationController
   end
 
   def show
-    @item = Item.find params[:id]
-    authorize_action_for @item
+    @item = Item.find params[:id] if authorize_action_for @item
   end
 
   private
 
   def item_params
-    params.require(:item).permit(:name, :value_date, :description, :payer_id, :exchange_rate, :base_amount, :base_currency, :foreign_amount, :foreign_currency, :event, :beneficiary_ids => [])
-  end
-
-  def get_exchange_rate_for item
-    item.apply_exchange_rate
-    @item = item
-    flash[:notice] = "Currency exchange updated..."
+    params.require(:item).permit(:name, :value_date, :description, :payer_id, :exchange_rate, 
+      :base_amount, :base_currency, :foreign_amount, :foreign_currency, :event, :beneficiary_ids => [])
   end
 
 end

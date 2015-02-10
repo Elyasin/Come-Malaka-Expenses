@@ -47,7 +47,8 @@ class User
   field :invitation_accepted_at, type: Time
   field :invitation_limit, type: Integer
   #Event ID for invitation
-  field :event_id, type: BSON::ObjectId
+  #field :event_id, type: BSON::ObjectId
+  belongs_to :event
 
   index( {invitation_token: 1}, {:background => true} )
   index( {invitation_by_id: 1}, {:background => true} )
@@ -62,9 +63,11 @@ class User
   after_invitation_accepted :add_to_invited_event
 
   def add_to_invited_event
-    Event.find(self.event_id).add_participant self
+    self.event.add_participant(self) if !event.nil?
+    self.event = nil
   end
 
+  #Assign default role to user
   after_create :assign_default_role
 
   def assign_default_role

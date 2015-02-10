@@ -22,12 +22,17 @@ class Item
   validates :name, :description, :value_date, :event, :base_amount, :base_currency, :exchange_rate, 
     :foreign_amount, :foreign_currency, :payer_id, :beneficiaries, presence: true
   validates :base_amount, :foreign_amount, :exchange_rate, numericality: {greater_than_or_equal_to: 0}
-
+  
+  after_create :initialize_roles
 
   def initialize_roles
     self.event.users.each do |participant|
       participant.add_role :event_participant, self
     end
+  end
+
+  def initialize_role_for participant
+    participant.add_role :event_participant, self
   end
 
   def cost_per_beneficiary
@@ -36,13 +41,13 @@ class Item
 
   #rework the method to catch exceptions
   def apply_exchange_rate
-    begin
-      rate = JSON.parse(open("http://devel.farebookings.com/api/curconversor/" + self.foreign_currency + "/" + self.base_currency + "/1/json").read)
-      self.exchange_rate = rate[self.base_currency]
-      self.base_amount = self.foreign_amount * self.exchange_rate
-    rescue
-      self.errors[:exchange_rate] = " cannot get exchange rate. If problem persists choose a currency or try to type a rate manually."
-    end
+    rate = JSON.parse(open("http://devel.farebookings.com/api/curconversor/" + self.foreign_currency + "/" + self.base_currency + "/1/json").read)
+    self.exchange_rate = rate[self.base_currency]
+    self.base_amount = self.foreign_amount * self.exchange_rate
+  rescue Timeout::Error
+    self.errors[:exchange_rate] = " cannot get exchange rate (Timed Out). If problem persists choose a currency or try to type a rate manually."
+  rescue
+    self.errors[:exchange_rate] = " cannot get exchange rate. If problem persists choose a currency or try to type a rate manually."
   end
 
 end

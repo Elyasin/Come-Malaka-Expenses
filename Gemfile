@@ -68,3 +68,6 @@ gem 'database_cleaner', "~> 1.3.0", group: :test
 
 #mocking external requests
 gem 'webmock', group: :test
+
+#coverage for test suites
+gem 'simplecov', "~> 0.9.0", :require => false, :group => :test
