@@ -55,7 +55,7 @@ Authority.configure do |config|
   #
   # Default is:
   #
-  # config.logger = Logger.new(STDERR)
+  config.logger = ENV['RAILS_ENV'] == 'test' ? Logger.new('/dev/null') : Logger.new(STDERR)
   #
   # Some possible settings:
   # config.logger = Rails.logger                     # Log with all your app's other messages

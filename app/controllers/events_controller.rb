@@ -37,22 +37,24 @@ class EventsController < ApplicationController
 
 
   def update
-    event = Event.find params[:id]
-    event.update_attributes event_params if authorize_action_for(event)
-    if event.invalid? then
-      render :new and return
+    @event = Event.find params[:id]
+    @event.update_attributes event_params if authorize_action_for(@event)
+    if @event.invalid? then
+      flash[:notice] = "Event cannot be updated with invalid data. Please correct"
+      render :edit and return
     end
+    flash[:notice] = "Event updated"
     redirect_to events_path
   end
 
 
   def destroy
     event = Event.find(params[:id])
-    if event.items.count == 0  or event.users.count == 0 then
+    if event.items.count == 0  then
       event.destroy if authorize_action_for(event)
       flash[:notice] = "Event deleted"
     else
-      flash[:notice] = "Event cannot be deleted. Posted items or users exist."
+      flash[:notice] = "Event cannot be deleted. Posted items exist."
     end
 	  redirect_to events_path
   end
