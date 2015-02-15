@@ -12,16 +12,16 @@ class Event
   field :event_currency, type: String
   has_and_belongs_to_many :users, inverse_of: nil
   has_many :items
-  field :organizer_id, type: BSON::ObjectId
+  belongs_to :organizer, class_name: "User"
 
   validates :name, :from_date, :to_date, :description, :event_currency, :organizer_id, presence: true
 
-  #add user to event if user not already participant
-  #true		user successfully added
-  #false	user already participant of event
+
+  # returns false if user already participant
+  # otherwise returns true
   def add_participant(user)
     return false if self.users.include?(user)
-    user.add_role :event_participant, self
+    user.add_role(:event_participant, self) unless user.has_role?(:event_participant, self)
     self.users << user
     self.items.each do |item| item.initialize_role_for user end
     true

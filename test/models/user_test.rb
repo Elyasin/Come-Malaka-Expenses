@@ -48,4 +48,9 @@ class UserTest < ActiveSupport::TestCase
 		assert_not @user5.has_role?(:item_owner), "No user must have global item owner role"
 	end
 
+	test "user's default role :event_user is revoked when user is destroyed" do
+		@user1.destroy
+		assert_not @user1.has_role?(:event_user), "Deleted user must have default role revoked"
+	end
+
 end

@@ -56,28 +56,62 @@ class EventsControllerTest < ActionController::TestCase
     assert_redirected_to new_user_session_path
   end
 
-	test "user can see events page" do
+	test "organizer can see events page" do
+    sign_in @organizer
 		get :index
 		assert_response :success
 		assert_not_nil assigns(:events)
+    assert_equal 1, assigns(:events).length
 	end
 
-  test "user can see new page" do
+  test "participant can see events page" do
+    sign_in @user1
+    get :index
+    assert_response :success
+    assert_not_nil assigns(:events)
+    assert_equal 1, assigns(:events).length
+  end
+
+  test "non participant can see events page" do
+    get :index
+    assert_response :success
+    assert_not_nil assigns(:events)
+    assert_equal 0, assigns(:events).length
+  end
+
+  test "organizer can see new page" do
+    sign_in @organizer
   	get :new
   	assert_response :success
   	assert_not_nil assigns(:event)
   end
 
+  test "participant can see new page" do
+    sign_in @user1
+    get :new
+    assert_response :success
+    assert_not_nil assigns(:event)
+  end
+
+  test "non participant can see new page" do
+    sign_in @non_participant_user
+    get :new
+    assert_response :success
+    assert_not_nil assigns(:event)
+  end
+
   test "user can create valid event and becomes participant" do
   	test_event = {name: "Test event", from_date: Date.today, to_date: Date.today+3, description: "Test description", 
-  		event_currency: "EUR", organizer_id: @organizer.id}
+  		event_currency: "EUR", organizer_id: @non_participant_user.id}
   	assert_difference('Event.count') do
   		post :create, event: test_event
   	end
   	assert_response :redirect
-  	assert_equal "Event created", flash[:notice]
+  	assert_equal "Event created.", flash[:notice]
+    assert_not_nil assigns(:event)
   	assert_redirected_to events_path
   	assert_includes assigns(:event).users, @non_participant_user
+    assert_equal @non_participant_user.id, assigns(:event).organizer_id
   end
 
   test "user tries to create event with invalid data and is sent back to new page" do
@@ -85,7 +119,7 @@ class EventsControllerTest < ActionController::TestCase
   	post :create, event: test_event
   	assert_response :success
   	assert_template :new
-  	assert_equal "Event is invalid. Please correct", flash[:notice]
+  	assert_equal "Event is invalid. Please correct.", flash[:notice]
   end
 
   test "organizer can edit event" do
@@ -115,7 +149,7 @@ class EventsControllerTest < ActionController::TestCase
   	put :update, id: @event.id, event: test_event
   	assert_response :redirect
   	assert_redirected_to events_path
-  	assert_equal "Event updated", flash[:notice]
+  	assert_equal "Event updated.", flash[:notice]
   end
 
   test "organizer tries to update event with invalid data and is sent back to edit page" do
@@ -124,7 +158,7 @@ class EventsControllerTest < ActionController::TestCase
   	put :update, id: @event.id, event: test_event
   	assert_response :success
   	assert_template :edit
-  	assert_equal "Event cannot be updated with invalid data. Please correct", flash[:notice]
+  	assert_equal "Event cannot be updated with invalid data. Please correct.", flash[:notice]
   end
 
   test "participant cannot update event" do
@@ -152,7 +186,7 @@ class EventsControllerTest < ActionController::TestCase
   	end	
   	assert_response :redirect
   	assert_redirected_to events_path
-  	assert_equal "Event deleted", flash[:notice]
+  	assert_equal "Event deleted.", flash[:notice]
   end
 
   test "organizer must fail to delete an event that contains items" do

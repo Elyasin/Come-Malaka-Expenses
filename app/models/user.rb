@@ -71,7 +71,13 @@ class User
   after_create :assign_default_role
 
   def assign_default_role
-    add_role(:event_user)
+    self.add_role(:event_user) unless self.has_role?(:event_user)
+  end
+
+  after_destroy :revoke_default_role
+
+  def revoke_default_role
+    self.revoke :event_user
   end
 
 end

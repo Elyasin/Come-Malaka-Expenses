@@ -1,7 +1,7 @@
 en:
   devise:
     failure:
-      invited: 'You have a pending invitation, accept it to finish creating your account.'
+      invited: 'You have a pending invitation to Come Malaka, accept it to finish creating your account.'
     event_invitations:
       send_instructions: 'An invitation email has been sent to %{email}.'
       invitation_token_invalid: 'The invitation token provided is not valid!'
@@ -16,9 +16,9 @@ en:
         submit_button: "Set my password"
     mailer:
       invitation_instructions:
-        subject: 'Invitation instructions'
-        hello: 'Hello %{email}'
-        someone_invited_you: 'Someone has invited you to %{url}, you can accept it through the link below.'
+        subject: 'Packoooook - You have been invited to Come Malaka'
+        hello: 'Packoooook %{email}'
+        someone_invited_you: 'You have been invited to join a Come Malaka event at %{url}, you can accept it through the link below.'
         accept: 'Accept invitation'
         ignore: "If you don't want to accept the invitation, please ignore this email.<br />Your account won't be created until you access the link above and set your password."
 

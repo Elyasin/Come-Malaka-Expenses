@@ -14,6 +14,7 @@ class EventsController < ApplicationController
 
   def new																			
   	@event = Event.new(from_date: Date.today, to_date: Date.today+3.days, organizer_id: current_user.id)
+    authorize_action_for @event
   end
 
 
@@ -21,11 +22,11 @@ class EventsController < ApplicationController
   	@event = Event.create(event_params)
     @event.add_participant current_user
     if @event.invalid? then
-      flash[:notice] = "Event is invalid. Please correct"
+      flash[:notice] = "Event is invalid. Please correct."
       render :new and return
     end
     @event.save
-  	flash[:notice] = "Event created"
+  	flash[:notice] = "Event created."
   	redirect_to events_path
   end
 
@@ -40,10 +41,10 @@ class EventsController < ApplicationController
     @event = Event.find params[:id]
     @event.update_attributes event_params if authorize_action_for(@event)
     if @event.invalid? then
-      flash[:notice] = "Event cannot be updated with invalid data. Please correct"
+      flash[:notice] = "Event cannot be updated with invalid data. Please correct."
       render :edit and return
     end
-    flash[:notice] = "Event updated"
+    flash[:notice] = "Event updated."
     redirect_to events_path
   end
 
@@ -52,7 +53,7 @@ class EventsController < ApplicationController
     event = Event.find(params[:id])
     if event.items.count == 0  then
       event.destroy if authorize_action_for(event)
-      flash[:notice] = "Event deleted"
+      flash[:notice] = "Event deleted."
     else
       flash[:notice] = "Event cannot be deleted. Posted items exist."
     end

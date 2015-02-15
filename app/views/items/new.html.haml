@@ -1,6 +1,6 @@
 %h2 Create new item
 %p= link_to 'Back to your items', event_items_path(@item.event)
-= form_for [@item.event, @item] do |f|
+= form_for @item, url: event_items_path(@item.event) do |f|
   .field
     = f.label :name
     %br/
@@ -30,7 +30,7 @@
     = f.label :exchange_rate
     %br/
     = f.number_field :exchange_rate, step: :any
-    %small (Blank or 0 fetches currency automatically)
+    %small (Leave blank to fetch currency automatically)
     %br/
   .field
     = f.label :foreign_amount
@@ -40,7 +40,7 @@
   .field
     = f.label :foreign_currency
     %br/
-    = f.select :foreign_currency, options_from_collection_for_select(Money::Currency.all, :iso_code, :iso_code, select_currency(@item, @event)), prompt: "Select foreign currency"
+    = f.select :foreign_currency, options_from_collection_for_select(Money::Currency.all, :iso_code, :iso_code, select_currency(@item, @item.event)), prompt: "Select foreign currency"
     %br/
     %br/
     = f.label :beneficiaries

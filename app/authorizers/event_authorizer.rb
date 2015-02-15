@@ -1,5 +1,10 @@
 class EventAuthorizer < ApplicationAuthorizer
   
+  # event participant can view
+  def readable_by?(user)
+    user.has_role?(:event_participant, resource)
+  end
+
   # event participant can create
   def creatable_by?(user)
     user.has_role? :event_user

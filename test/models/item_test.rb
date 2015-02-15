@@ -28,9 +28,10 @@ class ItemTest < ActiveSupport::TestCase
 		assert_not @item1.save, "Item must belong to an event"
 	end
 
-	test "do not save item without base amount" do
+	test "item's base amount is validated before save" do
 		@item1.base_amount = nil
-		assert_not @item1.save, "Item must have a base amount"
+		assert @item1.save, "Item must have a base amount"
+		assert_not_nil @item1.base_amount
 	end
 
 	test "do not save item without base currency" do
@@ -39,6 +40,7 @@ class ItemTest < ActiveSupport::TestCase
 	end
 
 	test "do not save item without exchange rate" do
+		stub_request(:get, "http://devel.farebookings.com/api/curconversor/DKK/EUR/1/json").to_raise(OpenURI::HTTPError.new(nil, ""))
 		@item1.exchange_rate = nil
 		assert_not @item1.save, "Item must have an exchange rate"
 	end
@@ -54,7 +56,7 @@ class ItemTest < ActiveSupport::TestCase
 	end
 
 	test "do not save item without payer" do
-		@item1.payer_id = nil
+		@item1.payer = nil
 		assert_not @item1.save, "Item must have a payer"
 	end
 
@@ -63,19 +65,11 @@ class ItemTest < ActiveSupport::TestCase
 		assert_not @item1.save, "Item must have at least one beneficiary"
 	end
 
-	test "base amount must be positive" do
-		@item1.base_amount = -1
-		assert_not @item1.save, "Item's base amount must be >= 0"
-	end
-
-	test "base amount must be a number" do
-		@item1.base_amount = "NaN"
-		assert_not @item1.save, "Item's base amount must be a number"
-	end
-
-	test "exchange rate must be positive" do
+	test "exchange rate must be positive and not zero" do
 		@item1.exchange_rate = -1
 		assert_not @item1.save, "Item's exchange rate must be >= 0"
+		@item1.exchange_rate = 0
+		assert_not @item1.save, "Item's exchange rate must not be 0"
 	end
 
 	test "exchange rate must be a number" do
@@ -94,35 +88,43 @@ class ItemTest < ActiveSupport::TestCase
 	end
 	
 	test "item's cost per beneficiary" do
-		assert_equal 40.22, @item1.cost_per_beneficiary.round(2), "Item 1 cpb must be 40.22"
-		assert_equal 11.17, @item2.cost_per_beneficiary.round(2), "Item 2 cpb must be 11.17"
-		assert_equal 11.17, @item3.cost_per_beneficiary.round(2), "Item 3 cpb must be 11.17"
-		assert_equal 36.87, @item4.cost_per_beneficiary.round(2), "Item 4 cpb must be 36.87"
-		assert_equal 24.58, @item5.cost_per_beneficiary.round(2), "Item 5 cpb must be 24.58"
-		assert_equal  1.79, @item6.cost_per_beneficiary.round(2), "Item 6 cpb must be 1.79"
+		assert_in_delta (241.30.to_d/6), @item1.cost_per_beneficiary, 0.0000000000000001, "Item 1 cpb must be 241.3/6"
+		assert_in_delta  (67.03.to_d/6), @item2.cost_per_beneficiary, 0.0000000000000001, "Item 2 cpb must be 67.03/6"
+		assert_in_delta  (67.03.to_d/6), @item3.cost_per_beneficiary, 0.0000000000000001, "Item 3 cpb must be 67.03/6"
+		assert_in_delta (147.46.to_d/4), @item4.cost_per_beneficiary, 0.0000000000000001, "Item 4 cpb must be 147.46/4"
+		assert_in_delta (147.46.to_d/6), @item5.cost_per_beneficiary, 0.0000000000000001, "Item 5 cpb must be 147.46/6"
+		assert_in_delta  (10.72.to_d/6), @item6.cost_per_beneficiary, 0.0000000000000001, "Item 6 cpb must be 10.72/6"
 	end
 
 	test "apply exchange rate on item successfully" do
+		@item1.exchange_rate = ""
 		stub_request(:get, "http://devel.farebookings.com/api/curconversor/DKK/EUR/1/json").to_return(:status => 200, :body => '{"EUR": 0.1343}')
 		@item1.apply_exchange_rate
-		assert_equal 0.1343, @item1.exchange_rate, "Item's new exchange rate must be 0.1343"
-		assert_equal 0.1343*@item1.foreign_amount, @item1.base_amount, "Item's new base_amount must correspond to new exchange rate"
+		assert_equal 0.1343.to_d, @item1.exchange_rate, "Item's new exchange rate must be 0.1343"
+		assert_equal 0.1343.to_d*@item1.foreign_amount, @item1.base_amount, "Item's new base_amount must correspond to new exchange rate"
+	end
+
+	test "apply exchange rate on item manually" do
+		assert_not_nil @item1.exchange_rate.blank?
+		assert_no_difference('@item1.exchange_rate') do
+			@item1.apply_exchange_rate
+		end
 	end
 
 	test "time out error when requesting exchange rate for item" do
 		stub_request(:any, "http://devel.farebookings.com/api/curconversor/DKK/EUR/1/json").to_raise(Timeout::Error)
-		expected_exchange_rate = @item1.exchange_rate
+		@item1.exchange_rate = ""
 		@item1.apply_exchange_rate
-		assert_equal 1, @item1.errors[:exchange_rate].length, "Item should have error message"
-		assert_equal expected_exchange_rate, @item1.exchange_rate, "Item's exchange rate must not have changed"
+		assert_equal 1, @item1.errors[:exchange_rate].length, "Item exchange rate must have error message"
+		assert @item1.invalid?
 	end
 
 	test "connection error when requesting exchange rate for item" do
 		stub_request(:any, "http://devel.farebookings.com/api/curconversor/DKK/EUR/1/json").to_raise(OpenURI::HTTPError.new(nil, ""))
-		expected_exchange_rate = @item1.exchange_rate
+		@item1.exchange_rate = ""
 		@item1.apply_exchange_rate
-		assert_equal 1, @item1.errors[:exchange_rate].length, "Item should have error message"
-		assert_equal expected_exchange_rate, @item1.exchange_rate, "Item's exchange rate must not have changed"
+		assert_equal 1, @item1.errors[:exchange_rate].length, "Item exchange rate must have error message"
+		assert @item1.invalid?
 	end
 
 
@@ -190,9 +192,19 @@ class ItemTest < ActiveSupport::TestCase
 		assert @user2.has_role?(:event_participant, @item6), "Initializing user's items accesses for testing"
 	end
 
-	test "initilialize role for a participant" do
+	test "revoke roles when item is destroyed" do
+		@item1.destroy
+		assert_not @organizer.has_role?(:event_participant, @item1), "Organizer must have his access revoked for item"
+		assert_not @user1.has_role?(:event_participant, @item1), "User1 must have his access revoked for item"
+		assert_not @user2.has_role?(:event_participant, @item1), "User2 must have his access revoked for item"
+		assert_not @user3.has_role?(:event_participant, @item1), "User3 must have his access revoked for item"
+		assert_not @user4.has_role?(:event_participant, @item1), "User4 must have his access revoked for item"
+		assert_not @user5.has_role?(:event_participant, @item1), "User5 must have his access revoked for item"
+	end
+
+	test "initilialize role for a new participant" do
 		@item1.initialize_role_for @non_participant_user
-		assert @non_participant_user.has_role? :event_participant, @item1
+		assert @non_participant_user.has_role?(:event_participant, @item1), "New participant must have event participant authorization for item"
 	end
 
 	test "event participants can create item instance" do
@@ -205,13 +217,13 @@ class ItemTest < ActiveSupport::TestCase
 	end
 
 	test "event participants can read item instance" do
-		assert @item1.authorizer.readable_by?(@organizer), "Organizer is item owner and must have read access"
-		assert @item1.authorizer.readable_by?(@user1), "User1 is beneficiary and must have read access"
-		assert @item4.authorizer.readable_by?(@user2), "User2, although not beneficiary, is event participant and must have read access"
+		assert @item1.authorizer.readable_by?(@organizer, @event), "Organizer is item owner and must have read access"
+		assert @item1.authorizer.readable_by?(@user1, @event), "User1 is beneficiary and must have read access"
+		assert @item4.authorizer.readable_by?(@user2, @event), "User2, although not beneficiary, is event participant and must have read access"
 	end
 
 	test "event user cannot read item instance" do
-		assert_not @item1.authorizer.readable_by?(@non_participant_user), "Non participant must not have read access"
+		assert_not @item1.authorizer.readable_by?(@non_participant_user, @event), "Non participant must not have read access"
 	end
 
 	test "item owner can update item instance" do

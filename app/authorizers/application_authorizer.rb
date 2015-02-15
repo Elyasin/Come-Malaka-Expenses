@@ -19,10 +19,5 @@ class ApplicationAuthorizer < Authority::Authorizer
     # Event participants are permitted to any adjective
     user.has_role? :event_user
   end
-  
-  # event participant can view
-  def readable_by?(user)
-    user.has_role? :event_participant, resource
-  end
 
 end

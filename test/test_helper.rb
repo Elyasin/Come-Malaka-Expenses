@@ -34,7 +34,7 @@ class ActiveSupport::TestCase
 		@non_participant_user.save!
 		@event = Event.new(name: "Randers", from_date: Date.new(2012, 11, 2), 
 			to_date: Date.new(2012, 11, 4), description: "Come Malaka event in Denmark", 
-			event_currency: "EUR", organizer_id: @organizer.id)
+			event_currency: "EUR", organizer: @organizer)
 		@event.add_participant(@organizer)
 		@event.add_participant(@user1)
 		@event.add_participant(@user2)
@@ -44,38 +44,38 @@ class ActiveSupport::TestCase
 		@event.save!
 		@item1 = Item.new(name: "Food", description: "Food", value_date: @event.from_date, 
 			event: @event, base_amount: 241.3, base_currency: "EUR", 
-			exchange_rate: 241.3/1800.to_d, foreign_amount: 1800, foreign_currency: "DKK", 
-			payer_id: @organizer.id, beneficiaries: [@organizer, @user1, @user2, @user3, @user4, @user5])
+			exchange_rate: 241.3.to_d/1800, foreign_amount: 1800, foreign_currency: "DKK", 
+			payer: @organizer, beneficiaries: [@organizer, @user1, @user2, @user3, @user4, @user5])
 		@item1.initialize_roles
 		@item1.save!
 		@item2 = Item.new(name: "Gas", description: "Gas", value_date: @event.from_date, 
 			event: @event, base_amount: 67.03, base_currency: "EUR", 
-			exchange_rate: 67.03/500.to_d, foreign_amount: 500, foreign_currency: "DKK", 
-			payer_id: @organizer.id, beneficiaries: [@organizer, @user1, @user2, @user3, @user4, @user5])
+			exchange_rate: 67.03.to_d/500, foreign_amount: 500, foreign_currency: "DKK", 
+			payer: @organizer, beneficiaries: [@organizer, @user1, @user2, @user3, @user4, @user5])
 		@item2.initialize_roles
 		@item2.save!
 		@item3 = Item.new(name: "Drinks", description: "Drinks", value_date: @event.from_date, 
 			event: @event, base_amount: 67.03, base_currency: "EUR", 
-			exchange_rate: 67.03/500.to_d, foreign_amount: 500, foreign_currency: "DKK", 
-			payer_id: @organizer.id, beneficiaries: [@organizer, @user1, @user2, @user3, @user4, @user5])
+			exchange_rate: 67.03.to_d/500, foreign_amount: 500, foreign_currency: "DKK", 
+			payer: @organizer, beneficiaries: [@organizer, @user1, @user2, @user3, @user4, @user5])
 		@item3.initialize_roles
 		@item3.save!
 		@item4 = Item.new(name: "Night out", description: "Night out & Misc", value_date: @event.from_date, 
 			event: @event, base_amount: 147.46, base_currency: "EUR", 
-			exchange_rate: 147.46/1100.to_d, foreign_amount: 1100, foreign_currency: "DKK", 
-			payer_id: @organizer.id, beneficiaries: [@organizer, @user1, @user3, @user4])
+			exchange_rate: 147.46.to_d/1100, foreign_amount: 1100, foreign_currency: "DKK", 
+			payer: @organizer, beneficiaries: [@organizer, @user1, @user3, @user4])
 		@item4.initialize_roles
 		@item4.save!
 		@item5 = Item.new(name: "Night out", description: "Night out & Misc", value_date: @event.from_date+1, 
 			event: @event, base_amount: 147.46, base_currency: "EUR", 
-			exchange_rate: 147.46/1100.to_d, foreign_amount: 1100, foreign_currency: "DKK", 
-			payer_id: @organizer.id, beneficiaries: [@organizer, @user1, @user2, @user3, @user4, @user5])
+			exchange_rate: 147.46.to_d/1100, foreign_amount: 1100, foreign_currency: "DKK", 
+			payer: @organizer, beneficiaries: [@organizer, @user1, @user2, @user3, @user4, @user5])
 		@item5.initialize_roles
 		@item5.save!
 		@item6 = Item.new(name: "Taxi", description: "Taxi", value_date: @event.from_date+1, 
 			event: @event, base_amount: 10.72, base_currency: "EUR", 
-			exchange_rate: 10.72/80.to_d, foreign_amount: 80, foreign_currency: "DKK", 
-			payer_id: @user4.id, beneficiaries: [@organizer, @user1, @user2, @user3, @user4, @user5])
+			exchange_rate: 10.72.to_d/80, foreign_amount: 80, foreign_currency: "DKK", 
+			payer: @user4, beneficiaries: [@organizer, @user1, @user2, @user3, @user4, @user5])
 		@item6.initialize_roles
 		@item6.save!
 	end

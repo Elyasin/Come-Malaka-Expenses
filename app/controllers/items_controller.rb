@@ -13,67 +13,61 @@ class ItemsController < ApplicationController
   end
 
   def new
-    @event = Event.find params[:event_id]
-    authorize_action_for @event
-    @item = @event.items.build(payer_id: current_user.id, value_date: @event.from_date)
+    event = Event.find params[:event_id]
+    @item = event.items.build(payer_id: current_user.id, value_date: event.from_date, event: event)
+    authorize_action_for @item, event
   end
 
-  #candidate for refactoring: put logic into Item model
   def create
     @item = Item.new(item_params)
     @item.event_id = params[:event_id]
-    authorize_action_for @item.event
-    if @item.exchange_rate.blank? or @item.exchange_rate.to_d.zero? then
-      @item.apply_exchange_rate
-      flash[:notice] = "Currency exchange updated..."
-      @item.valid?
+    authorize_action_for @item, @item.event
+    if @item.invalid? then
+      flash[:alert] = "Currency updated to #{@item.exchange_rate}." if @item.rate_changed?
+      flash[:notice] = "Item is invalid. Please correct."
       render :new and return
     end
-    @item.base_amount = @item.foreign_amount * @item.exchange_rate
-    if @item.invalid? then (render :new and return) end
     @item.save
-    @item.initialize_roles
-    redirect_to(event_items_path, :notice => "Item created")
+    flash[:alert] = "Currency updated to #{@item.exchange_rate}." if @item.rate_changed?
+    redirect_to event_items_path, :notice => "Item created."
   end
 
   def edit
     @item = Item.find params[:id]
     authorize_action_for @item
-    @event = @item.event
   end
 
-  #candidate for refactoring: put logic into Item model
   def update
     @item = Item.find params[:id]
     @item.update_attributes item_params
-    if @item.exchange_rate.blank? or @item.exchange_rate.to_d.zero? then
-      @item.apply_exchange_rate
-      flash[:notice] = "Currency exchange updated..."
-      @item.valid?
-      render :edit and return
+    authorize_action_for @item
+    if @item.invalid? then
+      flash[:alert] = "Currency updated to #{@item.exchange_rate}." if @item.rate_changed?
+      flash[:notice] = "Item is invalid. Please correct."
+      render :new and return
     end
-    @item.base_amount = @item.foreign_amount * @item.exchange_rate
-    if @item.invalid? then (render :edit and return) end
-    @item.save if authorize_action_for @item
-    redirect_to event_items_path(event_id: @item.event), :notice => "Item updated"
+    @item.save
+    flash[:alert] = "Currency updated to #{@item.exchange_rate}." if @item.rate_changed?
+    redirect_to event_items_path(event_id: @item.event_id), :notice => "Item updated."
   end
 
   def destroy
     item = Item.find(params[:id])
     event = item.event
     item.destroy if authorize_action_for item
-    redirect_to event_items_path(event_id: event), :notice => "Item deleted"
+    redirect_to event_items_path(event_id: event.id), :notice => "Item deleted."
   end
 
   def show
-    @item = Item.find params[:id] if authorize_action_for @item
+    @item = Item.find params[:id]
+    authorize_action_for @item, @item.event
   end
 
   private
 
   def item_params
     params.require(:item).permit(:name, :value_date, :description, :payer_id, :exchange_rate, 
-      :base_amount, :base_currency, :foreign_amount, :foreign_currency, :event, :beneficiary_ids => [])
+      :base_amount, :base_currency, :foreign_amount, :foreign_currency, :event_id, :beneficiary_ids => [])
   end
 
 end

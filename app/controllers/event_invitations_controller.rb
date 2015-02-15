@@ -6,15 +6,15 @@ class EventInvitationsController < Devise::InvitationsController
 	end
 
 	def create
-		event = Event.find(params[:user][:event_id])
+		@event = Event.find(params[:user][:event_id])
 		user = User.where(email: params[:user][:email].downcase)
 
 		if user.exists? then
-			invitee = user.first
-			if event.add_participant invitee
-				flash[:notice] = "#{invitee.name} had been added to the event"
+			@invitee = user.first
+			if @event.add_participant(@invitee)
+				flash[:notice] = "#{@invitee.name} had been added to the event."
 			else
-				flash[:notice] = "#{invitee.name} is already participant of event or pending invitation"
+				flash[:notice] = "#{@invitee.name} is already participant of event or pending invitation acceptance."
 			end
 			redirect_to events_path
 		else
