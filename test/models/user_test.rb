@@ -2,6 +2,9 @@ require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
 
+	#Test data initialized in test_helper.rb#setup
+	#and truncated while teardown
+
 	test "name returns first name (and last name) if first name is set" do
 		assert_equal "Lasse Lund", @organizer.name, "Organizer's name must be Lasse Lund"
 	end
