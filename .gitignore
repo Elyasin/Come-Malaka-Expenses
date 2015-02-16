@@ -18,3 +18,6 @@
 #Ignore .env file
 .env
 
+#Ignore coverage test results
+/coverage
+
