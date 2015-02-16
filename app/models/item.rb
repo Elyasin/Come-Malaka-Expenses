@@ -22,7 +22,8 @@ class Item
   #apply exchange rate must be validated before numericality
   validate :apply_exchange_rate
   validates :name, :description, :value_date, :event, :base_currency, 
-    :foreign_currency, :payer_id, :beneficiaries, presence: true
+    :foreign_currency, :payer, :beneficiaries, presence: true
+  #validates :beneficiaries, presence: true, message: "You must choose at least one beneficiary."
   validates :foreign_amount, :exchange_rate, numericality: {greater_than: 0}
   
   

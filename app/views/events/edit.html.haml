@@ -17,13 +17,15 @@
     %br/
     = f.date_field :to_date, size: 10
     %br/
+  .field
     = f.label :event_currency
-    (To implement: changing event currency should change posted items to event's currency's rate)
     %br/
-    = f.select :event_currency, options_from_collection_for_select(Money::Currency.all, :id, :iso_code, @event.event_currency), prompt: "Select event currency"
+    - if @event.items.empty?
+      = f.select :event_currency, options_from_collection_for_select(Money::Currency.all, :id, :iso_code, @event.event_currency), prompt: "Select event currency"
+    - else
+      = f.text_field :event_currency, value: @event.event_currency.upcase, readonly: true
     %br/
     = f.label "Change the organizer"
-    (To implement: changing organizer changes authorizations for event, eventually with confirmation)
     %br/
     = f.select :organizer_id, options_from_collection_for_select(@event.users, :id, :name, @event.organizer_id)
     %br/

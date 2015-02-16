@@ -14,8 +14,13 @@ class Event
   has_many :items
   belongs_to :organizer, class_name: "User"
 
-  validates :name, :from_date, :to_date, :description, :event_currency, :organizer_id, presence: true
+  validates :name, :from_date, :to_date, :description, :event_currency, :organizer, presence: true
+  validate :event_currency_not_modified, on: :update
 
+
+  def event_currency_not_modified
+    self.errors[:event_currency] = " cannot be modified. Event contains items." if (!self.items.empty? and self.event_currency_changed?)
+  end
 
   # returns false if user already participant
   # otherwise returns true
@@ -55,11 +60,6 @@ class Event
   # balance = total amount paid by participant - total amount benefited by participant
   def balance_for participant
     total_expenses_amount_for(participant) - total_benefited_amount_for(participant)
-  end
-
-  #returns the organizer's name
-  def organizer
-    User.find(self.organizer_id).name
   end
 
 end

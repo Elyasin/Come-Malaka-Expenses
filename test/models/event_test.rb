@@ -30,6 +30,17 @@ class EventTest < ActiveSupport::TestCase
 		assert_not @event.save, "Event currency must be set"
 	end
 
+	test "event currency cannot be modified when it contains items" do
+		@event.event_currency = "USD"
+		@event.items = {}
+		assert @event.save, "Event currency cannot be modified"
+	end
+
+	test "event currency can be modified when it does not contain items" do
+		@event.event_currency = "USD"
+		assert_not @event.save, "Event currency must be modifiable"
+	end
+
 	test "do not save event without organizer" do
 		@event.organizer_id = nil
 		assert_not @event.save, "Event must have an organizer"
@@ -50,7 +61,7 @@ class EventTest < ActiveSupport::TestCase
 	end
 
 	test "organizer's name" do
-		assert_equal @organizer.name, @event.organizer, "Event must return organizer's name (or alternatively email)"
+		assert_equal @organizer.name, @event.organizer.name, "Event organizer's name must be Lasse Lund"
 	end
 
 	test "paid expense items by participants" do
