@@ -19,5 +19,5 @@
 .env
 
 #Ignore coverage test results
-/coverage
+coverage
 
