@@ -71,3 +71,9 @@ gem 'webmock', group: :test
 
 #coverage for test suites
 gem 'simplecov', "~> 0.9.0", :require => false, :group => :test
+
+#Enabling features on Heroku
+gem 'rails_12factor', group: :production
+
+#Ensuring Ruby version on Heroku
+ruby "2.2.0"
