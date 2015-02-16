@@ -1,4 +1,14 @@
 %h2 Describe the event
+%p= link_to 'Back to events page', events_path
+
+- if @event.errors.any?
+  %div#error_explanation
+    %p #{pluralize(@event.errors.count, "error")} prevented this event from being saved:
+    %ul
+    - @event.errors.full_messages.each do |msg|
+      %li= msg
+%br/
+
 = form_for(@event) do |f|
   .field
     = f.label :name

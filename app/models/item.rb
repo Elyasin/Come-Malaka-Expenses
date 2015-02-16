@@ -22,8 +22,8 @@ class Item
   #apply exchange rate must be validated before numericality
   validate :apply_exchange_rate
   validates :name, :description, :value_date, :event, :base_currency, 
-    :foreign_currency, :payer, :beneficiaries, presence: true
-  #validates :beneficiaries, presence: true, message: "You must choose at least one beneficiary."
+    :foreign_currency, :payer, presence: true
+  validates :beneficiaries, presence: { message: " can't be empty. You must choose at least one beneficiary." }
   validates :foreign_amount, :exchange_rate, numericality: {greater_than: 0}
   
   
@@ -56,16 +56,17 @@ class Item
   end
 
   def apply_exchange_rate
+    self.rate_changed = false
     if self.exchange_rate.blank? then
       self.exchange_rate = JSON.parse(open("http://devel.farebookings.com/api/curconversor/" + self.foreign_currency + "/" + self.base_currency + "/1/json").read)[self.base_currency].to_d
       self.rate_changed = true
     end
     self.base_amount = self.foreign_amount * self.exchange_rate
   rescue Timeout::Error
-    self.errors[:exchange_rate] = " cannot get exchange rate (Timed Out). If problem persists try to type a rate manually."
+    self.errors[:exchange_rate] = " cannot be retrieeved (Timed Out). If problem persists try to type a rate manually."
     self.rate_changed = false
   rescue
-    self.errors[:exchange_rate] = " cannot get exchange rate. If problem persists try to type a rate manually."
+    self.errors[:exchange_rate] = " cannot be retrieved. If problem persists try to manually type in an exchange rate."
     self.rate_changed = false
   end
 

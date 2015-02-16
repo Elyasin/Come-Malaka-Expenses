@@ -1,5 +1,14 @@
 %h2 Item details
 %p= link_to 'Back to your items', event_items_path(@item.event)
+
+- if @item.errors.any?
+  %div#error_explanation
+    %p #{pluralize(@item.errors.count, "error")} prevented this item from being saved:
+    %ul
+    - @item.errors.full_messages.each do |msg|
+      %li= msg
+%br/
+
 = form_for @item do |f|
   .field
     = f.label :name
