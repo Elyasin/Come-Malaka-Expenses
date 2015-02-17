@@ -95,7 +95,7 @@ production:
 
       # retry_interval specifies the number of seconds to wait
       # before retrying a single operation.
-      retry_interval: 1
+      #retry_interval: 1
 
       # The default timeout is 5, which is the time in seconds
       # for an operation to time out.
@@ -116,4 +116,4 @@ production:
       # pool_size default size is 5 connections.
       # If you're running a lot of threads, you may consider increasing pool_size
       # to the number of threads you're running e.g.
-      poolsize:  20#<%= ENV['NUM_THREADS'] %>
+      poolsize:  10#<%= ENV['NUM_THREADS'] %>

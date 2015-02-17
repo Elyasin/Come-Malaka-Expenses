@@ -83,3 +83,6 @@ gem 'puma'
 
 #Applying time out poclicies for Heroku
 gem "rack-timeout"
+
+#App Performance Monitoring for Heroku
+gem 'newrelic_rpm'
