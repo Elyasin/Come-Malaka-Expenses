@@ -77,3 +77,9 @@ gem 'rails_12factor', group: :production
 
 #Ensuring Ruby version on Heroku
 ruby "2.2.0"
+
+#Using Puma web server
+gem 'puma'
+
+#Applying time out poclicies for Heroku
+gem "rack-timeout"
