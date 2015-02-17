@@ -89,6 +89,12 @@ production:
      password: <%= ENV['PROD_DB'] %>
 
      options:
+       # The default consistency is :eventual, which reads from 
+       # secondaries when possible. 
+       # Strong forces reads to primary. 
+       # We recommend using strong consistency.
+       consistency: :strong
+
        # max_retries specifies the number of times to attempt
        # an operation before giving up.
        max_retries: 30
@@ -108,6 +114,10 @@ production:
        # See our example for long-running queries in the blog
        # post referenced above.
        timeout: 15
+
+       # Set this to ensure that your writes are a round-trip operation
+       # and are confirmed by the system. Default (false).
+       safe: true
 
        # refresh_interval specifies the number of seconds to cache server information.
        # Lowering this number will help the driver recover more quickly from changes to replica set reconfiguration
