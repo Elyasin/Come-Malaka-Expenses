@@ -107,7 +107,7 @@ production:
       # (over 30 seconds), it will time out.
       # See our example for long-running queries in the blog
       # post referenced above.
-      timeout: 15
+      timeout: 30
 
       # refresh_interval specifies the number of seconds to cache server information.
       # Lowering this number will help the driver recover more quickly from changes to replica set reconfiguration
