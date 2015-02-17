@@ -116,4 +116,4 @@ production:
       # pool_size default size is 5 connections.
       # If you're running a lot of threads, you may consider increasing pool_size
       # to the number of threads you're running e.g.
-      # poolsize: <%= ENV['NUM_THREADS'] %>
+      poolsize:  20#<%= ENV['NUM_THREADS'] %>
