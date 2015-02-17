@@ -84,7 +84,7 @@ production:
      # Use environment variables or a config file to keep your
      # credentials safe e.g. <%= ENV['MONGOLAB_URI'] %>.
      hosts:
-       - mongodb://staging:ComeMalaka@host:45531
+       - ds045531.mongolab.com:45531
      username: staging
      password: <%= ENV['PROD_DB'] %>
 
