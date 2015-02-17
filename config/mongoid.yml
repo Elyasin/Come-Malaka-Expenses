@@ -78,6 +78,7 @@ test:
 production:
  sessions:
    default:
+     database: heroku_app34049352
      # The standard MongoDB connection URI allows for easy
      # replica set connection setup.
      # Use environment variables or a config file to keep your
