@@ -40,7 +40,8 @@ gem 'spring',        group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-
+#Moped for Mongoid
+gem "moped", :git => 'https://github.com/mongoid/moped.git'
 #Mongoid
 gem "mongoid", "~> 4.0.0"
 
