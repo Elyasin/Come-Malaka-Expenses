@@ -1,13 +1,11 @@
 !!!
 %html
 	%head
-		%title ComeMalaka
+		%title Come Malaka!!!
 		= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
 		= javascript_include_tag 'application', 'data-turbolinks-track' => true
 		= csrf_meta_tags
 	%body
-		%p.notice= notice
-		%p.alert= alert
 		%div.user_nav
 			-if user_signed_in?
 				Signed in as #{link_to (current_user.name), edit_user_registration_path}. Not you?
@@ -15,4 +13,6 @@
 			-else
 				#{link_to "Sign up", new_user_registration_path} or
 				= link_to "Sign in", new_user_session_path
+		%p.notice= notice
+		%p.alert= alert
 		= yield

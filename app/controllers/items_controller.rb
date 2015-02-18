@@ -23,13 +23,13 @@ class ItemsController < ApplicationController
     @item.event_id = params[:event_id]
     authorize_action_for @item, @item.event
     if @item.invalid? then
-      flash[:alert] = "Currency updated to #{@item.exchange_rate}." if @item.rate_changed?
+      flash[:alert] = "Exchange rate updated to #{@item.exchange_rate}." if @item.rate_changed?
       flash[:notice] = "Item is invalid. Please correct."
       render :new and return
     end
     @item.save
-    flash[:alert] = "Currency updated to #{@item.exchange_rate}." if @item.rate_changed?
-    redirect_to event_items_path, :notice => "Item created."
+    flash[:alert] = "Exchange rate updated to #{@item.exchange_rate}." if @item.rate_changed?
+    redirect_to item_path(@item), :notice => "Item created."
   end
 
   def edit
@@ -42,13 +42,13 @@ class ItemsController < ApplicationController
     @item.update_attributes item_params
     authorize_action_for @item
     if @item.invalid? then
-      flash[:alert] = "Currency updated to #{@item.exchange_rate}." if @item.rate_changed?
+      flash[:alert] = "Exchange rate updated to #{@item.exchange_rate}." if @item.rate_changed?
       flash[:notice] = "Item is invalid. Please correct."
       render :new and return
     end
     @item.save
-    flash[:alert] = "Currency updated to #{@item.exchange_rate}." if @item.rate_changed?
-    redirect_to event_items_path(event_id: @item.event_id), :notice => "Item updated."
+    flash[:alert] = "Exchange rate updated to #{@item.exchange_rate}." if @item.rate_changed?
+    redirect_to item_path(@item), :notice => "Item updated."
   end
 
   def destroy

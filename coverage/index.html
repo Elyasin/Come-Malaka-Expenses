@@ -14,7 +14,7 @@
       <img src="./assets/0.8.0/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" style="display:none;">
-      <div class="timestamp">Generated <abbr class="timeago" title="2015-02-16T13:15:11+07:00">2015-02-16T13:15:11+07:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2015-02-18T11:54:16+07:00">2015-02-18T11:54:16+07:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
@@ -25,7 +25,7 @@
      covered at
      <span class="covered_strength">
        <span class="green">
-         125.72
+         125.78
        </span>
     </span> hits/line)
   </h2>
@@ -137,7 +137,7 @@
         <td>3</td>
         <td>3</td>
         <td>0</td>
-        <td>25.7</td>
+        <td>27.7</td>
       </tr>
       
       <tr>
@@ -207,7 +207,7 @@
         <td>37</td>
         <td>37</td>
         <td>0</td>
-        <td>38.1</td>
+        <td>38.4</td>
       </tr>
       
     </tbody>
@@ -310,7 +310,7 @@
      covered at
      <span class="covered_strength">
        <span class="green">
-         278.31
+         278.4
        </span>
     </span> hits/line)
   </h2>
@@ -372,7 +372,7 @@
         <td>37</td>
         <td>37</td>
         <td>0</td>
-        <td>38.1</td>
+        <td>38.4</td>
       </tr>
       
     </tbody>
@@ -424,7 +424,7 @@
      covered at
      <span class="covered_strength">
        <span class="green">
-         11.01
+         11.76
        </span>
     </span> hits/line)
   </h2>
@@ -456,7 +456,7 @@
         <td>3</td>
         <td>3</td>
         <td>0</td>
-        <td>25.7</td>
+        <td>27.7</td>
       </tr>
       
       <tr>
@@ -2258,7 +2258,7 @@
         <li class="covered" data-hits="2" data-linenumber="26">
           <span class="hits">2</span>
           
-          <code class="ruby">      flash[:alert] = &quot;Currency updated to #{@item.exchange_rate}.&quot; if @item.rate_changed?</code>
+          <code class="ruby">      flash[:alert] = &quot;Exchange rate updated to #{@item.exchange_rate}.&quot; if @item.rate_changed?</code>
         </li>
       
         <li class="covered" data-hits="2" data-linenumber="27">
@@ -2288,13 +2288,13 @@
         <li class="covered" data-hits="4" data-linenumber="31">
           <span class="hits">4</span>
           
-          <code class="ruby">    flash[:alert] = &quot;Currency updated to #{@item.exchange_rate}.&quot; if @item.rate_changed?</code>
+          <code class="ruby">    flash[:alert] = &quot;Exchange rate updated to #{@item.exchange_rate}.&quot; if @item.rate_changed?</code>
         </li>
       
         <li class="covered" data-hits="4" data-linenumber="32">
           <span class="hits">4</span>
           
-          <code class="ruby">    redirect_to event_items_path, :notice =&gt; &quot;Item created.&quot;</code>
+          <code class="ruby">    redirect_to item_path(@item), :notice =&gt; &quot;Item created.&quot;</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="33">
@@ -2372,7 +2372,7 @@
         <li class="covered" data-hits="3" data-linenumber="45">
           <span class="hits">3</span>
           
-          <code class="ruby">      flash[:alert] = &quot;Currency updated to #{@item.exchange_rate}.&quot; if @item.rate_changed?</code>
+          <code class="ruby">      flash[:alert] = &quot;Exchange rate updated to #{@item.exchange_rate}.&quot; if @item.rate_changed?</code>
         </li>
       
         <li class="covered" data-hits="3" data-linenumber="46">
@@ -2402,13 +2402,13 @@
         <li class="covered" data-hits="2" data-linenumber="50">
           <span class="hits">2</span>
           
-          <code class="ruby">    flash[:alert] = &quot;Currency updated to #{@item.exchange_rate}.&quot; if @item.rate_changed?</code>
+          <code class="ruby">    flash[:alert] = &quot;Exchange rate updated to #{@item.exchange_rate}.&quot; if @item.rate_changed?</code>
         </li>
       
         <li class="covered" data-hits="2" data-linenumber="51">
           <span class="hits">2</span>
           
-          <code class="ruby">    redirect_to event_items_path(event_id: @item.event_id), :notice =&gt; &quot;Item updated.&quot;</code>
+          <code class="ruby">    redirect_to item_path(@item), :notice =&gt; &quot;Item updated.&quot;</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="52">
@@ -2579,8 +2579,8 @@
           <code class="ruby">	def money_format amount, currency</code>
         </li>
       
-        <li class="covered" data-hits="75" data-linenumber="4">
-          <span class="hits">75</span>
+        <li class="covered" data-hits="81" data-linenumber="4">
+          <span class="hits">81</span>
           
           <code class="ruby">		Money.new(amount * Money::Currency.new(currency).subunit_to_unit, currency).format</code>
         </li>
@@ -3296,13 +3296,13 @@
         <li class="never" data-hits="" data-linenumber="25">
           
           
-          <code class="ruby">    :foreign_currency, :payer, :beneficiaries, presence: true</code>
+          <code class="ruby">    :foreign_currency, :payer, presence: true</code>
         </li>
       
         <li class="covered" data-hits="1" data-linenumber="26">
           <span class="hits">1</span>
           
-          <code class="ruby">  validates :beneficiaries, presence: { message: &quot;You must choose at least one beneficiary.&quot; }</code>
+          <code class="ruby">  validates :beneficiaries, presence: { message: &quot; can&#39;t be empty. You must choose at least one beneficiary.&quot; }</code>
         </li>
       
         <li class="covered" data-hits="1" data-linenumber="27">
@@ -3473,8 +3473,8 @@
           <code class="ruby">  def cost_per_beneficiary</code>
         </li>
       
-        <li class="covered" data-hits="215" data-linenumber="55">
-          <span class="hits">215</span>
+        <li class="covered" data-hits="217" data-linenumber="55">
+          <span class="hits">217</span>
           
           <code class="ruby">    self.base_amount / self.beneficiaries.count</code>
         </li>
@@ -3536,7 +3536,7 @@
         <li class="covered" data-hits="4" data-linenumber="65">
           <span class="hits">4</span>
           
-          <code class="ruby">    self.errors[:exchange_rate] = &quot; cannot get exchange rate (Timed Out). If problem persists try to type a rate manually.&quot;</code>
+          <code class="ruby">    self.errors[:exchange_rate] = &quot; cannot be retrieeved (Timed Out). If problem persists try to type a rate manually.&quot;</code>
         </li>
       
         <li class="covered" data-hits="4" data-linenumber="66">
@@ -3554,7 +3554,7 @@
         <li class="covered" data-hits="7" data-linenumber="68">
           <span class="hits">7</span>
           
-          <code class="ruby">    self.errors[:exchange_rate] = &quot; cannot get exchange rate. If problem persists try to type a rate manually.&quot;</code>
+          <code class="ruby">    self.errors[:exchange_rate] = &quot; cannot be retrieved. If problem persists try to manually type in an exchange rate.&quot;</code>
         </li>
       
         <li class="covered" data-hits="7" data-linenumber="69">
@@ -4097,8 +4097,8 @@
           <code class="ruby">  def name</code>
         </li>
       
-        <li class="covered" data-hits="226" data-linenumber="58">
-          <span class="hits">226</span>
+        <li class="covered" data-hits="238" data-linenumber="58">
+          <span class="hits">238</span>
           
           <code class="ruby">    self.first_name.blank? ? self.email : self.first_name + &quot; &quot; +self.last_name</code>
         </li>

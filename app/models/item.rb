@@ -56,7 +56,6 @@ class Item
   end
 
   def apply_exchange_rate
-    self.rate_changed = false
     if self.exchange_rate.blank? then
       self.exchange_rate = JSON.parse(open("http://devel.farebookings.com/api/curconversor/" + self.foreign_currency + "/" + self.base_currency + "/1/json").read)[self.base_currency].to_d
       self.rate_changed = true

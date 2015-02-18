@@ -104,7 +104,7 @@ class ItemsControllerTest < ActionController::TestCase
       post :create, event_id: @event.id, item: new_item
     end
     assert_response :redirect, "Response must be redirect"
-    assert_redirected_to event_items_path(event_id: @event.id), "Redirect must be event_items_path"
+    assert_redirected_to item_path(assigns(:item)), "Redirect must be event_items_path"
     assert_equal "Item created.", flash[:notice], "Flash[:notice] must state that item was created"
     assert_nil flash[:alert], "Flash[:alert] must be empty"
     assert_equal @organizer, assigns(:item).payer, "Item owner must be the payer"
@@ -125,9 +125,9 @@ class ItemsControllerTest < ActionController::TestCase
       post :create, event_id: @event.id, item: new_item
     end
     assert_response :redirect, "Response must be redirect"
-    assert_redirected_to event_items_path
+    assert_redirected_to item_path(assigns(:item))
     assert_equal "Item created.", flash[:notice], "Flash[:notice] must state that item was created"
-    assert_equal "Currency updated to #{assigns(:item).exchange_rate}.", flash[:alert]
+    assert_equal "Exchange rate updated to #{assigns(:item).exchange_rate}.", flash[:alert], "Flash[:alert] must state that exchange rate changed"
     assert_equal @organizer, assigns(:item).payer, "Item owner must be the payer"
     assigns(:item).event.users.each do |participant|
       assert participant.has_role?(:event_participant, assigns(:item)), "Event participants must have event participant role for items"
@@ -178,7 +178,7 @@ class ItemsControllerTest < ActionController::TestCase
       post :create, event_id: @event.id, item: new_item
     end
     assert_response :redirect, "Response must be redirect"
-    assert_redirected_to event_items_path(event_id: @event.id), "Redirect must be event_items_path"
+    assert_redirected_to item_path(assigns(:item)), "Redirect must be event_items_path"
     assert_equal "Item created.", flash[:notice], "Flash[:notice] must state that item was created"
     assert_nil flash[:alert], "Flash[:alert] must be empty"
     assert_equal @user1, assigns(:item).payer, "Item owner must be the payer"
@@ -199,9 +199,9 @@ class ItemsControllerTest < ActionController::TestCase
       post :create, event_id: @event.id, item: new_item
     end
     assert_response :redirect, "Response must be redirect"
-    assert_redirected_to event_items_path
+    assert_redirected_to item_path(assigns(:item))
     assert_equal "Item created.", flash[:notice], "Flash[:notice] must state that item was created"
-    assert_equal "Currency updated to #{assigns(:item).exchange_rate}.", flash[:alert]
+    assert_equal "Exchange rate updated to #{assigns(:item).exchange_rate}.", flash[:alert], "Flash[:alert] must state that exchange rate changed"
     assert_equal @user1, assigns(:item).payer, "Item owner must be the payer"
     assigns(:item).event.users.each do |participant|
       assert participant.has_role?(:event_participant, assigns(:item)), "Event participants must have event participant role for items"
@@ -250,7 +250,7 @@ class ItemsControllerTest < ActionController::TestCase
     end
     assert_equal 0.1*assigns(:item).foreign_amount, assigns(:item).base_amount
     assert_response :redirect, "Response must be redirect"
-    assert_redirected_to event_items_path(event_id: assigns(:item).event_id)
+    assert_redirected_to item_path(assigns(:item))
     assert_equal "Item updated.", flash[:notice], "Flash[:notice] state that item was updated"
     assert_nil flash[:alert], "Flash[:alert] must be empty"
     assigns(:item).event.users.each do |participant|
@@ -271,8 +271,8 @@ class ItemsControllerTest < ActionController::TestCase
     end
     assert_equal 0.1*assigns(:item).foreign_amount, assigns(:item).base_amount
     assert_response :redirect, "Response must be redirect"
-    assert_redirected_to event_items_path(event_id: assigns(:item).event_id)
-    assert_equal "Currency updated to #{assigns(:item).exchange_rate}.", flash[:alert]
+    assert_redirected_to item_path(assigns(:item))
+    assert_equal "Exchange rate updated to #{assigns(:item).exchange_rate}.", flash[:alert], "Flash[:alert] must state that exchange rate changed"
     assert_equal "Item updated.", flash[:notice], "Flash[:notice] state that item was updated"
     assigns(:item).event.users.each do |participant|
       participant.has_role? :event_participant, assigns(:item)

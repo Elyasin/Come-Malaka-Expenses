@@ -33,11 +33,12 @@
     - if @event.items.empty?
       = f.select :event_currency, options_from_collection_for_select(Money::Currency.all, :id, :iso_code, @event.event_currency), prompt: "Select event currency"
     - else
-      = f.text_field :event_currency, value: @event.event_currency.upcase, readonly: true
+      = f.text_field :event_currency, value: @event.event_currency.upcase, disabled: true
     %br/
     = f.label "Change the organizer"
     %br/
     = f.select :organizer_id, options_from_collection_for_select(@event.users, :id, :name, @event.organizer_id)
+    %br/
     %br/
   .actions
     = f.submit "Save event"
