@@ -14,11 +14,7 @@ ToDos:
 
 	- DRY out the code: partials, view helpers, etc.
 
-	- Tests:
-
-		- Controller: Test views
-
-		- Integration Testing
+	- Tests: Views (functional), Integration Tests
 
 	- Soft delete a user
 
