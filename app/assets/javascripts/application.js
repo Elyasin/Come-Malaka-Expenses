@@ -20,4 +20,17 @@ $(document).on("page:load ready", function(){
 	if ( $('[type="date"]').prop('type') != 'date' ) {
     $('input[type="date"]').datepicker({dateFormat: "yy-mm-dd"});
 	}
+
+	$('#item_exchange_rate').keyup(function () {
+		if ( $('#item_foreign_amount').val().length != 0 ) {
+			$('#item_base_amount').val( this.value * $('#item_foreign_amount').val() );
+		}
+	});
+
+	$('#item_foreign_amount').keyup(function () {
+		if ( $('#item_exchange_rate').val().length != 0 ) {
+			$('#item_base_amount').val( this.value * $('#item_exchange_rate').val() );
+		}
+	});
+
 });
