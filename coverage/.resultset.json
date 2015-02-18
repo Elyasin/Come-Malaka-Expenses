@@ -353,6 +353,45 @@
         null,
         null
       ],
+      "/home/elyasin/ComeMalaka/app/controllers/home_controller.rb": [
+        1,
+        null,
+        1,
+        2,
+        null,
+        null,
+        null
+      ],
+      "/home/elyasin/ComeMalaka/app/controllers/application_controller.rb": [
+        1,
+        null,
+        null,
+        1,
+        null,
+        1,
+        2,
+        null,
+        null,
+        1,
+        1,
+        null,
+        null,
+        1,
+        1,
+        null,
+        null,
+        1,
+        null,
+        1,
+        null,
+        1,
+        4,
+        4,
+        4,
+        null,
+        null,
+        null
+      ],
       "/home/elyasin/ComeMalaka/app/controllers/items_controller.rb": [
         1,
         null,
@@ -424,36 +463,6 @@
         1,
         14,
         null,
-        null,
-        null,
-        null
-      ],
-      "/home/elyasin/ComeMalaka/app/controllers/application_controller.rb": [
-        1,
-        null,
-        null,
-        1,
-        null,
-        1,
-        2,
-        null,
-        null,
-        1,
-        1,
-        null,
-        null,
-        1,
-        1,
-        null,
-        null,
-        1,
-        null,
-        1,
-        null,
-        1,
-        4,
-        4,
-        4,
         null,
         null,
         null
@@ -551,15 +560,6 @@
         null,
         null
       ],
-      "/home/elyasin/ComeMalaka/app/controllers/home_controller.rb": [
-        1,
-        null,
-        1,
-        2,
-        null,
-        null,
-        null
-      ],
       "/home/elyasin/ComeMalaka/app/controllers/event_invitations_controller.rb": [
         1,
         null,
@@ -588,7 +588,7 @@
         null
       ]
     },
-    "timestamp": 1424235256
+    "timestamp": 1424243887
   },
   "Unit Tests": {
     "coverage": {

@@ -18,3 +18,9 @@
   background-color: red;
   display: inline;
 }
+
+.beta_testing {
+  position:absolute;
+  top:0;
+  right:0;
+}
