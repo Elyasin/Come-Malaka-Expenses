@@ -7,21 +7,20 @@ ToDos:
 	- Web Design/Sitemap (Bootstrap? Foundation?)
 
 	- Improve date field usability
-	
+
 	- Implement auto-complete when inviting user/participant
-	
+
 	- Implement JavaScript to update base amount/currency for item
-	
+
 	- DRY out the code: partials, view helpers, etc.
-	
+
 	- Tests:
-	
+
 		- Controller: Test views
-	
+
 		- Integration Testing
-	
+
 	- Soft delete a user
 
 
 * Ruby version: 2.2.0 (contains a bug with BigDecimal, be wary)
-
