@@ -16,8 +16,14 @@ class EventTest < ActiveSupport::TestCase
 	end
 
 	test "do not save event without To Date" do
-		@event.to_date = nil
+		@event.end_date = nil
 		assert_not @event.save, "Event must have an end date"
+	end
+
+	test "do not save event with To Date before From Date" do
+		@event.end_date = (Date.current - 100)
+		@event.from_date = Date.current
+		assert_not @event.save, "From Date must be before To Date"
 	end
 
 	test "do not save event without description" do

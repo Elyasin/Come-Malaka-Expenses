@@ -64,6 +64,9 @@ class Item
   rescue Timeout::Error
     self.errors[:exchange_rate] = " cannot be retrieeved (Timed Out). If problem persists try to type a rate manually."
     self.rate_changed = false
+  rescue Rack::Timeout::RequestTimeoutError
+    self.errors[:exchange_rate] = " cannot be retrieeved (Timed Out). If problem persists try to type a rate manually."
+    self.rate_changed = false
   rescue
     self.errors[:exchange_rate] = " cannot be retrieved. If problem persists try to manually type in an exchange rate."
     self.rate_changed = false

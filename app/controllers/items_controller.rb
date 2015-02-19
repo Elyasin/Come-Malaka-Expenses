@@ -44,7 +44,7 @@ class ItemsController < ApplicationController
     if @item.invalid? then
       flash[:alert] = "Exchange rate updated to #{@item.exchange_rate}." if @item.rate_changed?
       flash[:notice] = "Item is invalid. Please correct."
-      render :new and return
+      render :edit and return
     end
     @item.save
     flash[:alert] = "Exchange rate updated to #{@item.exchange_rate}." if @item.rate_changed?

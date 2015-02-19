@@ -25,3 +25,12 @@
   top:0;
   right:0;
 }
+
+p.notice {
+	font-weight: bold;
+}
+
+p.alert {
+	color: red;
+	font-weight: bold;
+}

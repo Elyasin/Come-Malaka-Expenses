@@ -17,9 +17,32 @@
 //= require_tree .
 
 $(document).on("page:load ready", function(){
+
 	if ( $('[type="date"]').prop('type') != 'date' ) {
     $('input[type="date"]').datepicker({dateFormat: "yy-mm-dd"});
 	}
+
+	$('#event_from_date').change(function() {
+		if ($('#event_end_date').val().length != 0 && $('#event_from_date').val().length != 0)  {
+			if ($('#event_end_date').val() <= $('#event_from_date').val()) {
+				$('#event_from_date').val("");
+				$('p.alert').text("From Date must be before End Date.");
+			} else {
+				$('p.alert').text("");
+			}
+		}
+	});
+
+	$('#event_end_date').change(function() {
+		if ($('#event_end_date').val().length != 0 && $('#event_from_date').val().length != 0)  {
+			if ($('#event_end_date').val() <= $('#event_from_date').val()) {
+				$('#event_end_date').val("");
+				$('p.alert').text("From Date must be before End Date.");
+			} else {
+				$('p.alert').text("");
+			}
+		}
+	});
 
 	$('#item_exchange_rate').keyup(function () {
 		if ( $('#item_foreign_amount').val().length != 0 ) {

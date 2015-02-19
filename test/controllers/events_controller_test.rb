@@ -112,7 +112,7 @@ class EventsControllerTest < ActionController::TestCase
   end
 
   test "user can create valid event and becomes participant" do
-  	test_event = {name: "Test event", from_date: Date.today, to_date: Date.today+3, description: "Test description", 
+  	test_event = {name: "Test event", from_date: Date.current, end_date: Date.current+3, description: "Test description", 
   		event_currency: "EUR", organizer_id: @non_participant_user.id}
   	assert_difference('Event.count', 1, "Event must be created") do
   		post :create, event: test_event
@@ -155,7 +155,7 @@ class EventsControllerTest < ActionController::TestCase
   test "organizer can update event" do
   	sign_in @organizer
    	test_event = {name: "Randers", from_date: Date.new(2012, 11, 2), 
-			to_date: Date.new(2012, 11, 4), description: "Come Malaka event in a different country", 
+			end_date: Date.new(2012, 11, 4), description: "Come Malaka event in a different country", 
 			event_currency: "EUR", organizer_id: @organizer.id}
   	put :update, id: @event.id, event: test_event
   	assert_response :redirect, "Response must be redirect"
@@ -175,7 +175,7 @@ class EventsControllerTest < ActionController::TestCase
   test "participant cannot update event" do
   	sign_in @user1
     test_event = {name: "Randers", from_date: Date.new(2012, 11, 2), 
-			to_date: Date.new(2012, 11, 4), description: "Come Malaka event in a different country", 
+			end_date: Date.new(2012, 11, 4), description: "Come Malaka event in a different country", 
 			event_currency: "EUR", organizer_id: @organizer.id}
   	put :update, id: @event.id, event: test_event
   	assert_response :forbidden, "Response must be forbidden"
@@ -183,7 +183,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "non participant cannot update event" do
     test_event = {name: "Randers", from_date: Date.new(2012, 11, 2), 
-			to_date: Date.new(2012, 11, 4), description: "Come Malaka event in a different country", 
+			end_date: Date.new(2012, 11, 4), description: "Come Malaka event in a different country", 
 			event_currency: "EUR", organizer_id: @organizer.id}
   	put :update, id: @event.id, event: test_event
   	assert_response :forbidden, "Response must be forbidden"

@@ -13,7 +13,7 @@ class EventsController < ApplicationController
 
 
   def new																			
-  	@event = Event.new(from_date: Date.today, to_date: Date.today+3.days, organizer_id: current_user.id)
+  	@event = Event.new(from_date: Date.current, end_date: Date.current+3.days, organizer_id: current_user.id)
     authorize_action_for @event
   end
 
@@ -85,7 +85,7 @@ class EventsController < ApplicationController
   private
 
   def event_params
-  	params.require(:event).permit(:name, :from_date, :to_date, :description, :organizer_id, :event_currency, :user_ids => [], :users => [])
+  	params.require(:event).permit(:name, :from_date, :end_date, :description, :organizer_id, :event_currency, :user_ids => [], :users => [])
   end
 
 end

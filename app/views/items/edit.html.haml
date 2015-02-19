@@ -29,17 +29,19 @@
     =f.label :base_amount
     %br/
     = f.number_field :base_amount, value: @item.base_amount, min: 0, step: :any, readonly: true
+    %small = "Exchange rate" * "Foreign currency"
     %br/
   .field
     = f.label :base_currency
     %br/
     = f.text_field :base_currency, value: @item.event.event_currency.upcase, readonly: true
+    %small This is the event currency
     %br/
   .field
     = f.label :exchange_rate
     %br/
     = f.number_field :exchange_rate, step: :any
-    %small (Leave blank to fetch currency automatically)
+    %small Leave blank to fetch currency automatically
     %br/
   .field
     = f.label :foreign_amount

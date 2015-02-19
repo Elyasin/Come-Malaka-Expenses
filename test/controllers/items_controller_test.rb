@@ -290,7 +290,7 @@ class ItemsControllerTest < ActionController::TestCase
         put :update, id: @item3.id, item: new_item
       end
       assert_response :success, "Response must be success"
-      assert_template :new, "New page must be rendered"
+      assert_template :edit, "New page must be rendered"
       assert_equal "Item is invalid. Please correct.", flash[:notice], "Flash[:notice] state that item is invalid"
       assert_nil flash[:alert], "Flash[:alert] must be empty"
       assert_not_empty assigns(:item).errors, "Item errors must not be empty"
@@ -307,7 +307,7 @@ class ItemsControllerTest < ActionController::TestCase
       put :update, id: @item3.id, item: new_item
     end
     assert_response :success, "Response must be success"
-    assert_template :new, "New page must be rendered"
+    assert_template :edit, "New page must be rendered"
     assert_equal "Item is invalid. Please correct.", flash[:notice], "Flash[:notice] state that item is invalid"
     assert_nil flash[:alert], "Flash[:alert] must be empty"
     assert_not_empty assigns(:item).errors, "Item errors must not be empty"
@@ -324,7 +324,24 @@ class ItemsControllerTest < ActionController::TestCase
       put :update, id: @item3.id, item: new_item
     end
     assert_response :success, "Response must be success"
-    assert_template :new, "New page must be rendered"
+    assert_template :edit, "New page must be rendered"
+    assert_equal "Item is invalid. Please correct.", flash[:notice], "Flash[:notice] state that item is invalid"
+    assert_nil flash[:alert], "Flash[:alert] must be empty"
+    assert_not_empty assigns(:item).errors, "Item errors must not be empty"
+  end
+
+  test "organizer cannot update invalid item (special case: automatic exchange rate update fails due to Rack time out)" do
+    sign_in @organizer
+    new_item = { name: "New item", value_date: @event.from_date, description: "New description", 
+      base_amount: 10, base_currency: "EUR", exchange_rate: "",  
+      foreign_amount: 10, foreign_currency: "EUR", payer_id: @organizer.id, 
+      beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
+    stub_request(:get, "http://devel.farebookings.com/api/curconversor/EUR/EUR/1/json").to_raise(Rack::Timeout::RequestTimeoutError)
+    assert_no_difference('Item.count') do
+      put :update, id: @item3.id, item: new_item
+    end
+    assert_response :success, "Response must be success"
+    assert_template :edit, "New page must be rendered"
     assert_equal "Item is invalid. Please correct.", flash[:notice], "Flash[:notice] state that item is invalid"
     assert_nil flash[:alert], "Flash[:alert] must be empty"
     assert_not_empty assigns(:item).errors, "Item errors must not be empty"

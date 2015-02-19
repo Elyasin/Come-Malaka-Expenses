@@ -7,16 +7,25 @@ class Event
 
   field :name, type: String
   field :from_date, type: Date
-  field :to_date, type: Date
+  field :end_date, type: Date
   field :description, type: String
   field :event_currency, type: String
   has_and_belongs_to_many :users, inverse_of: nil
   has_many :items
   belongs_to :organizer, class_name: "User"
 
-  validates :name, :from_date, :to_date, :description, :event_currency, :organizer, presence: true
+  validates :name, :description, :event_currency, :organizer, presence: true
   validate :event_currency_not_modified, on: :update
+  validate :event_dates
 
+
+  def event_dates
+    self.errors[:from_date] = " must not be blank" if self.from_date.blank?
+    self.errors[:end_date] = " must not be blank" if self.end_date.blank?
+    if !(self.from_date.blank? or self.end_date.blank?) then
+      self.errors[:base] = "'From date' must be before 'To Date'" unless (self.from_date <= self.end_date)
+    end
+  end
 
   def event_currency_not_modified
     self.errors[:event_currency] = " cannot be modified. Event contains items." if (!self.items.empty? and self.event_currency_changed?)
