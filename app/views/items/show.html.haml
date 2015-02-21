@@ -7,18 +7,15 @@ Value Date: #{@item.value_date.strftime('%d %b %Y')}
 %br/
 Description: #{@item.description}
 %br/
-%br/
 Base amount: #{money_format(@item.base_amount, @item.base_currency)}
 %br/
 Base currency: #{@item.base_currency}
 %small (This is the event currency)
 %br/
-%br/
 Foreign amount: #{money_format(@item.foreign_amount, @item.foreign_currency)}
 %br/
 Foreign currency: #{@item.foreign_currency}
 %small (This is the item's currency)
-%br/
 %br/
 Beneficiaries: #{@item.beneficiaries.map { |b| b.name }.join(", ") }
 %br/

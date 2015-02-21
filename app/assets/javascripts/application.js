@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require foundation
 //= require jquery-ui/datepicker
 //= require turbolinks
 //= require_tree .
@@ -34,9 +35,9 @@ $(document).on("page:load ready", function(){
 	});
 
 	$('#event_end_date').change(function() {
-		if ($('#event_end_date').val().length != 0 && $('#event_from_date').val().length != 0)  {
-			if ($('#event_end_date').val() <= $('#event_from_date').val()) {
-				$('#event_end_date').val("");
+		if (this.val().length != 0 && $('#event_from_date').val().length != 0)  {
+			if (this.val() <= $('#event_from_date').val()) {
+				this.value = "";
 				$('p.alert').text("From Date must be before End Date.");
 			} else {
 				$('p.alert').text("");
@@ -57,3 +58,5 @@ $(document).on("page:load ready", function(){
 	});
 
 });
+
+$(function(){ $(document).foundation(); });

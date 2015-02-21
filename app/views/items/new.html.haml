@@ -7,57 +7,39 @@
     %ul
     - @item.errors.full_messages.each do |msg|
       %li= msg
-%br/
 
 = form_for @item, url: event_items_path(@item.event) do |f|
   .field
     = f.label :name
-    %br/
     = f.text_field :name
   .field
     = f.label :description
-    %br/
     = f.text_field :description
   .field
     = f.label :value_date
-    %br/
     = f.date_field :value_date, size: 10
   .field
     = f.hidden_field :payer_id
-    %br/
   .field
     =f.label :base_amount
     %small = "Exchange rate" * "Foreign currency"
-    %br/
     = f.number_field :base_amount, min: 0, step: :any, readonly: true
-    %br/
   .field
     = f.label :base_currency
-    %br/
     = f.text_field :base_currency, value: @item.event.event_currency.upcase, readonly: true
     %small This is the event currency
-    %br/
   .field
     = f.label :exchange_rate
-    %br/
     = f.number_field :exchange_rate, step: :any
     %small Leave blank to fetch currency automatically
-    %br/
   .field
     = f.label :foreign_amount
-    %br/
     = f.number_field :foreign_amount, min: 0, step: :any
-    %br/
   .field
     = f.label :foreign_currency
-    %br/
     = f.select :foreign_currency, options_from_collection_for_select(Money::Currency.all, :iso_code, :iso_code, select_currency(@item, @item.event)), prompt: "Select foreign currency"
-    %br/
-    %br/
+  .field
     = f.label :beneficiaries
-    %br/
     = f.collection_check_boxes(:beneficiary_ids, @item.event.users, :id, :name)
-    %br/
-    %br/
   .actions
     = f.submit "Post item"

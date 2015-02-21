@@ -1,7 +1,5 @@
 %h2 Expense Report
-
-%br/
-
+%p= link_to 'Back to event', events_path
 %table
   %caption Expense Report* (base currency is #{@event.event_currency.upcase})
   %thead
@@ -17,9 +15,5 @@
         %td= money_format(@event.total_expenses_amount_for(participant), @event.event_currency)
         %td= money_format(@event.total_benefited_amount_for(participant), @event.event_currency)
         %td= money_format(@event.balance_for(participant), @event.event_currency)
-        
-%br/
+
 %small *Amounts are rounded for display
-%br/
-%br/
-=link_to 'Go to events page', events_path

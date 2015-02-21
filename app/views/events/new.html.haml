@@ -7,31 +7,24 @@
     %ul
     - @event.errors.full_messages.each do |msg|
       %li= msg
-%br/
 
 = form_for(@event) do |f|
   .field
     = f.label :name
-    %br/
     = f.text_field :name
   .field
     = f.label :description
-    %br/
     = f.text_field :description
   .field
     = f.label :from_date
-    %br/
     = f.date_field :from_date, size: 10
   .field
     = f.label :end_date
-    %br/
     = f.date_field :end_date, size: 10
-    %br/
+  .field
     = f.label :event_currency
-    %br/
     = f.select :event_currency, options_from_collection_for_select(Money::Currency.all, :id, :iso_code), prompt: "Select event currency"
-    %br/
+  .field
     = f.hidden_field :organizer_id
-    %br/
-    .actions
+  .actions
     = f.submit "Create event"

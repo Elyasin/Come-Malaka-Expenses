@@ -8,11 +8,11 @@ gem 'dotenv-rails', :groups => [:development, :test]
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.3'
+gem 'sass-rails'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer',  platforms: :ruby
 
@@ -85,6 +85,9 @@ gem 'puma'
 
 #Applying time out poclicies for Heroku
 gem "rack-timeout"
+
+#Foundation for Rails apps
+gem 'foundation-rails'
 
 #App Performance Monitoring for Heroku
 gem 'newrelic_rpm'
