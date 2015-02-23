@@ -1,5 +1,9 @@
-{<img src="https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses/badges/gpa.svg" />}[https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses] {<img src="https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses/badges/coverage.svg" />}[https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses]
- {<img src="https://travis-ci.org/Elyasin/Come-Malaka-Expenses.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/Elyasin/Come-Malaka-Expenses]
+{<img src="https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses/badges/gpa.svg" />}[https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses]
+
+{<img src="https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses/badges/coverage.svg" />}[https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses]
+
+{<img src="https://travis-ci.org/Elyasin/Come-Malaka-Expenses.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/Elyasin/Come-Malaka-Expenses]
+
 
 == README
 
