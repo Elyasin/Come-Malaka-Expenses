@@ -1,3 +1,7 @@
+{<img src="https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses/badges/gpa.svg" />}[https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses]
+{<img src="https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses/badges/coverage.svg" />}[https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses]
+
+
 == README
 
 This app is still in beta. Feel free to feed back or to join.
