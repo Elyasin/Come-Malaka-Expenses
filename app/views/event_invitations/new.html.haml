@@ -1,19 +1,21 @@
 %h2= t "devise.invitations.new.header"
-= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => {:method => :post} do |f|
+%p= link_to "Back to event", events_path
+= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :post, 'data-abide': true } do |f|
   = devise_error_messages!
-  - resource.class.invite_key_fields.each do |field|
+  %fieldset
+    %legend Invite a user
+    - resource.class.invite_key_fields.each do |field|
+      .field
+        = f.label field
+        = f.text_field field, placeholder: field, required: true, pattern: :email
+        %small.error #{field.capitalize} is required. Make sure you type in a valid email.
     .field
-      = f.label field
-      = f.text_field field
-  .field
-    = f.label :first_name
-    = f.text_field :first_name
-    %small Leave blank if not known
-  .field
-    = f.label :last_name
-    = f.text_field :last_name
-    %small Leave blank if not known
-  .field
-    = f.hidden_field :event_id
+      = f.label :first_name, "First name <small>Leave blank if not known</small>".html_safe
+      = f.text_field :first_name, placeholder: "First name"
+    .field
+      = f.label :last_name, "Last name <small>Leave blank if not known</small>".html_safe
+      = f.text_field :last_name, placeholder: "Last name"
+    .field
+      = f.hidden_field :event_id
   .actions
     = f.submit t("devise.invitations.new.submit_button")

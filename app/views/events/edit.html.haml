@@ -8,27 +8,33 @@
     - @event.errors.full_messages.each do |msg|
       %li= msg
 
-= form_for(@event) do |f|
-  .field
-    = f.label :name
-    = f.text_field :name
-  .field
-    = f.label :description
-    = f.text_field :description
-  .field
-    = f.label :from_date
-    = f.date_field :from_date, size: 10, class: :datepicker
-  .field
-    = f.label :end_date
-    = f.date_field :end_date, size: 10, class: :datepicker
-  .field
-    = f.label :event_currency
-    - if @event.items.empty?
-      = f.select :event_currency, options_from_collection_for_select(Money::Currency.all, :id, :iso_code, @event.event_currency), prompt: "Select event currency"
-    - else
-      = f.text_field :event_currency, value: @event.event_currency.upcase, disabled: true
-  .field
-    = f.label "Change the organizer"
-    = f.select :organizer_id, options_from_collection_for_select(@event.users, :id, :name, @event.organizer_id)
+= form_for @event, html: { 'data-abide': true } do |f|
+  %fieldset
+    %legend Edit event
+    .field
+      = f.label :name
+      = f.text_field :name, required: true
+      %small.error Please name the event.
+    .field
+      = f.label :description
+      = f.text_field :description, required: true
+      %small.error Please describe the event.
+    .field
+      = f.label :from_date
+      = f.date_field :from_date, required: true, size: 10
+      %small.error Please choose a start date for the event.
+    .field
+      = f.label :end_date
+      = f.date_field :end_date, required: true, size: 10
+      %small.error Please choose an end date for the event.
+    .field
+      = f.label :event_currency
+      - if @event.items.empty?
+        = f.select :event_currency, options_from_collection_for_select(Money::Currency.all, :id, :iso_code, @event.event_currency), prompt: "Select event currency"
+      - else
+        = f.text_field :event_currency, value: @event.event_currency.upcase, disabled: true
+    .field
+      = f.label "Change the organizer"
+      = f.select :organizer_id, options_from_collection_for_select(@event.users, :id, :name, @event.organizer_id)
   .actions
     = f.submit "Save event"

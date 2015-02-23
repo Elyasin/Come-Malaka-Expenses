@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 #Store config in .env file using env vars
 gem 'dotenv-rails', :groups => [:development, :test]
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails'
 # Use SCSS for stylesheets
@@ -90,4 +89,7 @@ gem "rack-timeout"
 gem 'foundation-rails'
 
 #App Performance Monitoring for Heroku
-gem 'newrelic_rpm'
+gem 'newrelic_rpm', group: :production
+
+#Connect Travis CI with CodeClimate
+gem "codeclimate-test-reporter", group: :test, require: nil

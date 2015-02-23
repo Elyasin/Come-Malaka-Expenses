@@ -18,6 +18,12 @@
 			-else
 				#{link_to "Sign up", new_user_registration_path} or
 				= link_to "Sign in", new_user_session_path
-		%p.notice= notice
-		%p.alert= alert
+		- if !notice.blank?
+			.alert-box.warning.radius{"data-alert" => ""}
+				= notice
+				%a.close{:href => "#"} &times;
+		- if !alert.blank?
+			.alert-box.alert.radius{"data-alert" => ""}
+				= alert
+				%a.close{:href => "#"} &times;
 		= yield

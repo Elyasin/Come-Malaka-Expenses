@@ -1,13 +1,13 @@
 %h2 Log in
-= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+= form_for(resource, as: resource_name, url: session_path(resource_name), html: { 'data-abide': true }) do |f|
   .field
     = f.label :email
-    %br/
-    = f.email_field :email, autofocus: true
+    = f.email_field :email, autofocus: true, required: true
+    %small.error Email is required for login.
   .field
     = f.label :password
-    %br/
-    = f.password_field :password, autocomplete: "off"
+    = f.password_field :password, autocomplete: "off", required: true
+    %small.error Password is required for login.
   - if devise_mapping.rememberable?
     .field
       = f.check_box :remember_me

@@ -1,7 +1,13 @@
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
 require 'simplecov'
 SimpleCov.start 'rails' do
 	add_group 'Views', 'app/views'
 	add_group 'Authorizers', 'app/authorizers'
+  formatter SimpleCov::Formatter::MultiFormatter[
+    SimpleCov::Formatter::HTMLFormatter,
+    CodeClimate::TestReporter::Formatter
+  ]
 end
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
@@ -10,6 +16,9 @@ require 'minitest/autorun'
 require 'database_cleaner'
 
 DatabaseCleaner[:mongoid].strategy = :truncation
+
+#CodeClimate reporting must not be blocked by WebMock
+WebMock.disable_net_connect!(:allow => "codeclimate.com")
 
 class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...

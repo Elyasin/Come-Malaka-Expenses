@@ -12,6 +12,8 @@ Base amount: #{money_format(@item.base_amount, @item.base_currency)}
 Base currency: #{@item.base_currency}
 %small (This is the event currency)
 %br/
+Exchange rate: #{@item.exchange_rate}
+%br/
 Foreign amount: #{money_format(@item.foreign_amount, @item.foreign_currency)}
 %br/
 Foreign currency: #{@item.foreign_currency}

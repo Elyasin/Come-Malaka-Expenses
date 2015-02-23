@@ -60,3 +60,13 @@ $(document).on("page:load ready", function(){
 });
 
 $(function(){ $(document).foundation(); });
+
+   $(function(){
+      $(document).foundation({
+        abide: {
+          patterns: {
+            password: /^(.){8,}$/
+            }
+          }
+        });
+    });
