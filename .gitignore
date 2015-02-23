@@ -20,6 +20,3 @@
 
 #Ignore coverage test results
 coverage
-
-#Ignore Travis CI
-.travis.yml
