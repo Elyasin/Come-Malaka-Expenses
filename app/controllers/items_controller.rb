@@ -22,11 +22,7 @@ class ItemsController < ApplicationController
     @item = Item.new(item_params)
     @item.event_id = params[:event_id]
     authorize_action_for @item, @item.event
-    if @item.invalid? then
-      flash[:alert] = "Exchange rate updated to #{@item.exchange_rate}." if @item.rate_changed?
-      flash[:notice] = "Item is invalid. Please correct."
-      render :new and return
-    end
+    (render :new and return) if invalid? @item
     @item.save
     flash[:alert] = "Exchange rate updated to #{@item.exchange_rate}." if @item.rate_changed?
     redirect_to item_path(@item), :notice => "Item created."
@@ -41,11 +37,7 @@ class ItemsController < ApplicationController
     @item = Item.find params[:id]
     @item.update_attributes item_params
     authorize_action_for @item
-    if @item.invalid? then
-      flash[:alert] = "Exchange rate updated to #{@item.exchange_rate}." if @item.rate_changed?
-      flash[:notice] = "Item is invalid. Please correct."
-      render :edit and return
-    end
+    (render :edit and return) if invalid? @item
     @item.save
     flash[:alert] = "Exchange rate updated to #{@item.exchange_rate}." if @item.rate_changed?
     redirect_to item_path(@item), :notice => "Item updated."
@@ -64,6 +56,15 @@ class ItemsController < ApplicationController
   end
 
   private
+
+  def invalid? item
+    ret = item.invalid?
+    if ret then
+      flash[:alert] = "Exchange rate updated to #{@item.exchange_rate}." if item.rate_changed?
+      flash[:notice] = "Item is invalid. Please correct."
+    end
+    return ret
+  end
 
   def item_params
     params.require(:item).permit(:name, :value_date, :description, :payer_id, :exchange_rate, 

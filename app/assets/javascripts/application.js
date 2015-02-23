@@ -19,12 +19,12 @@
 
 $(document).on("page:load ready", function(){
 
-	if ( $('[type="date"]').prop('type') != 'date' ) {
+	if ( $('[type="date"]').prop('type') !== 'date' ) {
     $('input[type="date"]').datepicker({dateFormat: "yy-mm-dd"});
 	}
 
 	$('#event_from_date').change(function() {
-		if ($('#event_end_date').val().length != 0 && $('#event_from_date').val().length != 0)  {
+		if ($('#event_end_date').val().length !== 0 && $('#event_from_date').val().length !== 0)  {
 			if ($('#event_end_date').val() <= $('#event_from_date').val()) {
 				$('#event_from_date').val("");
 				$('p.alert').text("From Date must be before End Date.");
@@ -35,7 +35,7 @@ $(document).on("page:load ready", function(){
 	});
 
 	$('#event_end_date').change(function() {
-		if (this.val().length != 0 && $('#event_from_date').val().length != 0)  {
+		if (this.val().length !== 0 && $('#event_from_date').val().length !== 0)  {
 			if (this.val() <= $('#event_from_date').val()) {
 				this.value = "";
 				$('p.alert').text("From Date must be before End Date.");
@@ -46,13 +46,13 @@ $(document).on("page:load ready", function(){
 	});
 
 	$('#item_exchange_rate').keyup(function () {
-		if ( $('#item_foreign_amount').val().length != 0 ) {
+		if ( $('#item_foreign_amount').val().length !== 0 ) {
 			$('#item_base_amount').val( this.value * $('#item_foreign_amount').val() );
 		}
 	});
 
 	$('#item_foreign_amount').keyup(function () {
-		if ( $('#item_exchange_rate').val().length != 0 ) {
+		if ( $('#item_exchange_rate').val().length !== 0 ) {
 			$('#item_base_amount').val( this.value * $('#item_exchange_rate').val() );
 		}
 	});

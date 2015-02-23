@@ -8,7 +8,7 @@
     - @event.errors.full_messages.each do |msg|
       %li= msg
 
-= form_for @event, html: { 'data-abide': true , class: :custom} do |f|
+= form_for @event, html: { 'data-abide': true } do |f|
   %fieldset
     %legend Create new event
     .field
