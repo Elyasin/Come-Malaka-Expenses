@@ -14,7 +14,7 @@ ToDos:
 
 	- DRY out the code: partials, view helpers, JavaScript, etc.
 
-	- Tests: Views (functional), Integration Tests
+	- Tests: Views (functional), Integration Tests, Coverage (Ruby, JavaScript, etc.)
 
 	- Soft delete a user
 
