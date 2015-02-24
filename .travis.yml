@@ -9,3 +9,6 @@ deploy:
   app: come-malaka-expenses
   on:
     repo: Elyasin/Come-Malaka-Expenses
+before_script:
+  - sleep 15
+  - mongo come_malaka_test --eval 'db.createUser( { user: "tester",pwd: "tester",roles: [ { role: "readWrite", db: "come_malaka_test" } ] } );'
