@@ -31,6 +31,9 @@ class Item
 
   after_destroy :revoke_roles
 
+  attr_accessor :rate_changed
+  alias_method :rate_changed?, :rate_changed
+
   def initialize_roles
     self.event.users.each do |participant|
       initialize_role_for participant
@@ -56,23 +59,18 @@ class Item
   end
 
   def apply_exchange_rate
-    if self.exchange_rate.blank? then
-      self.exchange_rate = JSON.parse(open("http://devel.farebookings.com/api/curconversor/" + self.foreign_currency + "/" + self.base_currency + "/1/json").read)[self.base_currency].to_d
-      self.rate_changed = true
-    end
+    get_exchange_rate() if self.exchange_rate.blank?
     self.base_amount = self.foreign_amount * self.exchange_rate
-  rescue Timeout::Error
+  rescue StandardError, Exception
     self.errors[:exchange_rate] = " cannot be retrieeved (Timed Out). If problem persists try to type a rate manually."
-    self.rate_changed = false
-  rescue Rack::Timeout::RequestTimeoutError
-    self.errors[:exchange_rate] = " cannot be retrieeved (Timed Out). If problem persists try to type a rate manually."
-    self.rate_changed = false
-  rescue
-    self.errors[:exchange_rate] = " cannot be retrieved. If problem persists try to manually type in an exchange rate."
     self.rate_changed = false
   end
 
-  attr_accessor :rate_changed
-  alias_method :rate_changed?, :rate_changed
+  private
+
+  def get_exchange_rate
+    self.exchange_rate = JSON.parse(open("http://devel.farebookings.com/api/curconversor/" + self.foreign_currency + "/" + self.base_currency + "/1/json").read)[self.base_currency].to_d
+    self.rate_changed = true
+  end
 
 end

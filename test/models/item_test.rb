@@ -127,6 +127,13 @@ class ItemTest < ActiveSupport::TestCase
 		assert @item1.invalid?
 	end
 
+	test "rack timeout error when requesting exchange rate for item" do
+		stub_request(:any, "http://devel.farebookings.com/api/curconversor/DKK/EUR/1/json").to_raise(Rack::Timeout::RequestTimeoutError.new)
+		@item1.exchange_rate = ""
+		@item1.apply_exchange_rate
+		assert_equal 1, @item1.errors[:exchange_rate].length, "Item exchange rate must have error message"
+		assert @item1.invalid?
+	end
 
 	#Test classe level authorization
 
