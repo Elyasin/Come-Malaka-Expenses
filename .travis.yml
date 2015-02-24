@@ -1,7 +1,11 @@
 language: ruby
 rvm:
-  - "2.2.2"
-#User MongoDB for tests
+- 2.2.0
 services: mongodb
-# uncomment this line if your project needs to run something other than `rake`:
-# script: bundle exec rspec specdf
+deploy:
+  provider: heroku
+  api_key:
+    secure: bhfGFajpFcdjNjwxAa7PunpkRgIAKCLM40rFByqSxr3NBiIOhICtyI6rAJG60SXCSLz7S+HYR+f4MyciLy2JEBg/b8CFHV4zHtHQ9LMJRlS0jsOEgGYdYHx6WkqIteK9Vu+mFaAEGb+eWeRfGeXvgcrCa5Xf+xJJieJtlLNWMgM=
+  app: come-malaka-expenses
+  on:
+    repo: Elyasin/Come-Malaka-Expenses
