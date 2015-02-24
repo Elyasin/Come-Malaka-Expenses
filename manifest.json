@@ -1,0 +1,6 @@
+{
+    "linux-kernel": { "command": "uname -r", "version": "" },
+    "mongodb": { "command": "mongo --eval 'db.version();'", "version": "" },
+    "ruby": { "command": "ruby -v", "version": "" },
+    "ruby-on-rails": { "command": "rails -v", "version": "" }
+}
