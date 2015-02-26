@@ -14,6 +14,8 @@
 		%br/
 		Base amount: #{money_format(item.base_amount, item.base_currency)}
 		%br/
+		Exchange rate: #{item.exchange_rate}
+		%br/
 		Foreign amount: #{money_format(item.foreign_amount, item.foreign_currency)}
 		%br/
 		Beneficiaries: #{item.beneficiaries.map { |b| b.name }.join(", ") }

@@ -1,0 +1,27 @@
+%p Packooook Malakes,
+%p Item #{@item.name} has been DELETED in event #{@item.event.name}.
+
+%p Item details below
+Name: #{@item.name}
+%br/
+Value Date: #{@item.value_date.strftime('%d %b %Y')}
+%br/
+Description: #{@item.description}
+%br/
+Base amount: {money_format(@item.base_amount, @item.base_currency)}
+%br/
+Base currency: #{@item.base_currency}
+%small (This is the event currency)
+%br/
+Exchange rate: #{@item.exchange_rate}
+%br/
+Foreign amount: {money_format(@item.foreign_amount, @item.foreign_currency)}
+%br/
+Foreign currency: #{@item.foreign_currency}
+%small (This is the item's currency)
+%br/
+Beneficiaries: #{@item.beneficiaries.map { |b| b.name }.join(", ") }
+%br/
+Cost per beneficiary: {money_format(@item.cost_per_beneficiary, @item.base_currency)}
+%small (This amount is in base currency)
+%hr

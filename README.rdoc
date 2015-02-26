@@ -6,19 +6,19 @@ This app is still in beta. Feel free to feed back or to join.
 
 ToDos:
 
-	- Web Design/Sitemap (Bootstrap? Foundation?)
+	- Web Design/Sitemap/Navigation - Foundation
+
+	- Email design and wording
 
 	- Implement auto-complete when inviting user/participant
 
-	- DRY out the code: partials, view helpers, JavaScript, etc.
+	- DRY out the code: partials, (mail) view helpers, JavaScript, etc.
 
 	- Tests: Views (functional), Integration Tests, Coverage (Ruby, JavaScript, etc.)
 
 	- Soft delete a user
 
 	- Notification stream for user
-
-	- Send email to participants when creation or modification of event/item took place
 
 	- Search engine for events/items
 

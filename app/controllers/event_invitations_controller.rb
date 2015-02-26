@@ -13,6 +13,7 @@ class EventInvitationsController < Devise::InvitationsController
 			@invitee = user.first
 			if @event.add_participant(@invitee)
 				flash[:notice] = "#{@invitee.name} had been added to the event."
+				EventMailer.invitation_message(@event, @invitee).deliver_now
 			else
 				flash[:notice] = "#{@invitee.name} is already participant of event or pending invitation acceptance."
 			end

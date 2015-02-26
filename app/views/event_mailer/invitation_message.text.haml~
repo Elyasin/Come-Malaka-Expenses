@@ -1,0 +1,6 @@
+Packooook brad.pitt@actor.com
+==================================
+
+You have been invited to the Come Malaka event Cambodia.
+
+You can access the event with this link: #{event_url(@event)}

@@ -61,7 +61,7 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   #Default URL Option (needed by Devise authentication)
-  config.action_mailer.default_url_options = { host: 'come-malaka-expenses.herokuapp.com/events' }
+  config.action_mailer.default_url_options = { host: 'come-malaka-expenses.herokuapp.com' }
 
   #For Mailcatcher on developement environment
   config.action_mailer.delivery_method = :smtp

@@ -8,6 +8,9 @@
       %th Total Paid
       %th Total Benefited
       %th Balance
+  %tfoot
+    %tr
+      %td{colspan: 4} *Amounts are rounded for display
   %tbody
     -@participants.each do |participant|
       %tr
@@ -15,5 +18,3 @@
         %td= money_format(@event.total_expenses_amount_for(participant), @event.event_currency)
         %td= money_format(@event.total_benefited_amount_for(participant), @event.event_currency)
         %td= money_format(@event.balance_for(participant), @event.event_currency)
-
-%small *Amounts are rounded for display
