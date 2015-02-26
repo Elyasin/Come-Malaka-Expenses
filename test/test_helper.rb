@@ -20,6 +20,8 @@ DatabaseCleaner[:mongoid].strategy = :truncation
 #CodeClimate reporting must not be blocked by WebMock
 WebMock.disable_net_connect!(:allow => "codeclimate.com")
 
+Rails.application.routes.default_url_options[:host]= 'localhost:3000'
+
 class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
 

@@ -10,6 +10,8 @@ ToDos:
 
 	- Email design and wording
 
+	- Sending emails in models with callback methods
+
 	- Implement auto-complete when inviting user/participant
 
 	- DRY out the code: partials, (mail) view helpers, JavaScript, etc.

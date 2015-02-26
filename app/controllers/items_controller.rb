@@ -24,7 +24,7 @@ class ItemsController < ApplicationController
     authorize_action_for @item, @item.event
     (render :new and return) if invalid? @item
     @item.save
-    EventMailer.item_created_message(@item).deliver_now
+    EventMailer.item_created_message(@item).deliver_now!
     flash[:alert] = "Exchange rate updated to #{@item.exchange_rate}." if @item.rate_changed?
     redirect_to item_path(@item), :notice => "Item created."
   end
@@ -40,7 +40,7 @@ class ItemsController < ApplicationController
     authorize_action_for @item
     (render :edit and return) if invalid? @item
     @item.save
-    EventMailer.item_modified_message(@item).deliver_now
+    EventMailer.item_modified_message(@item).deliver_now!
     flash[:alert] = "Exchange rate updated to #{@item.exchange_rate}." if @item.rate_changed?
     redirect_to item_path(@item), :notice => "Item updated."
   end
@@ -49,7 +49,7 @@ class ItemsController < ApplicationController
     item = Item.find(params[:id])
     event = item.event
     item.destroy if authorize_action_for item
-    EventMailer.item_deleted_message(item).deliver_now
+    EventMailer.item_deleted_message(item).deliver_now!
     redirect_to event_items_path(event_id: event.id), :notice => "Item deleted."
   end
 
