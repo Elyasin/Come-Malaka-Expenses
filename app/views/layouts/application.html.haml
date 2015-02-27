@@ -10,7 +10,7 @@
 		= javascript_include_tag 'application', 'data-turbolinks-track' => true
 		= csrf_meta_tags
 	%body
-		= image_tag "beta-testing-300x144.jpg", alt: "Beta Testing", class: "beta_testing"
+		= image_tag "beta-testing-300x144.jpg", alt: "Beta Testing", class: "beta_testing show-for-medium-up"
 		%div.user_nav
 			-if user_signed_in?
 				Signed in as #{link_to (current_user.name), edit_user_registration_path}. Not you?
