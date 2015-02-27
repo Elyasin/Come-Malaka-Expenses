@@ -58,6 +58,13 @@ class User
     self.first_name.blank? ? self.email : self.first_name + " " +self.last_name
   end
 
+  def email_addressing
+    if self.first_name.blank? and self.last_name.blank? then
+      self.email
+    else
+      %("#{self.name}" <#{self.email}>)
+    end
+  end
 
   #Add the user to the event after accepting invitation
   after_invitation_accepted :add_to_invited_event

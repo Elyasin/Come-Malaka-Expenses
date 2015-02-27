@@ -14,6 +14,16 @@ class UserTest < ActiveSupport::TestCase
 		assert_equal "user1@event.com", @user1.name, "Organizer's email must be organizer@event.com"
 	end
 
+	test "email adressing with name" do
+		assert_equal %("Theo Goumas" <user2@event.com>), @user2.email_addressing, "Email addressing is incorrect "
+	end
+
+	test "email addressing without name (email only)" do
+		@user3.first_name = nil
+		@user3.last_name = nil
+		assert_equal "user3@event.com", @user3.email_addressing, "Email addressing is incorrect"
+	end
+
 	test "new user is added as participant to invited event" do
 		@non_participant_user.event = @event
 		@non_participant_user.add_to_invited_event
