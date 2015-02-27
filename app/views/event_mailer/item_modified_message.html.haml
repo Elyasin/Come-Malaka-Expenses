@@ -1,28 +1,28 @@
 %p Packooook Malakes,
 %p Item #{@item.name} has been MODIFIED in event #{@item.event.name}.
 %p You can access the item with this link: #{link_to 'Go to item', item_url(@item)}
-
+\
 %p Item details below
 Name: #{@item.name}
-%br/
+%br
 Value Date: #{@item.value_date.strftime('%d %b %Y')}
-%br/
+%br
 Description: #{@item.description}
-%br/
+%br
 Base amount: #{money_format(@item.base_amount, @item.base_currency)}
-%br/
+%br
 Base currency: #{@item.base_currency}
 %small (This is the event currency)
-%br/
+%br
 Exchange rate: #{@item.exchange_rate}
-%br/
+%br
 Foreign amount: #{money_format(@item.foreign_amount, @item.foreign_currency)}
-%br/
+%br
 Foreign currency: #{@item.foreign_currency}
 %small (This is the item's currency)
-%br/
+%br
 Beneficiaries: #{@item.beneficiaries.map { |b| b.name }.join(", ") }
-%br/
+%br
 Cost per beneficiary: #{money_format(@item.cost_per_beneficiary, @item.base_currency)}
 %small (This amount is in base currency)
 %hr
