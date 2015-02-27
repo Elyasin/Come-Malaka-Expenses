@@ -6,8 +6,7 @@ class EventMailer < ApplicationMailer
 	def invitation_message event, participant
 		@event = event
 		@participant = participant
-		email = (@participant.name.blank? ? @participant.email : %("#{@participant.name}" <#{@participant.email}>))
-		mail(to: email, subject: "You have been invited to event " + @event.name)
+		mail(to: addressing(@participant), subject: "You have been invited to event " + @event.name)
 	end
 
 	# item creation email
@@ -32,9 +31,13 @@ class EventMailer < ApplicationMailer
 		emails = []
 		@item.beneficiaries.each do |participant|
 			@participant = participant
-			emails << @participant.name			
+			emails << addressing(participant)		
 		end
 		mail(to: emails, subject: subject)
+	end
+
+	def addressing participant
+		participant.name.blank? ? participant.email : %("#{participant.name}" <#{participant.email}>)
 	end
 
 end
