@@ -1,4 +1,5 @@
-%h2 Expense Report
+= content_for :title, "Expense report for " + @event.name + " event"
+%h3 Expense Report
 %p= link_to 'Back to event', events_path
 %table
   %caption Expense Report* (base currency is #{@event.event_currency.upcase})

@@ -1,7 +1,8 @@
 class EventInvitationsController < Devise::InvitationsController
   
 	def new
-		self.resource = resource_class.new(:event_id => params[:event_id])
+		@event = Event.find(params[:event_id])
+		self.resource = resource_class.new(:event_id => @event.id)
 	  render :new
 	end
 

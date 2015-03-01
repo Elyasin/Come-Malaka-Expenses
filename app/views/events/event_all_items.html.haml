@@ -1,4 +1,5 @@
-%h1 All event items
+= content_for :title, "All items of " + @event.name + " event"
+%h3 All event items
 %p= link_to 'Back to event', events_path
 - if @items.empty?
 	%p You don't have any items.

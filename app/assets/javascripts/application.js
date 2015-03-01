@@ -57,16 +57,14 @@ $(document).on("page:load ready", function(){
 		}
 	});
 
+	//$(document).foundation();
+
+  $(document).foundation({
+  	abide: {
+    	patterns: {
+      	password: /^(.){8,}$/
+      }
+    }
+  });
+
 });
-
-$(function(){ $(document).foundation(); });
-
-   $(function(){
-      $(document).foundation({
-        abide: {
-          patterns: {
-            password: /^(.){8,}$/
-            }
-          }
-        });
-    });

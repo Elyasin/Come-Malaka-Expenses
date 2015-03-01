@@ -1,4 +1,4 @@
-%h2 Item details
+= content_for :title, "Details for " + @item.name.to_s + " item"
 %p= link_to 'Back to your items', event_items_path(@item.event)
 
 - if @item.errors.any?
@@ -8,7 +8,7 @@
     - @item.errors.full_messages.each do |msg|
       %li= msg
 
-= form_for @item, html: { 'data-abide': true } do |f|
+= form_for @item, html: { 'data-abide': true, novalidate: true } do |f|
   %fieldset
     %legend Edit item
     .field

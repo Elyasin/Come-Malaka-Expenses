@@ -7,9 +7,9 @@ class ItemsController < ApplicationController
   authorize_actions_for Item
 
   def index
-    event = Event.find params[:event_id]
-    authorize_action_for event
-  	@items = event.items.in(payer_id: current_user.id)
+    @event = Event.find params[:event_id]
+    authorize_action_for @event
+  	@items = @event.items.in(payer_id: current_user.id)
   end
 
   def new

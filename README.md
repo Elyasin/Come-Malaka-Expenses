@@ -8,13 +8,13 @@
 
  * Web/Mail Design/Sitemap/Navigation - Foundation
 
- * Sending emails in models with callback methods ???
-
  * Implement auto-complete when inviting user/participant
 
  * DRY out the code: partials, (mail) view helpers, JavaScript, etc.
 
  * Tests: Views (functional), Integration Tests
+
+ * Look into CI for HTML/JavaScript: Selenium/PhantomJS, SauceLab, .... ?
 
  * Soft delete a user
 
@@ -24,6 +24,6 @@
 
  * ...
 
-	* Ruby version: 2.2.0 (Contains a [bug] with BigDecimal? User of Rational?)
+	* Ruby version: 2.2.0 (Contains a [bug] with BigDecimal? Use Rational class?)
 
 [bug]: https://bugs.ruby-lang.org/issues/10850

@@ -1,9 +1,9 @@
-%h2= t "devise.invitations.new.header"
+= content_for :title, "Invite to " + @event.name + " event"
 %p= link_to "Back to event", events_path
-= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :post, 'data-abide': true } do |f|
+= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :post, 'data-abide': true, novalidate: true } do |f|
   = devise_error_messages!
   %fieldset
-    %legend Invite a user
+    %legend Invite to #{@event.name} event
     - resource.class.invite_key_fields.each do |field|
       .field
         = f.label field

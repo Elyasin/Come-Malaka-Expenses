@@ -68,9 +68,9 @@ class EventsController < ApplicationController
 
 
   def event_all_items
-    event = Event.find(params[:event_id])
-    authorize_action_for(event)
-    @items = event.items
+    @event = Event.find(params[:event_id])
+    authorize_action_for(@event)
+    @items = @event.items
   end
 
 

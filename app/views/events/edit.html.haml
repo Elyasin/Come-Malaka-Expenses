@@ -1,14 +1,14 @@
-%h2 Edit Event
+= content_for :title, "Edit " + @event.name.to_s + " event"
 %p= link_to 'Back to events page', events_path
 
 - if @event.errors.any?
   %div#error_explanation
-    %p #{pluralize(@event.errors.count, "error")} prevented this event_currency from being saved:
+    %p #{pluralize(@event.errors.count, "error")} prevented this event from being saved:
     %ul
     - @event.errors.full_messages.each do |msg|
       %li= msg
 
-= form_for @event, html: { 'data-abide': true } do |f|
+= form_for @event, html: { 'data-abide': true, novalidate: true } do |f|
   %fieldset
     %legend Edit event
     .field

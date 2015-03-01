@@ -1,4 +1,4 @@
-%h2 Describe the event
+= content_for :title, "Create new event"
 %p= link_to 'Back to events page', events_path
 
 - if @event.errors.any?
@@ -8,7 +8,7 @@
     - @event.errors.full_messages.each do |msg|
       %li= msg
 
-= form_for @event, html: { 'data-abide': true } do |f|
+= form_for @event, html: { 'data-abide': true, novalidate: true } do |f|
   %fieldset
     %legend Create new event
     .field

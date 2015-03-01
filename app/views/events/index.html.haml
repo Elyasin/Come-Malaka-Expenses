@@ -1,4 +1,5 @@
-%h1 Your events
+= content_for :title, "Your events"
+%h3 Your events
 - if @events.empty?
 	%p= link_to "Create new event", new_event_path
 	%p You don't have any events.
