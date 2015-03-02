@@ -12,13 +12,28 @@
 	%body
 		%img.beta_testing{"data-interchange": "[#{asset_path("beta-testing-tiny.jpg")}, (default)], [#{asset_path("beta-testing-medium.jpg")}, (medium)], [#{asset_path("beta-testing-large.jpg")}, (large)]", alt: "Beta Testing"}
 
+		%div.fixed.sticky
+			%nav.top-bar{"data-topbar": true, role: :navigation, "data-optionS": "sticky-on: [small, medium, large]"}
+				%ul.title-area
+					%li.name
+						%h1=link_to "Come Malaka!", nil
+					%li.toggle-topbar.menu-icon
+						%a{href: '#'}
+							%span Menu
+				%section.top-bar-section
+					%ul.right
+						-if user_signed_in?
+							%li.has-dropdown
+								= link_to current_user.name, nil
+								%ul.dropdown
+									%li= link_to "Account profile", edit_user_registration_path
+									%li= link_to "Not you? Sign out", destroy_user_session_path, method: :delete
+						-else
+							%li= link_to "Sign in", new_user_session_path
+							%li.divide
+							%li= link_to "Sign up", new_user_registration_path
+
 		%div.user_nav
-			-if user_signed_in?
-				Signed in as #{link_to (current_user.name), edit_user_registration_path}. Not you?
-				= link_to "Sign out", destroy_user_session_path, method: :delete
-			-else
-				#{link_to "Sign up", new_user_registration_path} or
-				= link_to "Sign in", new_user_session_path
 		- if !notice.blank?
 			.alert-box.warning.radius{"data-alert" => ""}
 				= notice

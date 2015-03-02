@@ -57,8 +57,6 @@ $(document).on("page:load ready", function(){
 		}
 	});
 
-	//$(document).foundation();
-
   $(document).foundation({
   	abide: {
     	patterns: {
@@ -66,5 +64,7 @@ $(document).on("page:load ready", function(){
       }
     }
   });
+
+  $(document).foundation('interchange', 'reflow');
 
 });
