@@ -19,6 +19,8 @@
 
 $(document).on("page:load ready", function(){
 
+	$('.alert-box.warning').delay(3000).fadeOut();
+
 	if ( $('[type="date"]').prop('type') !== 'date' ) {
     $('input[type="date"]').datepicker({dateFormat: "yy-mm-dd"});
 	}

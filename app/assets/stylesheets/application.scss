@@ -16,6 +16,7 @@
  *= require foundation_and_overrides
 
  */
+
 .field_with_errors {
   padding: 2px;
   background-color: red;
@@ -24,7 +25,7 @@
 
 .beta_testing {
   position:absolute;
-  top:45;
+  top: 45;
   right:0;
   z-index:-1;
 }

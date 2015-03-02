@@ -22,6 +22,14 @@
 
  * Search engine for events/items
 
+ * Abide Validation: Number for amounts and exchange rate must be negative
+
+ * User can type in base amount
+
+ * Table form for event items - better overview by date, payer, amount
+
+ * Cash flow details per participant (see Johanna M. for design)
+
  * ...
 
 	* Ruby version: 2.2.0 (Contains a [bug] with BigDecimal? Use Rational class?)
