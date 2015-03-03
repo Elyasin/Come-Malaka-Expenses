@@ -1,6 +1,6 @@
 = content_for :title, "Details for " + @item.name + " item"
 %h3 Item details
-%p= link_to "Back to event", events_path
+%p= link_to "Back to your posted items", event_items_path(@item.event)
 %p= link_to "Back to edit item", edit_item_path(@item)
 Name: #{@item.name}
 %br/
