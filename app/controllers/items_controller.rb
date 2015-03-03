@@ -9,7 +9,7 @@ class ItemsController < ApplicationController
   def index
     @event = Event.find params[:event_id]
     authorize_action_for @event
-  	@items = @event.items.in(payer_id: current_user.id)
+  	@items = @event.items.in(payer_id: current_user.id).order_by(:value_date => 'desc')
   end
 
   def new

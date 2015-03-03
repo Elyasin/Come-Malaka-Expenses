@@ -41,5 +41,5 @@
 						%td= item.exchange_rate
 						%td= money_format(item.foreign_amount, item.foreign_currency)
 						%td= item.payer.short_name
-						%td= item.beneficiaries.map { |b| b.short_name }.join(", ")
+						%td.has-tip{"data-tooltip": true, :title => "#{item.beneficiaries.map{ |b| b.short_name }.join(', ')}"}= item.beneficiaries.count
 						%td= money_format(item.cost_per_beneficiary, item.base_currency)

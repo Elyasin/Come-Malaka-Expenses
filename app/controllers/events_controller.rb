@@ -8,7 +8,7 @@ class EventsController < ApplicationController
 
 
   def index
-    @events = Event.with_role(:event_participant, current_user)
+    @events = Event.order_by(:value_date => 'desc').with_role(:event_participant, current_user)
   end
 
 
@@ -70,7 +70,7 @@ class EventsController < ApplicationController
   def event_all_items
     @event = Event.find(params[:event_id])
     authorize_action_for(@event)
-    @items = @event.items
+    @items = @event.items.order_by(:value_date => 'desc')
   end
 
 
