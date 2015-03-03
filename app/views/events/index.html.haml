@@ -11,7 +11,7 @@
 			%p{:title => "#{event.description}"} #{event.name} from #{event.from_date.strftime('%d %b %Y')} to #{event.end_date.strftime('%d %b %Y')} - #{link_to('Delete event', event_path(event), :data => {:confirm => 'Are you sure?'}, :method => :delete)} - #{link_to 'Edit event', edit_event_path(event)}
 		-else
 			%p{:title => "#{event.description}"} #{event.name} from #{event.from_date.strftime('%d %b %Y')} to #{event.end_date.strftime('%d %b %Y')}
-		%p  Participants: #{event.users.map { |u| u.name }.join(", ") }
+		%p  Participants: #{event.users.map { |u| u.short_name }.join(", ") }
 		- if current_user.id == event.organizer_id
 			%p= link_to('Invite participant', invite_to_event_path(event))
 		%p= link_to 'See your posted items', event_items_path(event)

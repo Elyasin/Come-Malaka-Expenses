@@ -3,6 +3,7 @@
 %p= link_to 'Back to event', events_path
 %table
   %caption Expense Report* (base currency is #{@event.event_currency.upcase})
+  %summary This table shows the expense data in tabular form. It shows the name of the participant, the total amount the participant has paid during the event, the total amount the participant was beneficiary during the event and the participant's balance of the event. The balance is the difference of the total amount paid and the total amount benefited. A negative balance means the participant has to pay the balance amount. A positive balance means the participants has to receive the balance amount. The sum of the balance amounts must equal zero.
   %thead
     %tr
       %th Participant

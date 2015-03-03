@@ -1,4 +1,4 @@
-= content_for :title, "All items in " + @event.name + " event"
+= content_for :title, "All your items of " + @event.name + " event"
 %h3 Your items
 %p= link_to "Back to event", events_path
 %p= link_to "Create new item", new_event_item_path
@@ -6,20 +6,40 @@
 	%p You don't have any items.
 - else
 	%hr
-	- @items.each do |item|
-		-if current_user.can_update?(item) or current_user.can_delete?(item)
-			%p #{item.name} at the #{item.value_date.strftime('%d %b %Y')} - #{link_to("Edit", edit_item_path(item)) if current_user.can_update?(item)} - #{link_to("Delete", item_path(item), :data => {:confirm => 'Are you sure?'}, method: :delete) if current_user.can_delete?(item)}
-		- else
-			%p #{item.name} at the #{item.value_date.strftime('%d %b %Y')}
-		Description: #{item.description}
-		%br/
-		Base amount: #{money_format(item.base_amount, item.base_currency)}
-		%br/
-		Exchange rate: #{item.exchange_rate}
-		%br/
-		Foreign amount: #{money_format(item.foreign_amount, item.foreign_currency)}
-		%br/
-		Beneficiaries: #{item.beneficiaries.map { |b| b.name }.join(", ") }
-		%br/
-		Cost per beneficiary: #{money_format(item.cost_per_beneficiary, item.base_currency)}
-		%hr
+		%table{summary: "This table displays your posted items of the event #{@event.name}....", role: :grid}
+			%caption Your items of event #{@event.name}
+			%thead
+				%tr
+					%th
+					%th
+					%th Date
+					%th Name
+					%th Description
+					%th Base amount
+					%th Exchange rate
+					%th Foreign amount
+					%th Payer
+					%th Beneficiaries
+					%th Cost per beneficiary
+			%tfoot
+				%tr
+					%td{colspan: 11}
+						* Amounts are rounded for display
+						%br
+						** E = Edit
+						%br
+						*** D = Delete
+			%tbody
+				- @items.each do |item|
+					%tr
+						%td= link_to("E", edit_item_path(item)) if current_user.can_update?(item)
+						%td= link_to("D", item_path(item), method: :delete, data: {confirm: "Are you sure you want to delete item #{item.name} at the #{item.value_date.strftime('%d %b %Y')}?"}) if current_user.can_delete?(item)
+						%td= item.value_date.strftime('%d %b %Y')
+						%td= item.name
+						%td= item.description
+						%td= money_format(item.base_amount, item.base_currency)
+						%td= item.exchange_rate
+						%td= money_format(item.foreign_amount, item.foreign_currency)
+						%td= item.payer.short_name
+						%td= item.beneficiaries.map { |b| b.short_name }.join(", ")
+						%td= money_format(item.cost_per_beneficiary, item.base_currency)

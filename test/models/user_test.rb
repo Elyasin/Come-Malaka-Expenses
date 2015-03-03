@@ -5,6 +5,10 @@ class UserTest < ActiveSupport::TestCase
 	#Test data initialized in test_helper.rb#setup
 	#and truncated while teardown
 
+	test "short name returns first name if first name is set otherwise email" do
+		assert_equal "Lasse", @organizer.short_name, "Organizer's short name must be Lasser"
+	end
+
 	test "name returns first name (and last name) if first name is set" do
 		assert_equal "Lasse Lund", @organizer.name, "Organizer's name must be Lasse Lund"
 	end

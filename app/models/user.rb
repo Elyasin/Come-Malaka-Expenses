@@ -54,6 +54,10 @@ class User
   index( {invitation_by_id: 1}, {:background => true} )
 
 
+  def short_name
+    self.first_name.blank? ? self.email : self.first_name
+  end
+
   def name
     self.first_name.blank? ? self.email : self.first_name + " " +self.last_name
   end
