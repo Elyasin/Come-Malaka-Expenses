@@ -27,8 +27,8 @@
 			%tbody
 				- @items.each do |item|
 					%tr
-						%td.has-tip{"data-tooltip": true, title: "Click E to edit event"}= link_to("E", edit_item_path(item)) if current_user.can_update?(item)
-						%td.has-tip{"data-tooltip": true, title: "Click D to delete event"}= link_to("D", item_path(item), method: :delete, data: {confirm: "Are you sure you want to delete item #{item.name} at the #{item.value_date.strftime('%d %b %Y')}?"}) if current_user.can_delete?(item)
+						%td.has-tip{"data-tooltip": true, "data-options": :disable_for_touch:true, title: "Click E to edit event"}= link_to("E", edit_item_path(item)) if current_user.can_update?(item)
+						%td.has-tip{"data-tooltip": true, "data-options": :disable_for_touch:true, title: "Click D to delete event"}= link_to("D", item_path(item), method: :delete, data: {confirm: "Are you sure you want to delete item #{item.name} at the #{item.value_date.strftime('%d %b %Y')}?"}) if current_user.can_delete?(item)
 						%td= item.value_date.strftime('%d %b %Y')
 						%td.has-tip{"data-tooltip": true, title: "#{item.description}"}= item.name
 						%td= money_format(item.base_amount, item.base_currency)
