@@ -69,4 +69,6 @@ $(document).on("page:load ready", function(){
 
   $(document).foundation('interchange', 'reflow');
 
+  $(document).foundation('tooltip', 'reflow');
+
 });

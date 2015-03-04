@@ -20,23 +20,23 @@
 			%tfoot
 				%tr
 					%td{colspan: 12}
-						* Hover over the table cells for details
+						* Hover or click over the table cells for details
 			%tbody
 				- @events.each do |event|
 					%tr
-						%td.has-tip{"data-tooltip": true, "data-options": :disable_for_touch:true, title: "Click E to edit event"}
+						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click E to edit event"}
 							= link_to 'E', edit_event_path(event) if current_user.can_update?(event)
-						%td.has-tip{"data-tooltip": true, "data-options": :disable_for_touch:true, title: "Click D to delete event"}
+						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click D to delete event"}
 							= link_to('D', event_path(event), :data => {:confirm => 'Are you sure you want to delete event #{event.name}?'}, :method => :delete) if current_user.can_delete?(event)
-						%td.has-tip{"data-tooltip": true, "data-options": :disable_for_touch:true, title: "Click I to invite a participant"}
+						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click I to invite a participant"}
 							= link_to('I', invite_to_event_path(event)) if current_user.can_update?(event)
-						%td.has-tip{"data-tooltip": true, "data-options": :disable_for_touch:true, title: "Click A to see all items"}
+						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click A to see all items"}
 							= link_to('A', event_all_items_path(event))
-						%td.has-tip{"data-tooltip": true, "data-options": :disable_for_touch:true, title: "Click Y to see all items"}
+						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click Y to see all items"}
 							= link_to('Y', event_items_path(event))							
-						%td.has-tip{"data-tooltip": true, "data-options": :disable_for_touch:true, title: "Click R to see report"}
+						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click R to see report"}
 							= link_to('R', expense_report_path(event))							
-						%td.has-tip{"data-tooltip": true, "data-options": :disable_for_touch:true, title: "#{event.description}"}= event.name
+						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "#{event.description}"}= event.name
 						%td= event.from_date.strftime('%d %b %Y')
 						%td= event.end_date.strftime('%d %b %Y')
 						%td= event.event_currency.upcase
