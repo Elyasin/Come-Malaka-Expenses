@@ -10,33 +10,28 @@
 			%caption Your items of event #{@event.name}
 			%thead
 				%tr
-					%th
-					%th
+					%th{colspan: 2} Actions**
 					%th Date
 					%th Name
-					%th Description
-					%th Base amount
+					%th Base amount*
 					%th Exchange rate
-					%th Foreign amount
+					%th Foreign amount*
 					%th Payer
-					%th Beneficiaries
+					%th Beneficiaries**
 					%th Cost per beneficiary
 			%tfoot
 				%tr
-					%td{colspan: 11}
+					%td{colspan: 10}
 						* Amounts are rounded for display
 						%br
-						** E = Edit
-						%br
-						*** D = Delete
+						** Hover over the table cells for details
 			%tbody
 				- @items.each do |item|
 					%tr
-						%td= link_to("E", edit_item_path(item)) if current_user.can_update?(item)
-						%td= link_to("D", item_path(item), method: :delete, data: {confirm: "Are you sure you want to delete item #{item.name} at the #{item.value_date.strftime('%d %b %Y')}?"}) if current_user.can_delete?(item)
+						%td.has-tip{"data-tooltip": true, title: "Click E to edit event"}= link_to("E", edit_item_path(item)) if current_user.can_update?(item)
+						%td.has-tip{"data-tooltip": true, title: "Click D to delete event"}= link_to("D", item_path(item), method: :delete, data: {confirm: "Are you sure you want to delete item #{item.name} at the #{item.value_date.strftime('%d %b %Y')}?"}) if current_user.can_delete?(item)
 						%td= item.value_date.strftime('%d %b %Y')
-						%td= item.name
-						%td= item.description
+						%td.has-tip{"data-tooltip": true, title: "#{item.description}"}= item.name
 						%td= money_format(item.base_amount, item.base_currency)
 						%td= item.exchange_rate
 						%td= money_format(item.foreign_amount, item.foreign_currency)
