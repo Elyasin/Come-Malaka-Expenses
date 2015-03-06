@@ -2,20 +2,28 @@
 %p= link_to "Back to event", events_path
 = form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :post, 'data-abide': true, novalidate: true } do |f|
   = devise_error_messages!
-  %fieldset
-    %legend Invite to #{@event.name} event
-    - resource.class.invite_key_fields.each do |field|
-      .field
-        = f.label field
-        = f.text_field field, placeholder: field, required: true, pattern: :email
-        %small.error #{field.capitalize} is required. Make sure you type in a valid email.
-    .field
-      = f.label :first_name, "First name <small>Leave blank if not known</small>".html_safe
-      = f.text_field :first_name, placeholder: "First name"
-    .field
-      = f.label :last_name, "Last name <small>Leave blank if not known</small>".html_safe
-      = f.text_field :last_name, placeholder: "Last name"
-    .field
-      = f.hidden_field :event_id
-    .actions
-      = f.submit t("devise.invitations.new.submit_button")
+  = f.hidden_field :event_id
+  .row
+    .small-12.medium-8.large-6.columns.small-centered
+      %fieldset
+        %legend Invite to #{@event.name} event
+        - resource.class.invite_key_fields.each do |field|
+          .row
+            .field.small-12.medium-4.large-4.columns.end
+              = f.label field
+            .small-12.medium-8.large-8.columns.end
+              = f.text_field field, placeholder: field, required: true, pattern: :email
+              %small.error #{field.capitalize} is required. Make sure you type in a valid email.
+        .row
+          .field.small-12.medium-4.large-4.columns.end
+            = f.label :first_name
+          .small-12.medium-8.large-8.columns.end
+            = f.text_field :first_name, placeholder: "Leave blank if not known"
+        .row
+          .field.small-12.medium-4.large-4.columns.end
+            = f.label :last_name
+          .small-12.medium-8.large-8.columns.end
+            = f.text_field :last_name, placeholder: "Leave blank if not known"
+        .row
+          .actions.small-12.medium-4.large-4.columns.end
+            = f.submit t("devise.invitations.new.submit_button")

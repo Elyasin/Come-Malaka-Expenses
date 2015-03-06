@@ -2,14 +2,21 @@
 = form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :put, 'data-abide': true, novalidate: true } do |f|
   = devise_error_messages!
   = f.hidden_field :invitation_token
-  %fieldset
-    %legend Set your password
-    .field.password-field
-      = f.label :password
-      = f.password_field :password, required: true
-    .field.password-confirmation-field
-      = f.label :password_confirmation
-      = f.password_field :password_confirmation, required: true, novalidate: true, "data-equalto": :user_password
-      %small.error Password did not match or password length less than 8 characters.
-    .actions
-      = f.submit t("devise.invitations.edit.submit_button")
+  .row
+    .small-12.medium-8.large-6.columns.small-centered
+      %fieldset
+        %legend Set your password
+        .row
+          .field.small-12.medium-4.large-4.columns.end
+            = f.label :password
+          .password-field.small-12.medium-8.large-8.columns.end
+            = f.password_field :password, required: true
+        .row
+          .field.small-12.medium-4.large-4.columns.end
+            = f.label :password_confirmation
+          .password-confirmation-field.small-12.medium-8.large-8.columns.end
+            = f.password_field :password_confirmation, required: true, novalidate: true, "data-equalto": :user_password
+            %small.error Password did not match or password length less than 8 characters.
+        .row
+          .actions.small-12.medium-4.large-4.columns.end
+            = f.submit t("devise.invitations.edit.submit_button")
