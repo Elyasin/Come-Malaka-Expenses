@@ -1,29 +1,39 @@
 = devise_error_messages!
 = form_for(resource, as: resource_name, url: registration_path(resource_name), html: {'data-abide': true, novalidate: true }) do |f|
-  %fieldset
-    %legend Sign up
-    .field
-      = f.label :first_name
-      = f.text_field :first_name, required: true
-      %small.error Please type in your first name.
-    .field
-      = f.label :last_name
-      = f.text_field :last_name, required: true
-      %small.error Please type in your last name.
-    .field
-      = f.label :email
-      = f.email_field :email, autofocus: true, required: true, pattern: :email
-      %small.error Please type in a valid email.
-    .field.password-field
-      = f.label :password
-      - if @validatable
-        %small
-          (#{@minimum_password_length} characters minimum)
-      = f.password_field :password, autocomplete: "off", required: true
-    .field.password-confirmation-field
-      = f.label :password_confirmation
-      = f.password_field :password_confirmation, autocomplete: "off", required: true, "data-equalto": :user_password
-      %small.error Password did not match or password length less than 8 characters.
-  .actions
-    = f.submit "Sign up"
+  .row
+    .small-12.medium-8.large-6.columns.small-centered
+      %fieldset
+        %legend Sign up
+        .row
+          .field.small-12.medium-4.large-4.columns.end
+            = f.label :first_name
+          .small-12.medium-8.large-8.columns.end
+            = f.text_field :first_name, required: true
+            %small.error Please type in your first name.
+          .field.small-12.medium-4.large-4.columns.end
+            = f.label :last_name
+          .small-12.medium-8.large-8.columns.end            
+            = f.text_field :last_name, required: true
+            %small.error Please type in your last name.
+          .field.small-12.medium-4.large-4.columns.end
+            = f.label :email
+          .small-12.medium-8.large-8.columns.end
+            = f.email_field :email, autofocus: true, required: true, pattern: :email
+            %small.error Please type in a valid email.
+          .field.password-field.small-12.medium-4.large-4.columns.end
+            = f.label :password
+            - if @validatable
+              %small.error (#{@minimum_password_length} characters minimum)
+          .password-field.small-12.medium-8.large-8.columns.end
+            = f.password_field :password, autocomplete: "off", required: true
+            %small.error Password length must be at least 8 characters.
+          .field.password-confirmation-field.small-12.medium-4.large-4.columns.end
+            = f.label :password_confirmation
+          .password-confirmation-field.small-12.medium-8.large-8.columns.end
+            = f.password_field :password_confirmation, autocomplete: "off", required: true, "data-equalto": :user_password
+            %small.error Password did not match.
+          .field.small-12.medium-4.large-4.columns.end
+            &nbsp;          
+          .actions.small-12.medium-8.large-8.columns.end
+            = f.submit "Sign up"
 = render "devise/shared/links"
