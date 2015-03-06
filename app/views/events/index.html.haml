@@ -32,7 +32,7 @@
 							= link_to('I', invite_to_event_path(event)) if current_user.can_update?(event)
 						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click A to see all items"}
 							= link_to('A', event_all_items_path(event))
-						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click Y to see all items"}
+						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click Y to see your items"}
 							= link_to('Y', event_items_path(event))							
 						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click R to see report"}
 							= link_to('R', expense_report_path(event))							

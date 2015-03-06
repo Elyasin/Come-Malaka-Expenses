@@ -22,13 +22,17 @@
 
  * Search engine for events/items
 
- * Abide Validation: Number for amounts and exchange rate must be negative
+ * Abide Validation: Number for amounts and exchange rate must not be negative
 
  * User can type in base amount
 
  * Table form for event items - better overview by date, payer, amount
 
  * Cash flow details per participant (see Johanna M. for design)
+
+ * Improve accessibility for screen readers e.g.
+
+ * Export functionalities
 
  * ...
 

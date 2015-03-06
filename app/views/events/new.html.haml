@@ -9,29 +9,38 @@
       %li= msg
 
 = form_for @event, html: { 'data-abide': true, novalidate: true } do |f|
-  %fieldset
-    %legend Create new event
-    .field
-      = f.label :name
-      = f.text_field :name, required: true
-      %small.error Please name the event.
-    .field
-      = f.label :description
-      = f.text_field :description, required: true
-      %small.error Please describe the event.
-    .field
-      = f.label :from_date
-      = f.date_field :from_date, size: 10, required: true
-      %small.error Please choose a start date for the event.
-    .field
-      = f.label :end_date
-      = f.date_field :end_date, size: 10, required: true
-      %small.error Please choose an end date for the event.
-    .field
-      = f.label :event_currency
-      = f.select :event_currency, options_from_collection_for_select(Money::Currency.all, :id, :iso_code), {prompt: "Select event currency"}, {required: true}
-      %small.error Please choose an event currency.
-    .field
-      = f.hidden_field :organizer_id
-  .actions
-    = f.submit "Create event"
+  .row
+    .small-12.medium-8.large-8.large-6.columns.small-centered
+      %fieldset
+        %legend Create new event
+        .field.small-12.medium-4.large-4.columns.end
+          = f.label :name
+        .small-12.medium-8.large-8.columns.end
+          = f.text_field :name, required: true
+          %small.error Please name the event.
+        .field.small-12.medium-4.large-4.columns.end
+          = f.label :description
+        .small-12.medium-8.large-8.columns.end
+          = f.text_field :description, required: true
+          %small.error Please describe the event.
+        .field.small-12.medium-4.large-4.columns.end
+          = f.label :from_date
+        .small-12.medium-8.large-8.columns.end
+          = f.date_field :from_date, size: 10, required: true
+          %small.error Please choose a start date for the event.
+        .field.small-12.medium-4.large-4.columns.end
+          = f.label :end_date
+        .small-12.medium-8.large-8.columns.end
+          = f.date_field :end_date, size: 10, required: true
+          %small.error Please choose an end date for the event.
+        .field.small-12.medium-4.large-4.columns.end
+          = f.label :event_currency
+        .small-12.medium-8.large-8.columns.end
+          = f.select :event_currency, options_from_collection_for_select(Money::Currency.all, :id, :iso_code), {prompt: "Select event currency"}, {required: true}
+          %small.error Please choose an event currency.
+        .field.small-12.medium-4.large-4.columns.end
+          = f.label :organizer
+        .small-12.medium-8.large-8.columns.end
+          = f.select :organizer_id, options_from_collection_for_select([current_user] , :id, :name, current_user.id)
+        .actions.small-12.medium-4.large-4.columns.end
+          = f.submit "Create event"
