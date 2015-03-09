@@ -1,44 +1,49 @@
 = content_for :title, "Your events"
-%h3 Your events
+= link_to "Create new event", new_event_path
 - if @events.empty?
-	%p= link_to "Create new event", new_event_path
 	%p You don't have any events.
 - else
-	= link_to "Create new event", new_event_path
-	%hr
-		%table{summary: "This table displays all your events...", role: :grid}
-			%caption Your events
-			%thead
-				%tr
-					%th{colspan: 6} Actions*
-					%th Name*
-					%th Start date
-					%th End date
-					%th Event currency
-					%th Organizer
-					%th Participants*
-			%tfoot
-				%tr
-					%td{colspan: 12}
-						* Hover or click over the table cells for details
-			%tbody
-				- @events.each do |event|
+	.row
+		.small-12.columns.small-centered
+			%table{summary: "This table displays all your events...", role: :grid, align: :center}
+				%caption Your events
+				%thead
 					%tr
-						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click E to edit event"}
-							= link_to 'E', edit_event_path(event) if current_user.can_update?(event)
-						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click D to delete event"}
-							= link_to('D', event_path(event), :data => {:confirm => 'Are you sure you want to delete event #{event.name}?'}, :method => :delete) if current_user.can_delete?(event)
-						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click I to invite a participant"}
-							= link_to('I', invite_to_event_path(event)) if current_user.can_update?(event)
-						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click A to see all items"}
-							= link_to('A', event_all_items_path(event))
-						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click Y to see your items"}
-							= link_to('Y', event_items_path(event))							
-						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click R to see report"}
-							= link_to('R', expense_report_path(event))							
-						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "#{event.description}"}= event.name
-						%td= event.from_date.strftime('%d %b %Y')
-						%td= event.end_date.strftime('%d %b %Y')
-						%td= event.event_currency.upcase
-						%td= event.organizer.short_name
-						%td.has-tip{"data-tooltip": true, title: "#{event.users.map { |u| u.short_name }.join(", ") }"}= event.users.count
+						%th Event
+						%th Description
+						%th Start date
+						%th End date
+						%th Event currency
+						%th Organizer
+						%th Participants*
+				%tfoot
+					%tr
+						%td{colspan: 7}
+							* Hover or click over the table cells for details
+				%tbody
+					- @events.each do |event|
+						%tr
+							%td
+								%button.dropdown.tiny.radius.secondary{"data-dropdown": :actionButtons, "aria-controls": :actionButtons, "aria-expanded": false}= event.name
+								%ul#actionButtons.f-dropdown{"data-dropdown-content": true, "aria-hidden": true, tabindex: "-1", role: :menu}
+									- if current_user.can_update?(event)
+										%li
+											= link_to 'Edit', edit_event_path(event)
+									- if current_user.can_delete?(event)
+										%li
+											= link_to('Delete', event_path(event), :data => {:confirm => 'Are you sure you want to delete event #{event.name}?'}, :method => :delete)
+									- if current_user.can_update?(event)
+										%li
+											= link_to('Invite', invite_to_event_path(event))
+									%li
+										= link_to('All items', event_all_items_path(event))
+									%li
+										= link_to('Your items', event_items_path(event))
+									%li
+										= link_to('Expense Report', expense_report_path(event))
+							%td= event.description
+							%td= event.from_date.strftime('%d %b %Y')
+							%td= event.end_date.strftime('%d %b %Y')
+							%td= event.event_currency.upcase
+							%td= event.organizer.short_name
+							%td.has-tip{"data-tooltip": true, title: "#{event.users.map { |u| u.short_name }.join(", ") }"}= event.users.count

@@ -22,7 +22,7 @@
 
  * Search engine for events/items
 
- * Abide Validation: Number for amounts and exchange rate must not be negative
+ * Abide Validation: Number for exchange rate must not be negative
 
  * User can type in base amount
 

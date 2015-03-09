@@ -62,7 +62,9 @@ $(document).on("page:load ready", function(){
   $(document).foundation({
   	abide: {
     	patterns: {
-      	password: /^(.){8,}$/
+      	password: 			/^(.){8,}$/,
+      	amount:					/^[1-9]\d*(\.\d+)?$/,
+      	exchange_rate:	/^(\d*(\.\d+)?)$/
       }
     }
   });
