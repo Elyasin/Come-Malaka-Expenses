@@ -1,21 +1,21 @@
 = content_for :title, "Expense report for " + @event.name + " event"
-%h3 Expense Report
 %p= link_to 'Back to event', events_path
-%table{summary: "This table shows the expense data in tabular form. It shows the name of the participant, the total amount the participant has paid during the event, the total amount the participant was beneficiary during the event and the participant's balance of the event. The balance is the difference of the total amount paid and the total amount benefited. A negative balance means the participant has to pay the balance amount. A positive balance means the participants has to receive the balance amount. The sum of the balance amounts must equal zero.", role: :grid}
-  %caption Expense Report* (base currency is #{@event.event_currency.upcase})
-  %thead
-    %tr
-      %th Participant
-      %th Total Paid
-      %th Total Benefited
-      %th Balance
-  %tfoot
-    %tr
-      %td{colspan: 4} *Amounts are rounded for display
-  %tbody
-    -@participants.each do |participant|
+.table-selector
+  %table.tablesaw{summary: "This table shows the expense data in tabular form. It shows the name of the participant, the total amount the participant has paid during the event, the total amount the participant was beneficiary during the event and the participant's balance of the event. The balance is the difference of the total amount paid and the total amount benefited. A negative balance means the participant has to pay the balance amount. A positive balance means the participants has to receive the balance amount. The sum of the balance amounts must equal zero.", role: :grid, "data-tablesaw-mode": :stack}
+    %caption Expense Report* (base currency is #{@event.event_currency.upcase})
+    %thead
       %tr
-        %td= participant.short_name
-        %td= money_format(@event.total_expenses_amount_for(participant), @event.event_currency)
-        %td= money_format(@event.total_benefited_amount_for(participant), @event.event_currency)
-        %td= money_format(@event.balance_for(participant), @event.event_currency)
+        %th Participant
+        %th Total Paid
+        %th Total Benefited
+        %th Balance
+    %tfoot
+      %tr
+        %td{colspan: 4} *Amounts are rounded for display
+    %tbody
+      -@participants.each do |participant|
+        %tr
+          %td= participant.short_name
+          %td= money_format(@event.total_expenses_amount_for(participant), @event.event_currency)
+          %td= money_format(@event.total_benefited_amount_for(participant), @event.event_currency)
+          %td= money_format(@event.balance_for(participant), @event.event_currency)

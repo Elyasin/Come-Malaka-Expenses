@@ -4,8 +4,8 @@
 	%p You don't have any events.
 - else
 	.row
-		.small-12.columns.small-centered
-			%table{summary: "This table displays all your events...", role: :grid, align: :center}
+		.small-12.columns.small-centered.table-selector
+			%table.tablesaw{summary: "This table displays all your events...", role: :grid, align: :center, "data-tablesaw-mode": :stack}
 				%caption Your events
 				%thead
 					%tr

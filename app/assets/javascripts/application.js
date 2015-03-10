@@ -11,13 +11,14 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
 //= require foundation
 //= require jquery-ui/datepicker
 //= require turbolinks
 //= require_tree .
 
-$(document).on("page:load ready", function(){
+$(document).ready(function(){
 
 	$('.alert-box.warning').delay(3000).fadeOut();
 
