@@ -1,40 +1,47 @@
 = content_for :title, "All your items of " + @event.name + " event"
-%h3 Your items
 %p= link_to "Back to event", events_path
 %p= link_to "Create new item", new_event_item_path
 - if @items.empty?
 	%p You don't have any items.
 - else
-	%hr
-		%table{summary: "This table displays your posted items of the event #{@event.name}....", role: :grid}
-			%caption Your items of event #{@event.name}
-			%thead
-				%tr
-					%th{colspan: 2} Actions**
-					%th Date
-					%th Name
-					%th Base amount*
-					%th Exchange rate
-					%th Foreign amount*
-					%th Payer
-					%th Beneficiaries**
-					%th Cost per beneficiary
-			%tfoot
-				%tr
-					%td{colspan: 10}
-						* Amounts are rounded for display
-						%br
-						** Hover or click over the table cells for details.
-			%tbody
-				- @items.each do |item|
+	.row
+		.small-12.columns.small-centered.table-selector
+			%table.tablesaw{summary: "This table displays your posted items of the event #{@event.name}....", role: :grid, "data-tablesaw-mode": :stack}
+				%caption Your items of event #{@event.name}
+				%thead
 					%tr
-						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click E to edit event"}= link_to("E", edit_item_path(item)) if current_user.can_update?(item)
-						%td.has-tip{"data-tooltip": true, "data-options": "disable_for_touch:true", title: "Click D to delete event"}= link_to("D", item_path(item), method: :delete, data: {confirm: "Are you sure you want to delete item #{item.name} at the #{item.value_date.strftime('%d %b %Y')}?"}) if current_user.can_delete?(item)
-						%td= item.value_date.strftime('%d %b %Y')
-						%td.has-tip{"data-tooltip": true, title: "#{item.description}"}= item.name
-						%td= money_format(item.base_amount, item.base_currency)
-						%td= item.exchange_rate
-						%td= money_format(item.foreign_amount, item.foreign_currency)
-						%td= item.payer.short_name
-						%td.has-tip{"data-tooltip": true, :title => "#{item.beneficiaries.map{ |b| b.short_name }.join(', ')}"}= item.beneficiaries.count
-						%td= money_format(item.cost_per_beneficiary, item.base_currency)
+						%th Name
+						%th Date
+						%th Description
+						%th Base amount*
+						%th Exchange rate
+						%th Foreign amount*
+						%th Payer
+						%th Beneficiaries**
+						%th Cost per beneficiary
+				%tfoot
+					%tr{"data-tablesaw-no-labels": true}
+						%td{colspan: 10}
+							* Amounts are rounded for display
+							%br
+							** Hover or click over the table cells for details.
+				%tbody
+					- @items.each do |item|
+						%tr
+							%td
+								%button.dropdown.tiny.radius.secondary{"data-dropdown": :actionButtons, "aria-controls": :actionButtons, "aria-expanded": false}= item.name
+								%ul#actionButtons.f-dropdown{"data-dropdown-content": true, "aria-hidden": true, tabindex: "-1", role: :menu}
+									- if current_user.can_update?(item)
+										%li
+											= link_to("Edit", edit_item_path(item))
+									- if current_user.can_delete?(item)
+										%li
+											= link_to("Delete", item_path(item), method: :delete, data: {confirm: "Are you sure you want to delete item #{item.name} at the #{item.value_date.strftime('%d %b %Y')}?"}) 
+							%td= item.value_date.strftime('%d %b %Y')
+							%td= item.description
+							%td= money_format(item.base_amount, item.base_currency)
+							%td= item.exchange_rate
+							%td= money_format(item.foreign_amount, item.foreign_currency)
+							%td= item.payer.short_name
+							%td.has-tip{"data-tooltip": true, :title => "#{item.beneficiaries.map{ |b| b.short_name }.join(', ')}"}= item.beneficiaries.count
+							%td= money_format(item.cost_per_beneficiary, item.base_currency)
