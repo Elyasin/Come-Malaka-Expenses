@@ -3,47 +3,46 @@
 - if @events.empty?
 	%p You don't have any events.
 - else
-	.row
-		.small-12.columns.small-centered.table-selector
-			%table.tablesaw{summary: "This table displays all your events...", role: :grid, align: :center, "data-tablesaw-mode": :stack}
-				%caption Your events
-				%thead
+	.table-selector
+		%table.tablesaw{summary: "This table displays all your events...", role: :grid, align: :center, "data-tablesaw-mode": :stack}
+			%caption Your events
+			%thead
+				%tr
+					%th Event
+					%th Description
+					%th Start date
+					%th End date
+					%th Event currency
+					%th Organizer
+					%th Participants*
+			%tfoot
+				%tr{"data-tablesaw-no-labels": true}
+					%td{colspan: 7}
+						* Hover or click over the table cells for details
+			%tbody
+				- @events.each do |event|
 					%tr
-						%th Event
-						%th Description
-						%th Start date
-						%th End date
-						%th Event currency
-						%th Organizer
-						%th Participants*
-				%tfoot
-					%tr{"data-tablesaw-no-labels": true}
-						%td{colspan: 7}
-							* Hover or click over the table cells for details
-				%tbody
-					- @events.each do |event|
-						%tr
-							%td
-								%button.dropdown.tiny.radius.secondary{"data-dropdown": :actionButtons, "aria-controls": :actionButtons, "aria-expanded": false}= event.name
-								%ul#actionButtons.f-dropdown{"data-dropdown-content": true, "aria-hidden": true, tabindex: "-1", role: :menu}
-									- if current_user.can_update?(event)
-										%li
-											= link_to 'Edit', edit_event_path(event)
-									- if current_user.can_delete?(event)
-										%li
-											= link_to('Delete', event_path(event), :data => {:confirm => 'Are you sure you want to delete event #{event.name}?'}, :method => :delete)
-									- if current_user.can_update?(event)
-										%li
-											= link_to('Invite', invite_to_event_path(event))
+						%td
+							%button.dropdown.tiny.radius.secondary{"data-dropdown": :actionButtons, "aria-controls": :actionButtons, "aria-expanded": false}= event.name
+							%ul#actionButtons.f-dropdown{"data-dropdown-content": true, "aria-hidden": true, tabindex: "-1", role: :menu}
+								- if current_user.can_update?(event)
 									%li
-										= link_to('All items', event_all_items_path(event))
+										= link_to 'Edit', edit_event_path(event)
+								- if current_user.can_delete?(event)
 									%li
-										= link_to('Your items', event_items_path(event))
+										= link_to('Delete', event_path(event), :data => {:confirm => 'Are you sure you want to delete event #{event.name}?'}, :method => :delete)
+								- if current_user.can_update?(event)
 									%li
-										= link_to('Expense Report', expense_report_path(event))
-							%td= event.description
-							%td= event.from_date.strftime('%d %b %Y')
-							%td= event.end_date.strftime('%d %b %Y')
-							%td= event.event_currency.upcase
-							%td= event.organizer.short_name
-							%td.has-tip{"data-tooltip": true, title: "#{event.users.map { |u| u.short_name }.join(", ") }"}= event.users.count
+										= link_to('Invite', invite_to_event_path(event))
+								%li
+									= link_to('All items', event_all_items_path(event))
+								%li
+									= link_to('Your items', event_items_path(event))
+								%li
+									= link_to('Expense Report', expense_report_path(event))
+						%td= event.description
+						%td= event.from_date.strftime('%d %b %Y')
+						%td= event.end_date.strftime('%d %b %Y')
+						%td= event.event_currency.upcase
+						%td= event.organizer.short_name
+						%td.has-tip{"data-tooltip": true, title: "#{event.users.map { |u| u.short_name }.join(", ") }"}= event.users.count

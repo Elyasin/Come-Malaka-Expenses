@@ -22,8 +22,6 @@
 
  * Search engine for events/items
 
- * Abide Validation: Number for exchange rate must not be negative
-
  * User can type in base amount
 
  * Table form for event items - better overview by date, payer, amount
@@ -33,6 +31,10 @@
  * Improve accessibility for screen readers e.g.
 
  * Export functionalities
+
+ * Format amount fields on edit/new item pages
+
+ * Tooltips for currency symbol ($ -> US or Singapore or Aussie ???)
 
  * ...
 

@@ -24,7 +24,7 @@ class Item
   validates :name, :description, :value_date, :event, :base_currency, 
     :foreign_currency, :payer, presence: true
   validates :beneficiaries, presence: { message: " can't be empty. You must choose at least one beneficiary." }
-  validates :foreign_amount, :exchange_rate, numericality: {greater_than: 0}
+  validates :foreign_amount, :exchange_rate, numericality: {greater_than_or_equal_to: 0}
   
   
   after_save :initialize_roles
@@ -59,7 +59,7 @@ class Item
   end
 
   def apply_exchange_rate
-    get_exchange_rate() if self.exchange_rate.blank?
+    get_exchange_rate() if (self.exchange_rate.blank? or self.exchange_rate.to_d == 0.to_d)
     self.base_amount = self.foreign_amount * self.exchange_rate
   rescue StandardError, Exception
     self.errors[:exchange_rate] = " cannot be retrieeved (Timed Out). If problem persists try to type a rate manually."
