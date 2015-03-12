@@ -23,7 +23,7 @@
 				- @events.each do |event|
 					%tr
 						%td
-							%button.dropdown.tiny.radius.secondary{"data-dropdown": :actionButtons, "aria-controls": :actionButtons, "aria-expanded": false}= event.name
+							%a.dropdown{"data-dropdown": :actionButtons, "aria-controls": :actionButtons, "aria-expanded": false}= event.name
 							%ul#actionButtons.f-dropdown{"data-dropdown-content": true, "aria-hidden": true, tabindex: "-1", role: :menu}
 								- if current_user.can_update?(event)
 									%li

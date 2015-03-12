@@ -28,6 +28,8 @@
 
  * Cash flow details per participant (see Johanna M. for design)
 
+ * Track withdrawals/exchange rates
+
  * Improve accessibility for screen readers e.g.
 
  * Export functionalities
