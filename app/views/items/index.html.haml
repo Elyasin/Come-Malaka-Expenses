@@ -28,14 +28,15 @@
 				- @items.each do |item|
 					%tr
 						%td
-							%button.dropdown.tiny.radius.secondary{"data-dropdown": :actionButtons, "aria-controls": :actionButtons, "aria-expanded": false}= item.name
-							%ul#actionButtons.f-dropdown{"data-dropdown-content": true, "aria-hidden": true, tabindex: "-1", role: :menu}
+							%button.dropdown.tiny.radius.secondary{"data-dropdown": "#{'action' + item.id}"}= item.name
+							%br
+							%ul.f-dropdown{id: "#{'action' + item.id}", "data-dropdown-content": true}
 								- if current_user.can_update?(item)
 									%li
-										= link_to("Edit", edit_item_url(item))
+										= link_to("Edit", edit_item_path(item))
 								- if current_user.can_delete?(item)
 									%li
-										= link_to("Delete", item_url(item), method: :delete, data: {confirm: "Are you sure you want to delete item #{item.name} at the #{item.value_date.strftime('%d %b %Y')}?"}) 
+										= link_to("Delete", item_path(item), method: :delete, data: {confirm: "Are you sure you want to delete item #{item.name} at the #{item.value_date.strftime('%d %b %Y')}?"}) 
 						%td= item.value_date.strftime('%d %b %Y')
 						%td= item.description
 						%td= money_format(item.base_amount, item.base_currency)
