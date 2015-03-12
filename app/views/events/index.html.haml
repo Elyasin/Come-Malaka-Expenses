@@ -18,7 +18,7 @@
 			%tfoot
 				%tr{"data-tablesaw-no-labels": true}
 					%td{colspan: 7}
-						* Hover or click over the table cells for details
+						* Hover or click over the text for details
 			%tbody
 				- @events.each do |event|
 					%tr
@@ -43,6 +43,8 @@
 						%td= event.description
 						%td= event.from_date.strftime('%d %b %Y')
 						%td= event.end_date.strftime('%d %b %Y')
-						%td= event.event_currency.upcase
+						%td
+							%span.has-tip{"data-tooltip": true, :title => "#{Money::Currency.new(event.event_currency).name}"}= event.event_currency.upcase
 						%td= event.organizer.short_name
-						%td.has-tip{"data-tooltip": true, title: "#{event.users.map { |u| u.short_name }.join(", ") }"}= event.users.count
+						%td
+							%span.has-tip{"data-tooltip": true, title: "#{event.users.map { |u| u.short_name }.join(", ") }"}= event.users.count

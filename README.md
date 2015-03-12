@@ -24,7 +24,7 @@
 
  * User can type in base amount
 
- * Table form for event items - better overview by date, payer, amount
+ * Make tables sortable
 
  * Cash flow details per participant (see Johanna M. for design)
 
@@ -35,8 +35,6 @@
  * Export functionalities
 
  * Format amount fields on edit/new item pages
-
- * Tooltips for currency symbol ($ -> US or Singapore or Aussie ???)
 
  * ...
 

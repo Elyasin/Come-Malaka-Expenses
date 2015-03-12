@@ -23,7 +23,7 @@
 					%td{colspan: 10}
 						* Amounts are rounded for display
 						%br
-						** Hover or click over the table cells for details.
+						** Hover or click over the text for details.
 			%tbody
 				- @items.each do |item|
 					%tr
@@ -37,9 +37,12 @@
 								= item.name
 						%td= item.value_date.strftime('%d %b %Y')
 						%td= item.description
-						%td= money_format(item.base_amount, item.base_currency)
+						%td
+							%span.has-tip{"data-tooltip": true, :title => "#{Money::Currency.new(item.base_currency).name}"}= money_format(item.base_amount, item.base_currency)
 						%td= item.exchange_rate
-						%td= money_format(item.foreign_amount, item.foreign_currency)
+						%td
+							%span.has-tip{"data-tooltip": true, :title => "#{Money::Currency.new(item.foreign_currency).name}"}= money_format(item.foreign_amount, item.foreign_currency)
 						%td= item.payer.short_name
-						%td.has-tip{"data-tooltip": true, :title => "#{item.beneficiaries.map{ |b| b.short_name }.join(', ')}"}= item.beneficiaries.count
+						%td
+							%span.has-tip{"data-tooltip": true, :title => "#{item.beneficiaries.map{ |b| b.short_name }.join(', ')}"}= item.beneficiaries.count
 						%td= money_format(item.cost_per_beneficiary, item.base_currency)
