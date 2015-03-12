@@ -23,8 +23,8 @@
 				- @events.each do |event|
 					%tr
 						%td
-							%a.dropdown{"data-dropdown": :actionButtons, "aria-controls": :actionButtons, "aria-expanded": false}= event.name
-							%ul#actionButtons.f-dropdown{"data-dropdown-content": true, "aria-hidden": true, tabindex: "-1", role: :menu}
+							%a.dropdown{"data-dropdown": "#{'action' + event.id}"}= event.name
+							%ul.f-dropdown{id: "#{'action' + event.id}", "data-dropdown-content": true}
 								- if current_user.can_update?(event)
 									%li
 										= link_to 'Edit', edit_event_path(event)
