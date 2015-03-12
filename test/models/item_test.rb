@@ -65,11 +65,9 @@ class ItemTest < ActiveSupport::TestCase
 		assert_not @item1.save, "Item must have at least one beneficiary"
 	end
 
-	test "exchange rate must be positive and not zero" do
+	test "exchange rate must be greate or equal than 0" do
 		@item1.exchange_rate = -1
 		assert_not @item1.save, "Item's exchange rate must be >= 0"
-		@item1.exchange_rate = 0
-		assert_not @item1.save, "Item's exchange rate must not be 0"
 	end
 
 	test "exchange rate must be a number" do

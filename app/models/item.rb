@@ -26,7 +26,6 @@ class Item
   validates :beneficiaries, presence: { message: " can't be empty. You must choose at least one beneficiary." }
   validates :foreign_amount, :exchange_rate, numericality: {greater_than_or_equal_to: 0}
   
-  
   after_save :initialize_roles
 
   after_destroy :revoke_roles
