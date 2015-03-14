@@ -7,7 +7,7 @@ class ItemAuthorizer < ApplicationAuthorizer
 
   # event participant can create
   def creatable_by?(user, event)
-    user.has_role? :event_participant, event
+    user.has_role?(:event_participant, event)
   end
 
   # item owner can update

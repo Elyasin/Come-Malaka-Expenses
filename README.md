@@ -36,6 +36,8 @@
 
  * Format amount fields on edit/new item pages
 
+ * Reduce import files (SASS, JS/jQuery, ...) -> selected imports
+
  * ...
 
 	* Ruby version: 2.2.0 (Contains a [bug] with BigDecimal? Use Rational class?)

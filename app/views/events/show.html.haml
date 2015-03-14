@@ -1,10 +1,32 @@
 = content_for :title, "Details about " + @event.name
-%h3 Event details
-%p Name: #{@event.name}
-%p Description: #{@event.description}
-%p From date: #{@event.from_date}
-%p To Date: #{@event.end_date}
-%p Event currency: #{@event.event_currency.upcase}
-%p Organizer: #{@event.organizer.name}
-%p Participants: #{@event.users.map { |u| u.name }.join(", ") }
-%p Back to #{link_to 'Your events', events_path}
+%p= link_to 'Back to Your events', events_path
+.row
+	.small-12.medium-8.large-6.columns.small-centered
+		%table
+			%caption
+				Event details
+			%tbody
+				%tr
+					%th Name
+					%td #{@event.name}
+				%tr
+					%th Description
+					%td #{@event.description}
+				%tr
+					%th From Date
+					%td #{@event.from_date.strftime('%d %b %Y')}
+				%tr
+					%th To Date
+					%td #{@event.end_date.strftime('%d %b %Y')}
+				%tr
+					%th Event currency
+					%td #{@event.event_currency.upcase}
+				%tr
+					%th Organizer
+					%td #{@event.organizer.name}
+				%tr
+					%th Participants
+					%td
+						- @event.users.each do |participant|
+							= participant.short_name
+							%br

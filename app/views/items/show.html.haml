@@ -1,27 +1,45 @@
-= content_for :title, "Details for " + @item.name + " item"
-%h3 Item details
+= content_for :title, "Details about item " + @item.name
 %p= link_to "Back to your posted items", event_items_path(@item.event)
 %p= link_to "Back to edit item", edit_item_path(@item)
-Name: #{@item.name}
-%br/
-Value Date: #{@item.value_date.strftime('%d %b %Y')}
-%br/
-Description: #{@item.description}
-%br/
-Base amount: #{money_format(@item.base_amount, @item.base_currency)}
-%br/
-Base currency: #{@item.base_currency}
-%small (This is the event currency)
-%br/
-Exchange rate: #{@item.exchange_rate}
-%br/
-Foreign amount: #{money_format(@item.foreign_amount, @item.foreign_currency)}
-%br/
-Foreign currency: #{@item.foreign_currency}
-%small (This is the item's currency)
-%br/
-Beneficiaries: #{@item.beneficiaries.map { |b| b.short_name }.join(", ") }
-%br/
-Cost per beneficiary: #{money_format(@item.cost_per_beneficiary, @item.base_currency)}
-%small (This amount is in base currency)
-%hr
+.row
+	.small-12.medium-8.large-6.columns.small-centered
+		%table
+			%caption
+				Item details
+			%tbody
+				%tr
+					%th Name
+					%td #{@item.name}
+				%tr
+					%th Value Date
+					%td #{@item.value_date.strftime('%d %b %Y')}
+				%tr
+					%th Description
+					%td #{@item.description}
+				%tr
+					%th Base amount
+					%td #{money_format(@item.base_amount, @item.base_currency)}
+				%tr
+					%th Base currency
+					%td
+						%span.has-tip{"data-tooltip": true, title: "This is the event currency"}=@item.base_currency
+				%tr
+					%th Exchange rate
+					%td #{@item.exchange_rate}
+				%tr
+					%th Foreign amount
+					%td #{money_format(@item.foreign_amount, @item.foreign_currency)}
+				%tr
+					%th Foreign currency
+					%td 
+						%span.has-tip{"data-tooltip": true, title: "This is the item's currency"}=@item.foreign_currency
+				%tr
+					%th Beneficiaries
+					%td
+						- @item.beneficiaries.each do |participant|
+							= participant.short_name
+							%br
+				%tr
+					%th Cost per beneficiary
+					%td 
+						%span.has-tip{"data-tooltip": true, title: "This amount is in base currency"}= money_format(@item.cost_per_beneficiary, @item.base_currency)
