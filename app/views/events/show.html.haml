@@ -27,6 +27,4 @@
 				%tr
 					%th Participants
 					%td
-						- @event.users.each do |participant|
-							= participant.short_name
-							%br
+						%span.has-tip{"data-tooltip": true, title: "#{@event.users.map { |participant| participant.short_name}.join(', ') }"}= @event.users.count

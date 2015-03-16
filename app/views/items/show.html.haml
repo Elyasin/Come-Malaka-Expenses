@@ -36,9 +36,7 @@
 				%tr
 					%th Beneficiaries
 					%td
-						- @item.beneficiaries.each do |participant|
-							= participant.short_name
-							%br
+						%span.has-tip{"data-tooltip": true, title: "#{@item.beneficiaries.map { |beneficiary| beneficiary.short_name }.join(', ') }"}= @item.beneficiaries.count
 				%tr
 					%th Cost per beneficiary
 					%td 

@@ -13,7 +13,7 @@
 		%img.beta_testing{"data-interchange": "[#{asset_path("beta-testing-tiny.jpg")}, (default)], [#{asset_path("beta-testing-medium.jpg")}, (medium)], [#{asset_path("beta-testing-medium.jpg")}, (large)]", alt: "Beta Testing"}
 
 		%div.fixed.sticky
-			%nav.top-bar{"data-topbar": true, role: :navigation, "data-options": "sticky-on: [small, medium, large]"}
+			%nav.top-bar.hide-for-small{"data-topbar": true, role: :navigation, "data-options": "sticky-on: [medium, large]"}
 				%ul.title-area
 					%li.name
 						%h1=link_to "Come Malaka!", nil
