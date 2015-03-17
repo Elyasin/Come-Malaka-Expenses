@@ -1,30 +1,44 @@
 = content_for :title, "Details about " + @event.name
 %p= link_to 'Back to Your events', events_path
-.row
-	.small-12.medium-8.large-6.columns.small-centered
-		%table
-			%caption
-				Event details
-			%tbody
-				%tr
-					%th Name
-					%td #{@event.name}
-				%tr
-					%th Description
-					%td #{@event.description}
-				%tr
-					%th From Date
-					%td #{@event.from_date.strftime('%d %b %Y')}
-				%tr
-					%th To Date
-					%td #{@event.end_date.strftime('%d %b %Y')}
-				%tr
-					%th Event currency
-					%td #{@event.event_currency.upcase}
-				%tr
-					%th Organizer
-					%td #{@event.organizer.name}
-				%tr
-					%th Participants
-					%td
-						%span.has-tip{"data-tooltip": true, title: "#{@event.users.map { |participant| participant.short_name}.join(', ') }"}= @event.users.count
+
+= form_for @event do |f|
+	.row
+		.small-12.medium-8.large-6.columns.small-centered
+			%fieldset{disabled: true}
+				%legend View event details
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :name
+					.small-12.medium-8.large-8.columns.end
+						= f.text_field :name
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :description
+					.small-12.medium-8.large-8.columns.end
+						= f.text_field :description
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :from_date
+					.small-12.medium-8.large-8.columns.end
+						= f.date_field :from_date, size: 10
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :end_date
+					.small-12.medium-8.large-8.columns.end
+						= f.date_field :end_date, size: 10
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :event_currency
+					.small-12.medium-8.large-8.columns.end
+						= f.text_field :event_currency, value: @event.event_currency.upcase
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= label_tag :organizer
+					.small-12.medium-8.large-8.columns.end
+						= text_field_tag :dummy, @event.organizer.name
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :participants
+					.small-12.medium-8.large-8.columns.end
+						= f.collection_check_boxes(:user_ids, @event.users, :id, :name) do |b|
+							=  b.label { b.check_box + " " + b.text }

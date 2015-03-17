@@ -1,43 +1,61 @@
 = content_for :title, "Details about item " + @item.name
 %p= link_to "Back to your posted items", event_items_path(@item.event)
 %p= link_to "Back to edit item", edit_item_path(@item)
-.row
-	.small-12.medium-8.large-6.columns.small-centered
-		%table
-			%caption
-				Item details
-			%tbody
-				%tr
-					%th Name
-					%td #{@item.name}
-				%tr
-					%th Value Date
-					%td #{@item.value_date.strftime('%d %b %Y')}
-				%tr
-					%th Description
-					%td #{@item.description}
-				%tr
-					%th Base amount
-					%td #{money_format(@item.base_amount, @item.base_currency)}
-				%tr
-					%th Base currency
-					%td
-						%span.has-tip{"data-tooltip": true, title: "This is the event currency"}=@item.base_currency
-				%tr
-					%th Exchange rate
-					%td #{@item.exchange_rate}
-				%tr
-					%th Foreign amount
-					%td #{money_format(@item.foreign_amount, @item.foreign_currency)}
-				%tr
-					%th Foreign currency
-					%td 
-						%span.has-tip{"data-tooltip": true, title: "This is the item's currency"}=@item.foreign_currency
-				%tr
-					%th Beneficiaries
-					%td
-						%span.has-tip{"data-tooltip": true, title: "#{@item.beneficiaries.map { |beneficiary| beneficiary.short_name }.join(', ') }"}= @item.beneficiaries.count
-				%tr
-					%th Cost per beneficiary
-					%td 
-						%span.has-tip{"data-tooltip": true, title: "This amount is in base currency"}= money_format(@item.cost_per_beneficiary, @item.base_currency)
+
+= form_for @item do |f|
+	.row
+		.small-12.medium-8.large-6.columns.small-centered
+			%fieldset{ disabled: true }
+				%legend Show item details
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :name
+					.small-12.medium-8.large-8.columns.end
+						= f.text_field :name
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :description 
+					.small-12.medium-8.large-8.columns.end
+						= f.text_field :description
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :value_date 
+					.small-12.medium-8.large-8.columns.end
+						= f.date_field :value_date, size: 10
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= label_tag :payer
+					.field.small-12.medium-8.large-8.columns.end
+						= text_field_tag :dummy, @item.payer.name
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :base_amount, "Base amount"
+					.small-12.medium-8.large-8.columns.end
+						= f.number_field :base_amount, value: @item.base_amount
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :base_currency, "Base currency"
+					.small-12.medium-8.large-8.columns.end
+						= f.text_field :base_currency, value: @item.event.event_currency.upcase
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :exchange_rate, "Exchange rate"
+					.small-12.medium-8.large-8.columns.end
+						= f.number_field :exchange_rate
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :foreign_amount
+					.small-12.medium-8.large-8.columns.end
+						= f.number_field :foreign_amount, value: @item.foreign_amount
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :foreign_currency
+					.small-12.medium-8.large-8.columns.end
+						= f.select :foreign_currency, options_from_collection_for_select(Money::Currency.all, :iso_code, :iso_code, @item.foreign_currency), {prompt: "Select foreign currency"}
+				.row
+					.field.small-12.medium-4.large-4.columns.end
+						= f.label :beneficiaries
+					.small-12.medium-8.large-8.columns.end
+						= f.collection_check_boxes(:beneficiary_ids, @item.event.users, :id, :short_name) do |b|
+							=  b.label { b.check_box + " " + b.text }
+							
