@@ -290,4 +290,39 @@ class EventsControllerTest < ActionController::TestCase
   	assert_nil assigns(:items), "Items must not be assigned"
   end
 
+  test "organizer can see Who owes you? details" do
+    sign_in @organizer
+    get :who_owes_you, event_id: @event.id
+    assert_response :success, "Response must be success"
+    assert assigns(:event), "Event must be assigned"
+    assert_not_empty assigns(:total_amounts), "Total amount must not be empty"
+    assert_not_empty assigns(:item_lists), "Item lists must not be empty"
+  end
+
+  test "participant (payer) can see Who owes you? details" do
+    sign_in @user4
+    get :who_owes_you, event_id: @event.id
+    assert_response :success, "Response must be success"
+    assert assigns(:event), "Event must be assigned"
+    assert_not_empty assigns(:total_amounts), "Total amount must not be empty"
+    assert_not_empty assigns(:item_lists), "Item lists must not be empty"
+  end
+
+  test "participant (non payer) can see Who owes you? details" do
+    sign_in @user1
+    get :who_owes_you, event_id: @event.id
+    assert_response :success, "Response must be success"
+    assert assigns(:event), "Event must be assigned"
+    assert_empty assigns(:total_amounts), "Total amount must be empty"
+    assert_empty assigns(:item_lists), "Item lists must be empty"
+  end
+
+  test "non participant cannot see Who owes you? details" do
+    sign_in @non_participant_user
+    get :who_owes_you, event_id: @event.id
+    assert_response :forbidden, "Response must be forbidden"
+    assert_nil assigns(:total_amounts), "Total amounts must be emtpy"
+    assert_nil assigns(:item_lists), "Item lists must be empty"
+  end
+
 end

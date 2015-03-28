@@ -107,11 +107,51 @@ class EventTest < ActiveSupport::TestCase
 	end
 
 	test "who owes organizer" do
-		skip
+    total_amounts = Hash.new { |h,k| h[k] = 0 }
+    item_lists = Hash.new { |h,k| h[k] = [] }
+		@event.who_owes @organizer, total_amounts, item_lists
+		assert_equal      0, total_amounts[@organizer], "Organizer's tota amount must not be calculated"
+		assert_equal 124.00, total_amounts[@user1].round(2), "Total amount for user 1 must be 124.00"
+		assert_equal  87.14, total_amounts[@user2].round(2), "Total amount for user 2 must be 87.14"
+		assert_equal 124.00, total_amounts[@user3].round(2), "Total amount for user 3 must be 124.00"
+		assert_equal 124.00, total_amounts[@user4].round(2), "Total amount for user 4 must be 124.00"
+		assert_equal  87.14, total_amounts[@user5].round(2), "Total amount for user 5 must be 87.14"
+		assert_empty item_lists[@organizer], "Organizer's item list must be empty"
+		assert_equal 5, item_lists[@user1].count, "User 1 must have 5 items"
+		assert_equal 4, item_lists[@user2].count, "User 2 must have 4 items"
+		assert_equal 5, item_lists[@user3].count, "User 3 must have 5 items"
+		assert_equal 5, item_lists[@user4].count, "User 4 must have 5 items"
+		assert_equal 4, item_lists[@user5].count, "User 5 must have 4 items"
+		assert_not_includes item_lists[@user1], @item6, "Item 6 must not be included in item lists"
+		assert_not_includes item_lists[@user2], @item6, "Item 6 must not be included in item lists"
+		assert_not_includes item_lists[@user2], @item4, "Item 4 must not be included in item lists"
+		assert_not_includes item_lists[@user3], @item6, "Item 6 must not be included in item lists"
+		assert_not_includes item_lists[@user4], @item6, "Item 6 must not be included in item lists"
+		assert_not_includes item_lists[@user5], @item6, "Item 6 must not be included in item lists"
+		assert_not_includes item_lists[@user5], @item4, "Item 4 must not be included in item lists"
 	end
 
-	test "who owes participant" do
-		skip
+	test "who owes participant (user4 is a payer)" do
+    total_amounts = Hash.new { |h,k| h[k] = 0 }
+    item_lists = Hash.new { |h,k| h[k] = [] }
+		@event.who_owes @user4, total_amounts, item_lists
+		assert_equal 1.79, total_amounts[@organizer].round(2), "Total amount for organizer must be 1.79"
+		assert_equal 1.79, total_amounts[@user1].round(2), "Total amount for user 1 must be 1.79"
+		assert_equal 1.79, total_amounts[@user2].round(2), "Total amount for user 2 must be 1.79"
+		assert_equal 1.79, total_amounts[@user3].round(2), "Total amount for user 3 must be 1.79"
+		assert_equal    0, total_amounts[@user4].round(2), "User4's total amount must be 0"
+		assert_equal 1.79, total_amounts[@user5].round(2), "Total amount for user 5 must be 1.79"
+		assert_equal 1, item_lists[@organizer].count, "Organizer must have 1 item"
+		assert_equal 1, item_lists[@user1].count, "User 1 must have 1 item"
+		assert_equal 1, item_lists[@user2].count, "User 2 must have 1 item"
+		assert_equal 1, item_lists[@user3].count, "User 3 must have 1 item"
+		assert_empty item_lists[@user4], "User4's item list must be empty"
+		assert_equal 1, item_lists[@user5].count, "User 5 must have 1 item"
+		assert_includes item_lists[@organizer], @item6, "Item 6 must be included in item lists"		
+		assert_includes item_lists[@user1], @item6, "Item 6 must be included in item lists"
+		assert_includes item_lists[@user2], @item6, "Item 6 must be included in item lists"
+		assert_includes item_lists[@user3], @item6, "Item 6 must be included in item lists"
+		assert_includes item_lists[@user5], @item6, "Item 6 must be included in item lists"
 	end
 
 	#Test classe level authorization
