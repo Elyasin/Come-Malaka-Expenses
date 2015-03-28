@@ -71,4 +71,15 @@ class Event
     total_expenses_amount_for(participant) - total_benefited_amount_for(participant)
   end
 
+  # who owes payer what in this event
+  def who_owes(payer, total_amount = Hash.new { |h,k| h[k] = 0 }, item_list = Hash.new { |h,k| h[k] = [] })
+    self.items.where(payer_id: payer.id).each do |item|
+      item.beneficiaries.each do |beneficiary|
+        next unless beneficiary != payer
+        total_amount[beneficiary] += item.cost_per_beneficiary
+        item_list[beneficiary] << item
+      end
+    end
+  end
+
 end

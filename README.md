@@ -8,6 +8,8 @@
 
  * Web/Mail Design/Sitemap/Navigation - Foundation
 
+ * Use Charts to display data (e.g. Who owes you?)
+
  * Implement auto-complete when inviting user/participant
 
  * DRY out the code: partials, (mail) view helpers, JavaScript, etc.

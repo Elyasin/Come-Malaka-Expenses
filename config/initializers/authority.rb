@@ -29,7 +29,8 @@ Authority.configure do |config|
      :update  => 'update',
      :destroy => 'delete',
      :event_all_items => 'read',
-     :expense_report => 'read'
+     :expense_report => 'read',
+     :who_owes_payer => 'read'
    }
 
   # ABILITIES
