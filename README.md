@@ -18,17 +18,19 @@
 
  * Look into CI for HTML/JavaScript: Selenium/PhantomJS, SauceLab, .... ?
 
- * Soft delete a user
+ * Soft delete a user (Mongoid Paranoia)
 
  * Notification stream for user
 
  * Search engine for events/items
 
- * User can type in base amount
+ * User can type in base amount?
 
  * Make tables sortable
 
- * Cash flow details per participant (see Johanna M. for design)
+ * Cash flow details per participant
+
+ * Make use of aggregation/map-reduce framework
 
  * Track withdrawals/exchange rates
 

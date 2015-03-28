@@ -1,6 +1,6 @@
 = content_for :title, "Expense report for " + @event.name + " event"
 %p= link_to 'Back to event', events_path
-%p= link_to "Who owes you?", who_owes_payer_path(@event)
+%p= link_to "Who owes you?", who_owes_you_path(@event)
 .row
   .small-12.columns.small-centered.table-selector
     %table.tablesaw{role: :grid, "data-tablesaw-mode": :stack}

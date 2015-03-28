@@ -73,7 +73,7 @@ class Event
 
   # who owes payer what in this event
   def who_owes(payer, total_amount = Hash.new { |h,k| h[k] = 0 }, item_list = Hash.new { |h,k| h[k] = [] })
-    self.items.where(payer_id: payer.id).each do |item|
+    self.items.where(payer_id: payer.id).order_by(value_date: :desc, name: :asc).each do |item|
       item.beneficiaries.each do |beneficiary|
         next unless beneficiary != payer
         total_amount[beneficiary] += item.cost_per_beneficiary
