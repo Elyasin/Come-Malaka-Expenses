@@ -37,6 +37,8 @@ class EventRoutesTest < ActionController::TestCase
 		assert_routing({ method: 'delete', path: 'events/86' }, { controller: "events", action: "destroy", id: "86" } )
 	end
 
-
+	test "must route to 'who owes you?'" do
+		assert_routing({ method: 'get', path: 'who_owes_you/100' }, {controller: "events", action: "who_owes_you", event_id: "100"} )
+	end
 
 end

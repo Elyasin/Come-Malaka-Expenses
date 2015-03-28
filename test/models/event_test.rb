@@ -106,6 +106,13 @@ class EventTest < ActiveSupport::TestCase
 		assert_equal -88.92, @event.balance_for(@user5).round(2), "User 5 must pay 125.79"
 	end
 
+	test "who owes organizer" do
+		skip
+	end
+
+	test "who owes participant" do
+		skip
+	end
 
 	#Test classe level authorization
 
