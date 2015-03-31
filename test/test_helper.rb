@@ -55,7 +55,7 @@ class ActiveSupport::TestCase
 		@event.save!
 		@item1 = Item.new(name: "Food", description: "Food", value_date: @event.from_date, 
 			event: @event, base_amount: 241.3, base_currency: "EUR", 
-			exchange_rate: 241.3.to_d/1800, foreign_amount: 1800, foreign_currency: "DKK", 
+			exchange_rate: 241.3.to_d/1800, foreign_amount: 1800, foreign_currency: "DKK",
 			payer: @organizer, beneficiaries: [@organizer, @user1, @user2, @user3, @user4, @user5])
 		@item1.initialize_roles
 		@item1.save!

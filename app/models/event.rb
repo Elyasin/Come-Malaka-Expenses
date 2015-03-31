@@ -71,14 +71,23 @@ class Event
     total_expenses_amount_for(participant) - total_benefited_amount_for(participant)
   end
 
-  # who owes payer what in this event
-  def who_owes(payer, total_amount = Hash.new { |h,k| h[k] = 0 }, item_list = Hash.new { |h,k| h[k] = [] })
-    self.items.where(payer_id: payer.id).order_by(value_date: :desc, name: :asc).each do |item|
+  # who owes participant which items/amounts in this event
+  def who_owes(participant, total_amount = Hash.new { |h,k| h[k] = 0 }, item_list = Hash.new { |h,k| h[k] = [] })
+    self.items.where(payer_id: participant.id).order_by(value_date: :desc, name: :asc).each do |item|
       item.beneficiaries.each do |beneficiary|
-        next unless beneficiary != payer
+        next unless beneficiary != participant
         total_amount[beneficiary] += item.cost_per_beneficiary
         item_list[beneficiary] << item
       end
+    end
+  end
+
+  #participants owe whom which item/amount in this event
+  def who_paid_for(beneficiary, total_amount = Hash.new { |h,k| h[k] = 0 }, item_list = Hash.new { |h,k| h[k] = [] })
+    self.items.in(beneficiary_ids: beneficiary.id).order_by(value_date: :desc, name: :asc).each do |item|
+      next unless beneficiary != item.payer
+      total_amount[item.payer] += item.cost_per_beneficiary
+      item_list[item.payer] << item
     end
   end
 

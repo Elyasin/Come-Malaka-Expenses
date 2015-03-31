@@ -295,7 +295,7 @@ class EventsControllerTest < ActionController::TestCase
     get :who_owes_you, event_id: @event.id
     assert_response :success, "Response must be success"
     assert assigns(:event), "Event must be assigned"
-    assert_not_empty assigns(:total_amounts), "Total amount must not be empty"
+    assert_not_empty assigns(:total_amounts), "Total amounts must not be empty"
     assert_not_empty assigns(:item_lists), "Item lists must not be empty"
   end
 
@@ -320,6 +320,32 @@ class EventsControllerTest < ActionController::TestCase
   test "non participant cannot see Who owes you? details" do
     sign_in @non_participant_user
     get :who_owes_you, event_id: @event.id
+    assert_response :forbidden, "Response must be forbidden"
+    assert_nil assigns(:total_amounts), "Total amounts must be emtpy"
+    assert_nil assigns(:item_lists), "Item lists must be empty"
+  end
+
+  test "organizer can see you owe whom? details" do
+    sign_in @organizer
+    get :you_owe_whom, event_id: @event.id
+    assert_response :success, "Response must be success"
+    assert assigns(:event), "Event must be assigned"
+    assert_not_empty assigns(:total_amounts), "Total amounts must not be empty"
+    assert_not_empty assigns(:item_lists), "Item lists must not be empty"
+  end
+
+  test "participant (payer and beneficiary) can see you owe whom? details" do
+    sign_in @user5
+    get :you_owe_whom, event_id: @event.id
+    assert_response :success, "Response must be success"
+    assert assigns(:event), "Event must be assigned"
+    assert_not_empty assigns(:total_amounts), "Total amounts must not be empty"
+    assert_not_empty assigns(:item_lists), "Item lists must not be empty"
+  end
+
+  test "non participant cannot see you owe whom? details" do
+    sign_in @non_participant_user
+    get :you_owe_whom, event_id: @event.id
     assert_response :forbidden, "Response must be forbidden"
     assert_nil assigns(:total_amounts), "Total amounts must be emtpy"
     assert_nil assigns(:item_lists), "Item lists must be empty"

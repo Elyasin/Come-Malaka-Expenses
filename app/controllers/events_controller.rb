@@ -89,6 +89,13 @@ class EventsController < ApplicationController
     @event.who_owes current_user, @total_amounts, @item_lists
   end
 
+  def you_owe_whom
+    @event = Event.find(params[:event_id])
+    authorize_action_for(@event)
+    @total_amounts = Hash.new { |h,k| h[k] = 0 }
+    @item_lists = Hash.new { |h,k| h[k] = [] }
+    @event.who_paid_for current_user, @total_amounts, @item_lists
+  end
 
   private
 

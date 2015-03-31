@@ -41,4 +41,8 @@ class EventRoutesTest < ActionController::TestCase
 		assert_routing({ method: 'get', path: 'who_owes_you/100' }, {controller: "events", action: "who_owes_you", event_id: "100"} )
 	end
 
+	test "must route to 'you owe whom?'" do
+		assert_routing({ method: 'get', path: 'you_owe_whom/45' }, {controller: "events", action: "you_owe_whom", event_id: "45"} )#
+	end
+
 end

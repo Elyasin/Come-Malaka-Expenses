@@ -30,7 +30,8 @@ Authority.configure do |config|
      :destroy => 'delete',
      :event_all_items => 'read',
      :expense_report => 'read',
-     :who_owes_you => 'read'
+     :who_owes_you => 'read',
+     :you_owe_whom => 'read'
    }
 
   # ABILITIES
