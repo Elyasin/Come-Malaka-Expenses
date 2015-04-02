@@ -1,4 +1,4 @@
-[![Code Climate](https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses/badges/gpa.svg)](https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses) [![Code Climate](https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses/badges/gpa.svg)](https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses) [![Build Status](https://travis-ci.org/Elyasin/Come-Malaka-Expenses.svg?branch=master)](https://travis-ci.org/Elyasin/Come-Malaka-Expenses) [![security](https://hakiri.io/github/Elyasin/Come-Malaka-Expenses/master.svg)](https://hakiri.io/github/Elyasin/Come-Malaka-Expenses/master)
+[![Test Coverage](https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses/badges/coverage.svg)](https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses) [![Code Climate](https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses/badges/gpa.svg)](https://codeclimate.com/github/Elyasin/Come-Malaka-Expenses) [![Build Status](https://travis-ci.org/Elyasin/Come-Malaka-Expenses.svg?branch=master)](https://travis-ci.org/Elyasin/Come-Malaka-Expenses) [![security](https://hakiri.io/github/Elyasin/Come-Malaka-Expenses/master.svg)](https://hakiri.io/github/Elyasin/Come-Malaka-Expenses/master)
 
 # README
 
@@ -40,7 +40,7 @@
 
  * Format amount fields on edit/new item pages
 
- * Reduce import files (SASS, JS/jQuery, ...) -> selected imports
+ * Reduce imported files (SASS, JS/jQuery, ...) -> selected imports
 
  * ...
 

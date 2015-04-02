@@ -82,22 +82,23 @@ class EventsController < ApplicationController
   end
 
   def who_owes_you
-    @event = Event.find(params[:event_id])
-    authorize_action_for(@event)
-    @total_amounts = Hash.new { |h,k| h[k] = 0 }
-    @item_lists = Hash.new { |h,k| h[k] = [] }
+    init_actions
     @event.who_owes current_user, @total_amounts, @item_lists
   end
 
   def you_owe_whom
-    @event = Event.find(params[:event_id])
-    authorize_action_for(@event)
-    @total_amounts = Hash.new { |h,k| h[k] = 0 }
-    @item_lists = Hash.new { |h,k| h[k] = [] }
+    init_actions
     @event.who_paid_for current_user, @total_amounts, @item_lists
   end
 
   private
+
+  def init_actions
+    @event = Event.find(params[:event_id])
+    authorize_action_for(@event)
+    @total_amounts = Hash.new { |h,k| h[k] = 0 }
+    @item_lists = Hash.new { |h,k| h[k] = [] }
+  end
 
   def event_params
   	params.require(:event).permit(:name, :from_date, :end_date, :description, :organizer_id, :event_currency, :user_ids => [], :users => [])
