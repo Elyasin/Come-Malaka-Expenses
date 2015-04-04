@@ -72,10 +72,10 @@ class Event
   end
 
   # who owes participant which items/amounts in this event
-  def who_owes(participant, total_amount, item_list)
-    self.items.where(payer_id: participant.id).order_by(value_date: :desc, name: :asc).each do |item|
+  def who_owes(payer, total_amount, item_list)
+    self.items.where(payer_id: payer.id).order_by(value_date: :desc, name: :asc).each do |item|
       item.beneficiaries.each do |beneficiary|
-        next unless beneficiary != participant
+        next unless beneficiary != payer
         total_amount[beneficiary] += item.cost_per_beneficiary
         item_list[beneficiary] << item
       end

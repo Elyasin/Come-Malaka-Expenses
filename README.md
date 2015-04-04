@@ -14,6 +14,9 @@
 
  * DRY out the code: partials, (mail) view helpers, JavaScript, etc.
 
+ * Refactor:
+ 		Value objects, Service objects, Form objects, Query objects, View objects, Policy objects, Decorators...
+
  * Tests: Views (functional), Integration Tests
 
  * Look into CI for HTML/JavaScript: Selenium/PhantomJS, SauceLab, .... ?
