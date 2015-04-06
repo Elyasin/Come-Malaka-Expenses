@@ -88,7 +88,7 @@ gem 'puma'
 gem "rack-timeout"
 
 #Foundation for Rails apps
-gem 'foundation-rails'
+gem 'foundation-rails', "5.5.1.0"
 
 #App Performance Monitoring for Heroku
 gem 'newrelic_rpm', group: :production
