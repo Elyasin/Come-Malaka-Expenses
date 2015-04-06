@@ -1,6 +1,11 @@
 = content_for :title, "Details about item " + @item.name
-%p= link_to "Back to your posted items", event_items_path(@item.event)
-%p= link_to "Back to edit item", edit_item_path(@item)
+= link_to "Back to all items", event_all_items_path(@item.event)
+%br
+= link_to "Back to your posted items", event_items_path(@item.event)
+%br
+= link_to "Back to edit item", edit_item_path(@item) if current_user.can_update? @item
+%br
+
 
 = form_for @item do |f|
 	.row

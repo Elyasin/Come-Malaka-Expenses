@@ -21,7 +21,7 @@
 
  * Look into CI for HTML/JavaScript: Selenium/PhantomJS, SauceLab, .... ?
 
- * Soft delete a user (Mongoid Paranoia)
+ * Soft delete a user (Mongoid Paranoid)
 
  * Notification stream for user
 
@@ -30,8 +30,6 @@
  * User can type in base amount?
 
  * Make tables sortable
-
- * Cash flow details per participant
 
  * Make use of aggregation/map-reduce framework
 

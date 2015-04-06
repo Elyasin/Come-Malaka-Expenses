@@ -22,7 +22,7 @@
       %tbody
         -@participants.each do |participant|
           %tr
-            %td= participant.short_name
+            %td= participant.short_name 
             %td= money_format(@event.total_expenses_amount_for(participant), @event.event_currency)
             %td= money_format(@event.total_benefited_amount_for(participant), @event.event_currency)
             %td= money_format(@event.balance_for(participant), @event.event_currency)

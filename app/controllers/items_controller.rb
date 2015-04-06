@@ -14,7 +14,7 @@ class ItemsController < ApplicationController
 
   def new
     event = Event.find params[:event_id]
-    @item = event.items.build(payer_id: current_user.id, value_date: event.from_date, event: event)
+    @item = event.items.build(value_date: Date.today, event: event)
     authorize_action_for @item, event
   end
 
@@ -36,8 +36,8 @@ class ItemsController < ApplicationController
 
   def update
     @item = Item.find params[:id]
-    @item.update_attributes item_params
     authorize_action_for @item
+    @item.update_attributes item_params
     (render :edit and return) if invalid? @item
     @item.save
     EventMailer.item_modified_message(@item).deliver_now!
