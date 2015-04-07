@@ -10,6 +10,7 @@ Item details below
 Name: #{@item.name}
 Value Date: #{@item.value_date.strftime('%d %b %Y')}
 Description: #{@item.description}
+Payer: #{@item.payer.name}
 Base amount: #{money_format(@item.base_amount, @item.base_currency)}
 Base currency: #{@item.base_currency} (This is the event currency)
 Exchange rate: #{@item.exchange_rate}

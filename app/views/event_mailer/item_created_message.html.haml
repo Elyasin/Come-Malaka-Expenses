@@ -9,6 +9,8 @@ Value Date: #{@item.value_date.strftime('%d %b %Y')}
 %br
 Description: #{@item.description}
 %br
+Payer: #{@item.payer.name}
+%br
 Base amount: #{money_format(@item.base_amount, @item.base_currency)}
 %br
 Base currency: #{@item.base_currency}
