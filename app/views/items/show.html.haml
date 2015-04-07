@@ -6,6 +6,7 @@
 - if current_user.can_update? @item
 	= link_to "Back to edit item", edit_item_path(@item)
 	%br
+= link_to "Create new item", new_event_item_path(@item.event)
 
 
 = form_for @item do |f|

@@ -46,6 +46,6 @@
 						%td= event.end_date.strftime('%d %b %Y')
 						%td
 							%span.has-tip{"data-tooltip": true, :title => "#{Money::Currency.new(event.event_currency).name}"}= event.event_currency.upcase
-						%td= event.organizer.short_name
+						%td= event.organizer.short_name if not event.organizer.nil?
 						%td
 							%span.has-tip{"data-tooltip": true, title: "#{event.users.map { |u| u.short_name }.join(", ") }"}= event.users.count
