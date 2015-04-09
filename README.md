@@ -6,7 +6,9 @@
 
 ## ToDos:
 
- * Web/Mail Design/Sitemap/Navigation - Foundation
+ * User cannot delete account if participating in events
+
+ * Web/Mail Design/Sitemap/Navigation - Foundation/Responsive
 
  * Use Charts to display data (e.g. Who owes you?)
 
