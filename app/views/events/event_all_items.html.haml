@@ -30,7 +30,7 @@
 						%td
 							%a.dropdown{"data-dropdown": "#{'action' + item.id}"}= item.name
 							%ul.f-dropdown{id: "#{'action' + item.id}", "data-dropdown-content": true}
-								%li= link_to 'View details', item_path(item, item.event)
+								%li= link_to 'View details', item_path(item)
 								- if current_user.can_update?(item)
 									%li= link_to 'Edit', edit_item_path(item)
 								- if current_user.can_delete?(item)
