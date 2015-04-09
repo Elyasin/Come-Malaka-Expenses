@@ -10,7 +10,7 @@
 		= javascript_include_tag 'application', 'data-turbolinks-track' => true
 		= csrf_meta_tags
 	%body
-		%img.beta_testing{"data-interchange": "[#{asset_path("beta-testing-tiny.jpg")}, (default)], [#{asset_path("beta-testing-medium.jpg")}, (medium)], [#{asset_path("beta-testing-medium.jpg")}, (large)]", alt: "Beta Testing"}
+		%div.beta_testing BETA TESTING
 
 		%div.fixed.sticky
 			%nav.top-bar.hide-for-small{"data-topbar": true, role: :navigation, "data-options": "sticky-on: [medium, large]"}

@@ -24,11 +24,17 @@
   display: inline;
 }
 
-.beta_testing {
+div.beta_testing {
   position:absolute;
-  top: 45;
+  top: 50px;
   right:0;
-  z-index:-1;
+  -ms-transform: rotate(7deg); /* IE 9 */
+  -webkit-transform: rotate(7deg); /* Chrome, Safari, Opera */
+  transform: rotate(7deg);
+  color: red;
+  border-color: red;
+  border-top-style: solid;
+  border-bottom-style: solid;
 }
 
 p.notice {
