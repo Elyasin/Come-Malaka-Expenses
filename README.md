@@ -6,7 +6,7 @@
 
 ## ToDos:
 
- * User cannot delete account if participating in events
+ * Layout devise error messages
 
  * Web/Mail Design/Sitemap/Navigation - Foundation/Responsive
 
@@ -19,7 +19,7 @@
  * Refactor:
  		Value objects, Service objects, Form objects, Query objects, View objects, Policy objects, Decorators...
 
- * Tests: Views (functional), Integration Tests
+ * Tests: Views (functional), Integration Tests, Helper Tests
 
  * Look into CI for HTML/JavaScript: Selenium/PhantomJS, SauceLab, .... ?
 
