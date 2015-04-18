@@ -59,7 +59,7 @@ class User
   end
 
   def name
-    self.first_name.blank? ? self.email : self.first_name + " " +self.last_name
+    self.first_name.blank? ? self.email : self.first_name + " " + self.last_name
   end
 
   def email_addressing
