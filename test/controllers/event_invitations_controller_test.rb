@@ -24,24 +24,24 @@ class EventInvitationsControllerTest < ActionController::TestCase
     # Test the view
     assert_select 'title', "Invite to " + @event.name + " event"
     assert_select 'body p a', "Back to event"
-    assert_select "a:match('href', ?)", events_path
+    assert_select "a[href=?]", events_path
     # Test form and Foundation (Abide, Grid)
-    assert_select "form:match('data-abide', ?)", "true"
-    assert_select "form:match('novalidate', ?)", "novalidate"
-    assert_select "form input#user_event_id:match('value', ?)", @event.id.to_s
+    assert_select "form[data-abide=true]"
+    assert_select "form[novalidate=novalidate]"
+    assert_select "form input#user_event_id[value=?]", @event.id.to_s
     assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
       assert_select "legend", "Invite to #{@event.name} event"
       assert_select "div.row", 4
       assert_select "div.row div.field.small-12.medium-4.large-4.columns.end label", "Email"
-      assert_select "div.row div.small-12.medium-8.large-8.columns.end input#user_email:match('required', ?)", "required" 
-      assert_select "div.row div.small-12.medium-8.large-8.columns.end input:match('pattern', ?)", "email" 
-      assert_select "div.row div.small-12.medium-8.large-8.columns.end input:match('placeholder', ?)", "Email"
+      assert_select "div.row div.small-12.medium-8.large-8.columns.end input#user_email[required=?]", "required" 
+      assert_select "div.row div.small-12.medium-8.large-8.columns.end input[pattern=?]", "email" 
+      assert_select "div.row div.small-12.medium-8.large-8.columns.end input[placeholder=?]", "Email"
       assert_select "div.row div.small-12.medium-8.large-8.columns.end small.error", "Email is required. Make sure you type in a valid email."
       assert_select "div.row div.field.small-12.medium-4.large-4.columns.end label", "First name"
-      assert_select "div.row div.small-12.medium-8.large-8.columns.end input#user_first_name:match('placeholder', ?)", "Leave blank if not known"
+      assert_select "div.row div.small-12.medium-8.large-8.columns.end input#user_first_name[placeholder=?]", "Leave blank if not known"
       assert_select "div.row div.field.small-12.medium-4.large-4.columns.end label", "Last name"
-      assert_select "div.row div.small-12.medium-8.large-8.columns.end input#user_last_name:match('placeholder', ?)", "Leave blank if not known"
-      assert_select "div.row div.actions.small-12.medium-8.large-8.columns.end input:match('value', ?)", "Send an invitation"
+      assert_select "div.row div.small-12.medium-8.large-8.columns.end input#user_last_name[placeholder=?]", "Leave blank if not known"
+      assert_select "div.row div.actions.small-12.medium-8.large-8.columns.end input[value=?]", "Send an invitation"
     end
   end
 
@@ -56,20 +56,20 @@ class EventInvitationsControllerTest < ActionController::TestCase
     # Test the view
     assert_select 'title', "Accept invitation to " + @event.name + " event"
     # Test form and Foundation (Abide and Grid)
-    assert_select "form:match('data-abide', ?)", "true"
-    assert_select "form:match('novalidate', ?)", "novalidate"
-    assert_select "form input#user_invitation_token:match('value', ?)", new_participant.raw_invitation_token
+    assert_select "form[data-abide=?]", "true"
+    assert_select "form[novalidate=?]", "novalidate"
+    assert_select "form input#user_invitation_token[value=?]", new_participant.raw_invitation_token
     assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
       assert_select "legend", "Set your password"
       assert_select "div.row", 3
       assert_select "div.row div.field.password-field.small-12.medium-4.large-4.columns.end label", "Password"
-      assert_select "div.row div.password-field.small-12.medium-8.large-8.columns.end input#user_password:match('required', ?)", "required"
+      assert_select "div.row div.password-field.small-12.medium-8.large-8.columns.end input#user_password[required=?]", "required"
       assert_select "div.row div.password-field.small-12.medium-8.large-8.columns.end small.error", "Password length must be at least 8 characters."
       assert_select "div.row div.field.password-confirmation-field.small-12.medium-4.large-4.columns.end label", "Password confirmation"
-      assert_select "div.row div.password-confirmation-field.small-12.medium-8.large-8.columns.end input#user_password_confirmation:match('required', ?)", "required"
-      assert_select "div.row div.password-confirmation-field.small-12.medium-8.large-8.columns.end input#user_password_confirmation:match('data-equalto', ?)", "user_password"
+      assert_select "div.row div.password-confirmation-field.small-12.medium-8.large-8.columns.end input#user_password_confirmation[required=?]", "required"
+      assert_select "div.row div.password-confirmation-field.small-12.medium-8.large-8.columns.end input#user_password_confirmation[data-equalto=?]", "user_password"
       assert_select "div.row div.password-confirmation-field.small-12.medium-8.large-8.columns.end small.error", "Password did not match."
-      assert_select "div.row div.actions.small-12.medium-8.large-8.columns.end input:match('value', ?)", "Set my password"
+      assert_select "div.row div.actions.small-12.medium-8.large-8.columns.end input[value=?]", "Set my password"
     end
   end
 
