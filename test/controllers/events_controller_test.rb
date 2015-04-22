@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class EventsControllerTest < ActionController::TestCase
+  include ApplicationHelper
 
 	#Test data initialized in test_helper.rb#setup
 	#and truncated while teardown
@@ -104,7 +105,6 @@ class EventsControllerTest < ActionController::TestCase
   end
 
   test "non participant can see new page" do
-    sign_in @non_participant_user
     get :new
     assert_response :success, "Response must be success"
     assert_template :new, "New page must be rendered"
@@ -318,7 +318,6 @@ class EventsControllerTest < ActionController::TestCase
   end
 
   test "non participant cannot see Who owes you? details" do
-    sign_in @non_participant_user
     get :who_owes_you, event_id: @event.id
     assert_response :forbidden, "Response must be forbidden"
     assert_nil assigns(:total_amounts), "Total amounts must be emtpy"
@@ -344,11 +343,273 @@ class EventsControllerTest < ActionController::TestCase
   end
 
   test "non participant cannot see you owe whom? details" do
-    sign_in @non_participant_user
     get :you_owe_whom, event_id: @event.id
     assert_response :forbidden, "Response must be forbidden"
     assert_nil assigns(:total_amounts), "Total amounts must be emtpy"
     assert_nil assigns(:item_lists), "Item lists must be empty"
+  end
+
+  # Test the view
+  
+  test "index page with no events" do
+    @event = nil
+    get :index
+    assert_select "title", "Your events"
+    assert_select "body a", "Create new event"
+    assert_select "body a:match('href', ?)", new_event_path
+    assert_select "p", "You don't have any events."
+  end
+
+  test "organizer's index page with events" do
+    sign_in @organizer
+    get :index
+    assert_select "div.table-selector table.tablesaw[align=center]" 
+    assert_select "div.table-selector table.tablesaw[data-tablesaw-mode=stack]"
+    assert_select "div.table-selector table.tablesaw caption", "Your events"
+    head = "div.table-selector table.tablesaw thead tr th"
+    assert_select head, "Event"
+    assert_select head, "Description"
+    assert_select head, "Start date"
+    assert_select head, "End date"
+    assert_select head, "Event currency"
+    assert_select head, "Organizer"
+    assert_select head, "Participants*"
+    assert_select "div.table-selector table.tablesaw tfoot tr[data-tablesaw-no-labels] td[colspan='7']", "* Hover or click over the text for details"
+    assert_select "div.table-selector table.tablesaw tbody tr td a.dropdown[data-dropdown=action#{@event.id}]", @event.name
+    ul = "div.table-selector table.tablesaw tbody tr td ul#action#{@event.id}"
+    assert_select ul + ".f-dropdown[data-dropdown-content]"
+    assert_select ul + " li a[href='#{edit_event_path(@event)}']", 'Edit'
+    assert_select ul + " li a[href='#{event_path(@event)}'][data-confirm][data-method=delete]", 'Delete'
+    assert_select ul + " li a[href='#{event_path(@event)}']", 'View details'
+    assert_select ul + " li a[href='#{invite_to_event_path(@event)}']", 'Invite to event'
+    assert_select ul + " li a[href='#{event_all_items_path(@event)}']", 'All items'
+    assert_select ul + " li a[href='#{event_items_path(@event)}']", 'Your items'
+    assert_select ul + " li a[href='#{expense_report_path(@event)}']", 'Expense Report'
+    tbody_td = "div.table-selector table.tablesaw tbody tr td"
+    assert_select tbody_td, @event.description
+    assert_select tbody_td, @event.from_date.strftime('%d %b %Y')
+    assert_select tbody_td, @event.end_date.strftime('%d %b %Y')
+    assert_select tbody_td + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(@event.event_currency).name, {text: @event.event_currency.upcase}
+    assert_select tbody_td, @event.organizer.short_name
+    user_names = @event.users.map { |u| u.short_name }.join(", ") 
+    assert_select tbody_td + " span.has-tip[data-tooltip][title='#{user_names}']", {text: @event.users.count.to_s}
+  end
+
+  test "participant's index page with events" do
+    sign_in @user1
+    get :index
+    assert_select "div.table-selector table.tablesaw[align=center]" 
+    assert_select "div.table-selector table.tablesaw[data-tablesaw-mode=stack]"
+    assert_select "div.table-selector table.tablesaw caption", "Your events"
+    head = "div.table-selector table.tablesaw thead tr th"
+    assert_select head, "Event"
+    assert_select head, "Description"
+    assert_select head, "Start date"
+    assert_select head, "End date"
+    assert_select head, "Event currency"
+    assert_select head, "Organizer"
+    assert_select head, "Participants*"
+    assert_select "div.table-selector table.tablesaw tfoot tr[data-tablesaw-no-labels] td[colspan='7']", "* Hover or click over the text for details"
+    assert_select "div.table-selector table.tablesaw tbody tr td a.dropdown[data-dropdown=action#{@event.id}]", @event.name
+    ul = "div.table-selector table.tablesaw tbody tr td ul#action#{@event.id}"
+    assert_select ul + ".f-dropdown[data-dropdown-content]"
+    assert_select ul + " li a[href='#{edit_event_path(@event)}']", false
+    assert_select ul + " li a[href='#{event_path(@event)}'][data-confirm][data-method=delete]", false
+    assert_select ul + " li a[href='#{event_path(@event)}']", 'View details'
+    assert_select ul + " li a[href='#{invite_to_event_path(@event)}']", false
+    assert_select ul + " li a[href='#{event_all_items_path(@event)}']", 'All items'
+    assert_select ul + " li a[href='#{event_items_path(@event)}']", 'Your items'
+    assert_select ul + " li a[href='#{expense_report_path(@event)}']", 'Expense Report'
+    tbody_td = "div.table-selector table.tablesaw tbody tr td"
+    assert_select tbody_td, @event.description
+    assert_select tbody_td, @event.from_date.strftime('%d %b %Y')
+    assert_select tbody_td, @event.end_date.strftime('%d %b %Y')
+    assert_select tbody_td + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(@event.event_currency).name, {text: @event.event_currency.upcase}
+    assert_select tbody_td, @event.organizer.short_name
+    user_names = @event.users.map { |u| u.short_name }.join(", ") 
+    assert_select tbody_td + " span.has-tip[data-tooltip][title='#{user_names}']", {text: @event.users.count.to_s}
+  end
+
+  test "new event page" do
+    get :new
+    assert_select "title", "Create new event"
+    assert_select "p a[href=?]", events_path, {text: "Back to events page"}
+    #Test form and Foundation Abide and Grid
+    assert_select "form[data-abide=true]"
+    assert_select "form[novalidate=novalidate]"
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
+      assert_select "legend", "Create new event"
+      
+      label = "div.field.small-12.medium-4.large-4.columns.end label"
+      input = "div.small-12.medium-8.large-8.columns.end input"
+      error = "div.small-12.medium-8.large-8.columns.end small.error"
+
+      assert_select label, "Name"
+      assert_select input + "#event_name[required=?]", "required" 
+      assert_select error, "Please name the event."
+      assert_select label, "Description"
+      assert_select input + "#event_description[required=?]", "required" 
+      assert_select error, "Please describe the event."
+      assert_select label, "Start date"
+      assert_select input + "#event_from_date[required=?]", "required" 
+      assert_select input + "#event_from_date[size=?]", "10" 
+      assert_select error, "Please choose a start date for the event."
+      assert_select label, "End date"
+      assert_select input + "#event_end_date[required=?]", "required" 
+      assert_select input + "#event_end_date[size=?]", "10" 
+      assert_select error, "Please choose an end date for the event."
+      assert_select label, "Event currency"
+      assert_select "div.small-12.medium-8.large-8.columns.end select#event_event_currency" do
+        assert_select "#event_event_currency[required=?]", "required"
+        assert_select "option[value=?]", "", {text: "Select event currency"}
+        Money::Currency.all.each do |currency|
+          assert_select "option[value=?]", currency.id.to_s, {text: currency.iso_code.to_s}
+        end
+      end
+      assert_select error, "Please choose an event currency."
+      assert_select label, "Organizer"
+      assert_select "div.small-12.medium-8.large-8.columns.end select#event_organizer_id" do
+        assert_select "option[value=?]", @non_participant_user.id.to_s
+        assert_select "option[selected=selected]", @non_participant_user.name
+      end
+      assert_select "div.actions.small-12.medium-8.large-8.columns.end input[value=?]", "Create event"
+    end
+  end
+
+  test "show event details page" do
+    sign_in @organizer
+    get :show, id: @event.id
+    assert_select "title", "Details about " + @event.name
+    assert_select "p a[href=?]", events_path, {text: "Back to events page"}
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
+      assert_select "[disabled]"
+      assert_select "legend", "View event details"
+      assert_select "div.row", 7
+      
+      label = "div.row div.field.small-12.medium-4.large-4.columns.end label"
+      input = "div.row div.small-12.medium-8.large-8.columns.end input"
+
+      assert_select label, "Name" 
+      assert_select input + "#event_name[value=?]", @event.name
+      assert_select label, "Description"
+      assert_select input + "#event_description[value=?]", @event.description
+      assert_select label, "Start date"
+      assert_select input + "#event_from_date[value=?]", @event.from_date.to_s
+      assert_select label, "End date"
+      assert_select input + "#event_end_date[value=?]", @event.end_date.to_s
+      assert_select label, "Event currency"
+      assert_select input + "#event_event_currency[value=?]", @event.event_currency
+      assert_select label, "Organizer"
+      assert_select input + "#dummy[value=?]", @event.organizer.name
+      assert_select label, "Participants"
+      @event.users.each do |user|
+        assert_select "div.row div.small-12.medium-8.large-8.columns.end label[for=?]", "event_user_ids_" + user.id.to_s, {text: user.name}
+        assert_select "div.row div.small-12.medium-8.large-8.columns.end label input#event_user_ids_" + user.id.to_s + "[checked=checked][value=?]", user.id.to_s 
+      end
+    end
+  end
+#When items are posted the event currency cannot be modified
+test "edit event page (with posted items)" do
+    sign_in @organizer
+    get :edit, id: @event.id
+    assert_select "title", "Edit " + @event.name + " event"
+    assert_select "p a[href=?]", events_path, {text: "Back to events page"}
+    #Test form and Foundation Abide and Grid
+    assert_select "form[data-abide=true]"
+    assert_select "form[novalidate=novalidate]"
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
+      assert_select "legend", "Edit event"
+      
+      label = "div.field.small-12.medium-4.large-4.columns.end label"
+      input = "div.small-12.medium-8.large-8.columns.end input"
+      error = "div.small-12.medium-8.large-8.columns.end small.error"
+
+      assert_select label, "Name"
+      assert_select input + "#event_name[required=?]", "required" 
+      assert_select error, "Please name the event."
+      assert_select label, "Description"
+      assert_select input + "#event_description[required=?]", "required" 
+      assert_select error, "Please describe the event."
+      assert_select label, "Start date"
+      assert_select input + "#event_from_date[required=?]", "required" 
+      assert_select input + "#event_from_date[size=?]", "10" 
+      assert_select error, "Please choose a start date for the event."
+      assert_select label, "End date"
+      assert_select input + "#event_end_date[required=?]", "required" 
+      assert_select input + "#event_end_date[size=?]", "10" 
+      assert_select error, "Please choose an end date for the event."
+      assert_select label, "Event currency"
+      assert_select input + "#event_event_currency[value=?][disabled=disabled]", @event.event_currency.to_s 
+      assert_select "div.actions.small-12.medium-8.large-8.columns.end input[value=?]", "Save event"
+    end
+  end
+
+  #when there are no posted items the event currency can be modified
+test "edit event page (without posted items)" do
+    sign_in @organizer
+    @event.items = nil
+    get :edit, id: @event.id
+    assert_select "title", "Edit " + @event.name + " event"
+    assert_select "p a[href=?]", events_path, {text: "Back to events page"}
+    #Test form and Foundation Abide and Grid
+    assert_select "form[data-abide=true]"
+    assert_select "form[novalidate=novalidate]"
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
+      assert_select "legend", "Edit event"
+      
+      label = "div.field.small-12.medium-4.large-4.columns.end label"
+      input = "div.small-12.medium-8.large-8.columns.end input"
+      error = "div.small-12.medium-8.large-8.columns.end small.error"
+
+      assert_select label, "Name"
+      assert_select input + "#event_name[required=?]", "required" 
+      assert_select error, "Please name the event."
+      assert_select label, "Description"
+      assert_select input + "#event_description[required=?]", "required" 
+      assert_select error, "Please describe the event."
+      assert_select label, "Start date"
+      assert_select input + "#event_from_date[required=?]", "required" 
+      assert_select input + "#event_from_date[size=?]", "10" 
+      assert_select error, "Please choose a start date for the event."
+      assert_select label, "End date"
+      assert_select input + "#event_end_date[required=?]", "required" 
+      assert_select input + "#event_end_date[size=?]", "10" 
+      assert_select error, "Please choose an end date for the event."
+      assert_select label, "Event currency"
+      assert_select "div.small-12.medium-8.large-8.columns.end select#event_event_currency" do
+        Money::Currency.all.each do |currency|
+          assert_select "option[value=?]", currency.id.to_s, {text: currency.iso_code.to_s}
+        end
+      end
+      assert_select "div.actions.small-12.medium-8.large-8.columns.end input[value=?]", "Save event"
+    end
+  end
+
+  test "expense report page" do
+    sign_in @organizer
+    get :expense_report, event_id: @event.id
+    assert_select "title", "Expense report for " + @event.name + " event"
+    assert_select "a[href=?]", events_path, {text: "Back to events page"}
+    assert_select "a[href=?]", who_owes_you_path(@event), {text: "Who owes you?"}
+    assert_select "a[href=?]", you_owe_whom_path(@event), {text: "You owe whom?"}
+    #Test table and Foundation Grid
+    table = "div.row div.small-12.columns.small-centered.table-selector table.tablesaw"
+    assert_select table + "[role=grid][data-tablesaw-mode=stack]" 
+    assert_select table + " caption", /Expense Summary\*/
+    assert_select table + " caption span.has-tip[data-tooltip][title=?]", Money::Currency.new(@event.event_currency).name, {text: "(base currency is #{@event.event_currency.upcase})"}
+    head = table + " thead tr th"
+    assert_select head, "Participant"
+    assert_select head, "Total Paid"
+    assert_select head, "Total Benefited"
+    assert_select head, "Balance"
+    assert_select table + " tfoot tr[data-tablesaw-no-labels] td[colspan='4']", "*Amounts are rounded for display"
+    body = table + " tbody tr td"
+    @event.users.each do |participant|
+      assert_select body, participant.short_name
+      assert_select body, money_format(@event.total_expenses_amount_for(participant), @event.event_currency)
+      assert_select body, money_format(@event.total_benefited_amount_for(participant), @event.event_currency)
+      assert_select body, money_format(@event.balance_for(participant), @event.event_currency)
+    end 
   end
 
 end

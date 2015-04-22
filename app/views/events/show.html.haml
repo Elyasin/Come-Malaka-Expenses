@@ -1,5 +1,5 @@
 = content_for :title, "Details about " + @event.name
-%p= link_to 'Back to Your events', events_path
+%p= link_to 'Back to events page', events_path
 
 = form_for @event do |f|
 	.row
@@ -18,7 +18,7 @@
 						= f.text_field :description
 				.row
 					.field.small-12.medium-4.large-4.columns.end
-						= f.label :from_date
+						= f.label :from_date, "Start date"
 					.small-12.medium-8.large-8.columns.end
 						= f.date_field :from_date, size: 10
 				.row
@@ -33,7 +33,7 @@
 						= f.text_field :event_currency, value: @event.event_currency.upcase
 				.row
 					.field.small-12.medium-4.large-4.columns.end
-						= label_tag :organizer
+						= label_tag :dummy, "Organizer"
 					.small-12.medium-8.large-8.columns.end
 						= text_field_tag :dummy, @event.organizer.name
 				.row
