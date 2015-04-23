@@ -612,4 +612,62 @@ test "edit event page (without posted items)" do
     end 
   end
 
+  test "event's all items page (with items)" do
+    sign_in @organizer
+    get :event_all_items, event_id: @event.id
+    assert_select "title", "All items of " + @event.name + " event"
+    assert_select "p a[href=?]", events_path, {text: "Back to events page"}
+    assert_select "p a[href=?]", new_event_item_path(@event.id), {text: "Create new item"}
+    table = "div.table-selector table.tablesaw[role=grid][data-tablesaw-mode=stack]"
+    assert_select table + " caption", "All items of Randers event"
+    head = table + " thead tr th"
+    assert_select head, "Name"
+    assert_select head, "Date"
+    assert_select head, "Description"
+    assert_select head, "Base amount*"
+    assert_select head, "Exchange rate"
+    assert_select head, "Foreign amount*"
+    assert_select head, "Payer"
+    assert_select head, "Beneficiaries**"
+    assert_select head, "Cost per beneficiary"
+    foot = table + " tfoot tr[data-tablesaw-no-labels] td[colspan='9']"
+    assert_select foot, /^\* Amounts are rounded for display\n\n\*\* Hover or click over the text for details$/
+    body = table + " tbody tr td"
+    @event.items.each do |item|
+      assert_select body + " a.dropdown[data-dropdown=?]", "action" + item.id.to_s, {text: item.name}
+      li = body + " ul.f-dropdown#action#{item.id.to_s}[data-dropdown-content] li"
+      assert_select li + " a[href=?]", item_path(item), "View details"
+      if item.payer == @organizer then
+        assert_select li + " a[href=?]", edit_item_path(item), "Edit"
+        assert_select li + " a[href=?][data-confirm][data-method=delete]", item_path(item), "Delete"
+      end
+      assert_select body, item.value_date.strftime('%d %b %Y')
+      assert_select body, item.description
+      assert_select body + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(item.base_currency).name, money_format(item.base_amount, item.base_currency)
+      assert_select body, item.exchange_rate.to_s
+      assert_select body + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(item.foreign_currency).name, money_format(item.foreign_amount, item.foreign_currency)
+      assert_select body, item.payer.short_name
+      assert_select body + " span.has-tip[data-tooltip][title=?]", item.beneficiaries.map{ |b| b.short_name }.join(', '), item.beneficiaries.count.to_s
+      assert_select body, money_format(item.cost_per_beneficiary, item.base_currency)
+    end
+  end
+
+  test "event's all items page (without items)" do
+    @event.items = []
+    sign_in @organizer
+    get :event_all_items, event_id: @event.id
+    assert_select "title", "All items of " + @event.name + " event"
+    assert_select "p a[href=?]", events_path, {text: "Back to events page"}
+    assert_select "p a[href=?]", new_event_item_path(@event.id), {text: "Create new item"}
+    assert_select "p", "You don't have any items."
+  end
+
+  test "who owes you page" do
+    skip
+  end
+
+  test "you owe whom page" do
+    skip
+  end
+
 end

@@ -1,11 +1,11 @@
 = content_for :title, "All items of " + @event.name + " event"
-%p= link_to 'Back to event', events_path
+%p= link_to 'Back to events page', events_path
 %p= link_to "Create new item", new_event_item_path
 - if @items.empty?
 	%p You don't have any items.
 - else
 	.table-selector
-		%table.tablesaw{summary: "This table displays all items of the event #{@event.name}....", role: :grid, "data-tablesaw-mode": :stack}
+		%table.tablesaw{role: :grid, "data-tablesaw-mode": :stack}
 			%caption All items of #{@event.name} event
 			%thead
 				%tr
@@ -23,7 +23,7 @@
 					%td{colspan: 9}
 						* Amounts are rounded for display
 						%br
-						** Hover or click  over the text for details
+						** Hover or click over the text for details
 			%tbody
 				- @items.each do |item|
 					%tr
