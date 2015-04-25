@@ -349,7 +349,7 @@ class EventsControllerTest < ActionController::TestCase
     assert_nil assigns(:item_lists), "Item lists must be empty"
   end
 
-  # Test the view
+  # Test the views/pages
   
   test "index page with no events" do
     @event = nil
@@ -663,11 +663,59 @@ test "edit event page (without posted items)" do
   end
 
   test "who owes you page" do
-    skip
+    sign_in @organizer
+    get :who_owes_you, event_id: @event.id
+    assert_select "title", "Who owes you?"
+    assert_select "a[href=?]", expense_report_path(@event), {text: "Back to expense summary"}
+
+    ul_header = "ul[style='list-style-type:none'] li u"
+    ul_line = "ul[style='list-style-type:none'] ul li"
+    date1 = @event.from_date.strftime('%d %b %Y')
+    date2 = (@event.from_date+1).strftime('%d %b %Y')
+
+    assert_select ul_header, "Elyasin owes you €124.00 in total"
+    assert_select ul_line, "Elyasin owes you €40.22 on the " + date1 + " for item Food (Food)"
+    assert_select ul_line, "Elyasin owes you €11.17 on the " + date1 + " for item Gas (Gas)"
+    assert_select ul_line, "Elyasin owes you €11.17 on the " + date1 + " for item Drinks (Drinks)"
+    assert_select ul_line, "Elyasin owes you €36.86 on the " + date1 + " for item Night out (Night out & Misc)"
+    assert_select ul_line, "Elyasin owes you €24.58 on the " + date2 + " for item Night out (Night out & Misc)"
+    assert_select ul_header, "Juan owes you €124.00 in total"
+    assert_select ul_line, "Juan owes you €40.22 on the " + date1 + " for item Food (Food)"
+    assert_select ul_line, "Juan owes you €11.17 on the " + date1 + " for item Gas (Gas)"
+    assert_select ul_line, "Juan owes you €11.17 on the " + date1 + " for item Drinks (Drinks)"
+    assert_select ul_line, "Juan owes you €36.86 on the " + date1 + " for item Night out (Night out & Misc)"
+    assert_select ul_line, "Juan owes you €24.58 on the " + date2 + " for item Night out (Night out & Misc)"
+    assert_select ul_header, "Neal owes you €87.14 in total"
+    assert_select ul_line, "Neal owes you €40.22 on the " + date1 + " for item Food (Food)"
+    assert_select ul_line, "Neal owes you €11.17 on the " + date1 + " for item Gas (Gas)"
+    assert_select ul_line, "Neal owes you €11.17 on the " + date1 + " for item Drinks (Drinks)"
+    assert_select ul_line, "Neal owes you €24.58 on the " + date2 + " for item Night out (Night out & Misc)"    
+    assert_select ul_header, "Nuno owes you €124.00 in total"
+    assert_select ul_line, "Nuno owes you €40.22 on the " + date1 + " for item Food (Food)"
+    assert_select ul_line, "Nuno owes you €11.17 on the " + date1 + " for item Gas (Gas)"
+    assert_select ul_line, "Nuno owes you €11.17 on the " + date1 + " for item Drinks (Drinks)"
+    assert_select ul_line, "Nuno owes you €36.86 on the " + date1 + " for item Night out (Night out & Misc)"
+    assert_select ul_line, "Nuno owes you €24.58 on the " + date2 + " for item Night out (Night out & Misc)"
+    assert_select ul_header, "Theo owes you €87.14 in total"
+    assert_select ul_line, "Theo owes you €40.22 on the " + date1 + " for item Food (Food)"
+    assert_select ul_line, "Theo owes you €11.17 on the " + date1 + " for item Gas (Gas)"
+    assert_select ul_line, "Theo owes you €11.17 on the " + date1 + " for item Drinks (Drinks)"
+    assert_select ul_line, "Theo owes you €24.58 on the " + date2 + " for item Night out (Night out & Misc)"
   end
 
+
   test "you owe whom page" do
-    skip
+    sign_in @organizer
+    get :you_owe_whom, event_id: @event.id
+    assert_select "title", "You owe whom?"
+    assert_select "a[href=?]", expense_report_path(@event), {text: "Back to expense summary"}
+
+    ul_header = "ul[style='list-style-type:none'] li u"
+    ul_line = "ul[style='list-style-type:none'] ul li"
+    date2 = (@event.from_date+1).strftime('%d %b %Y')
+
+    assert_select ul_header, "You owe Juan €1.79 in total"
+    assert_select ul_line, "You owe Juan €1.79 on the " + date2 + " for item Taxi (Taxi)"
   end
 
 end
