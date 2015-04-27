@@ -86,12 +86,12 @@ class ItemTest < ActiveSupport::TestCase
 	end
 	
 	test "item's cost per beneficiary" do
-		assert_in_delta (241.30.to_d/6), @item1.cost_per_beneficiary, 0.0000000000000001, "Item 1 cpb must be 241.3/6"
-		assert_in_delta  (67.03.to_d/6), @item2.cost_per_beneficiary, 0.0000000000000001, "Item 2 cpb must be 67.03/6"
-		assert_in_delta  (67.03.to_d/6), @item3.cost_per_beneficiary, 0.0000000000000001, "Item 3 cpb must be 67.03/6"
-		assert_in_delta (147.46.to_d/4), @item4.cost_per_beneficiary, 0.0000000000000001, "Item 4 cpb must be 147.46/4"
-		assert_in_delta (147.46.to_d/6), @item5.cost_per_beneficiary, 0.0000000000000001, "Item 5 cpb must be 147.46/6"
-		assert_in_delta  (10.72.to_d/6), @item6.cost_per_beneficiary, 0.0000000000000001, "Item 6 cpb must be 10.72/6"
+		assert_equal (241.30.to_r/6.to_r).to_f.to_d, @item1.cost_per_beneficiary, "Item 1 cpb must be 241.3/6"
+		assert_equal  (67.03.to_r/6.to_r).to_f.to_d, @item2.cost_per_beneficiary, "Item 2 cpb must be 67.03/6"
+		assert_equal  (67.03.to_r/6.to_r).to_f.to_d, @item3.cost_per_beneficiary, "Item 3 cpb must be 67.03/6"
+		assert_equal (147.46.to_r/4.to_r).to_f.to_d, @item4.cost_per_beneficiary, "Item 4 cpb must be 147.46/4"
+		assert_equal (147.46.to_r/6.to_r).to_f.to_d, @item5.cost_per_beneficiary, "Item 5 cpb must be 147.46/6"
+		assert_equal  (10.72.to_r/6.to_r).to_f.to_d, @item6.cost_per_beneficiary, "Item 6 cpb must be 10.72/6"
 	end
 
 	test "apply exchange rate on item successfully" do

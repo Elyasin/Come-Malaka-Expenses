@@ -1,11 +1,11 @@
 = content_for :title, "All your items of " + @event.name + " event"
-%p= link_to "Back to event", events_path
+%p= link_to "Back to events page", events_path
 %p= link_to "Create new item", new_event_item_path
 - if @items.empty?
 	%p You don't have any items.
 - else
 	.table-selector
-		%table.tablesaw{summary: "This table displays your posted items of the event #{@event.name}....", role: :grid, "data-tablesaw-mode": :stack}
+		%table.tablesaw{role: :grid, "data-tablesaw-mode": :stack}
 			%caption Your items of event #{@event.name}
 			%thead
 				%tr
@@ -20,22 +20,19 @@
 					%th Cost per beneficiary
 			%tfoot
 				%tr{"data-tablesaw-no-labels": true}
-					%td{colspan: 10}
+					%td{colspan: 9}
 						* Amounts are rounded for display
 						%br
-						** Hover or click over the text for details.
+						** Hover or click over the text for details
 			%tbody
 				- @items.each do |item|
 					%tr
 						%td
-							- if (current_user.can_update?(item) or current_user.can_delete?(item))
-								%a.dropdown{"data-dropdown": "#{'action' + item.id}"}= item.name
-								%ul.f-dropdown{id: "#{'action' + item.id}", "data-dropdown-content": true}
-									%li= link_to('Edit', edit_item_path(item))
-									%li= link_to("Delete", item_path(item), method: :delete, data: {confirm: "Are you sure you want to delete item #{item.name} at the #{item.value_date.strftime('%d %b %Y')}?"})
-									%li= link_to('View details', item_path(item, item.event))
-							- else
-								= item.name
+							%a.dropdown{"data-dropdown": "#{'action' + item.id}"}= item.name
+							%ul.f-dropdown{id: "#{'action' + item.id}", "data-dropdown-content": true}
+								%li= link_to('Edit', edit_item_path(item))
+								%li= link_to("Delete", item_path(item), method: :delete, data: {confirm: "Are you sure you want to delete item #{item.name} at the #{item.value_date.strftime('%d %b %Y')}?"})
+								%li= link_to('View details', item_path(item, item.event))
 						%td= item.value_date.strftime('%d %b %Y')
 						%td= item.description
 						%td

@@ -3,6 +3,7 @@ require 'webmock/minitest'
 require 'open-uri'
 
 class ItemsControllerTest < ActionController::TestCase
+  include ApplicationHelper
 
 	#Test data initialized in test_helper.rb#setup
 	#and truncated while teardown
@@ -423,5 +424,269 @@ class ItemsControllerTest < ActionController::TestCase
     get :show, id: @item6.id
     assert_response :forbidden, "Response must be forbidden"
   end
+
+ #Test the views/pages
+
+  test "items index page" do
+    sign_in @organizer
+    get :index, event_id: @event.id
+    assert_select "title", "All your items of Randers event"
+    assert_select "p a[href=?]", events_path, {text: "Back to events page"}
+    assert_select "p a[href=?]", new_event_item_path(@event.id), {text: "Create new item"}
+    table = "div.table-selector table.tablesaw[role=grid][data-tablesaw-mode=stack]"
+    assert_select table + " caption", "Your items of event Randers"
+    head = table + " thead tr th"
+    assert_select head, "Name"
+    assert_select head, "Date"
+    assert_select head, "Description"
+    assert_select head, "Base amount*"
+    assert_select head, "Exchange rate"
+    assert_select head, "Foreign amount*"
+    assert_select head, "Payer"
+    assert_select head, "Beneficiaries**"
+    assert_select head, "Cost per beneficiary"
+    foot = table + " tfoot tr[data-tablesaw-no-labels] td[colspan='9']"
+    assert_select foot, /^\* Amounts are rounded for display\n\n\*\* Hover or click over the text for details$/
+    body = table + " tbody tr td"
+    assigns(:items).each do |item|
+      assert_select body + " a.dropdown[data-dropdown=?]", "action" + item.id.to_s, {text: item.name}
+      li = body + " ul.f-dropdown#action#{item.id.to_s}[data-dropdown-content] li"
+      assert_select li + " a[href=?]", item_path(item, item.event), "View details"
+      assert_select li + " a[href=?]", edit_item_path(item), "Edit"
+      assert_select li + " a[href=?][data-confirm][data-method=delete]", item_path(item), "Delete"
+      assert_select body, item.value_date.strftime('%d %b %Y')
+      assert_select body, item.description
+      assert_select body + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(item.base_currency).name, money_format(item.base_amount, item.base_currency)
+      assert_select body, item.exchange_rate.to_s
+      assert_select body + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(item.foreign_currency).name, money_format(item.foreign_amount, item.foreign_currency)
+      assert_select body, item.payer.short_name
+      assert_select body + " span.has-tip[data-tooltip][title=?]", item.beneficiaries.map{ |b| b.short_name }.join(', '), item.beneficiaries.count.to_s
+      assert_select body, money_format(item.cost_per_beneficiary, item.base_currency)
+    end
+  end
+
+  test "items new page" do
+    sign_in @organizer
+    get :new, event_id: @event.id
+    assert_select "title", "Create new item in Randers event"
+    assert_select "p a[href=?]", event_items_path(assigns(:item).event), {text: "Back to your items"}
+
+    #Test form and Foundation Abide and Grid
+    assert_select "form[data-abide=true][novalidate=novalidate]"
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
+      assert_select "legend", "Create new item"
+      
+      assert_select "div.row", 11
+      label = "div.field.small-12.medium-4.large-4.columns.end label"
+      input = "div.small-12.medium-8.large-8.columns.end input"
+      error = "div.small-12.medium-8.large-8.columns.end small.error"
+
+      assert_select label, "Name"
+      assert_select input + "#item_name[required=required]" 
+      assert_select error, "Please name the item."
+      assert_select label, "Name"
+      assert_select input + "#item_description[required=required]" 
+      assert_select error, "Please describe the item."
+      assert_select label, "Value date"
+      assert_select input + "#item_value_date[required=required][size=?]", "10" 
+      assert_select error, "Please choose a value date for the item."
+      assert_select label, "Payer"
+      assert_select "div.small-12.medium-8.large-8.columns.end select#item_payer_id" do
+        assert_select "option[selected=selected][value=?]", @organizer.id.to_s, {text: @organizer.name}
+        assigns(:item).event.users.each do |participant|
+          next unless participant != @organizer
+          assert_select "option[value=?]", participant.id.to_s, {text: participant.name}
+        end
+      end
+      assert_select label, "Base amount"
+      assert_select input + "#item_base_amount[readonly=readonly][placeholder=?]", "= Exchange rate * Foreign amount" 
+      assert_select label, "Base currency"
+      assert_select input + "#item_base_currency[readonly=readonly][value=?]", assigns(:item).event.event_currency.upcase
+      assert_select label, "Exchange rate"
+      assert_select input + "#item_exchange_rate[required=required][pattern='exchange_rate'][placeholder=?]", "Put 0 to fetch currency automatically"
+      assert_select error, "Exchange rate must be a positive number."
+      assert_select label, "Foreign amount"
+      assert_select input + "#item_foreign_amount[required=required][pattern='amount']"
+      assert_select error, "Please type in how much you paid for the item."
+      assert_select "div.small-12.medium-8.large-8.columns.end select#item_foreign_currency" do
+        assert_select "#item_foreign_currency[required=required]"
+        assert_select "option[value=?]", "", {text: "Select foreign currency"}
+        Money::Currency.all.each do |currency|
+          assert_select "option[value=?]", currency.id.to_s, {text: currency.iso_code.to_s}
+        end
+      end
+      assert_select error, "Please choose a currency."
+      assert_select label, "Beneficiaries"
+      assigns(:item).event.users.each do |beneficiary|
+        assert_select "div.row div.small-12.medium-8.large-8.columns.end label[for=?]", "item_beneficiary_ids_" + beneficiary.id.to_s, {text: beneficiary.name}
+        assert_select "div.row div.small-12.medium-8.large-8.columns.end label input#item_beneficiary_ids_" + beneficiary.id.to_s + "[value=?]", beneficiary.id.to_s 
+      end
+      assert_select "div.actions.small-12.medium-8.large-8.columns.end input[value=?]", "Post item"
+    end
+  end
+
+  test "items edit page" do
+    sign_in @organizer
+    get :edit, id: @item1.id
+    assert_select "title", "Details for Food item"
+    assert_select "p a[href=?]", event_items_path(assigns(:item).event), {text: "Back to your items"}
+
+    #Test form and Foundation Abide and Grid
+    assert_select "form[data-abide=true][novalidate=novalidate]"
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
+      assert_select "legend", "Edit item"
+      
+      assert_select "div.row", 11
+      label = "div.row div.field.small-12.medium-4.large-4.columns.end label"
+      input = "div.row div.small-12.medium-8.large-8.columns.end input"
+      error = "div.row div.small-12.medium-8.large-8.columns.end small.error"
+
+      assert_select label, "Name"
+      assert_select input + "#item_name[required=required][value=?]", "Food"
+      assert_select error, "Please name the item."
+      assert_select label, "Name"
+      assert_select input + "#item_description[required=required][value=?]", "Food"
+      assert_select error, "Please describe the item."
+      assert_select label, "Value date"
+      assert_select input + "#item_value_date[required=required][size='10'][value=?]", Date.new(2012, 11, 2).strftime('%Y-%m-%d')
+      assert_select error, "Please choose a value date for the item."
+      assert_select label, "Payer"
+      assert_select "div.small-12.medium-8.large-8.columns.end select#item_payer_id" do
+        assert_select "option[selected=selected][value=?]", @organizer.id.to_s, {text: "Lasse Lund"}
+        assigns(:item).event.users.each do |participant|
+          next unless participant != @organizer
+          assert_select "option[value=?]", participant.id.to_s, {text: participant.name}
+        end
+      end
+      assert_select label, "Base amount"
+      assert_select input + "#item_base_amount[readonly=readonly][placeholder=?]", "= Exchange rate * Foreign amount"
+      assert_select input + "#item_base_amount[value=?]", "241.3000000000000000000000008"
+      assert_select label, "Base currency"
+      assert_select input + "#item_base_currency[readonly=readonly][value='EUR']"
+      assert_select label, "Exchange rate"
+      assert_select input + "#item_exchange_rate[required=required][pattern='exchange_rate'][placeholder=?]", "Put 0 to fetch currency automatically"
+      assert_select input + "#item_exchange_rate:match('value', ?)", /0\.13405555555/
+      assert_select error, "Exchange rate must be a positive number."
+      assert_select label, "Foreign amount"
+      assert_select input + "#item_foreign_amount[required=required][pattern='amount'][value=?]", "1800.0"
+      assert_select error, "Please type in how much you paid for the item."
+      assert_select "div.small-12.medium-8.large-8.columns.end select#item_foreign_currency" do
+        Money::Currency.all.each do |currency|
+          assert_select "option[value=?]", currency.id.to_s, {text: currency.iso_code.to_s}
+        end
+      end
+      assert_select error, "Please choose a currency."
+      assert_select label, "Beneficiaries"
+      assigns(:item).event.users.each do |participant|
+        assert_select "div.row div.small-12.medium-8.large-8.columns.end label[for=?]", "item_beneficiary_ids_" + participant.id.to_s, {text: participant.short_name}
+        assert_select "div.row div.small-12.medium-8.large-8.columns.end label input#item_beneficiary_ids_" + participant.id.to_s + "[value=?]", participant.id.to_s 
+        if assigns(:item).beneficiaries.include?(participant) then
+          assert_select "div.row div.small-12.medium-8.large-8.columns.end label input#item_beneficiary_ids_" + participant.id.to_s + "[checked=checked]"
+        end
+      end
+      assert_select "div.actions.small-12.medium-8.large-8.columns.end input[value=?]", "Post item"
+    end
+  end
+
+  test "items show page (payer's display)" do
+    sign_in @organizer
+    get :show, id: @item1.id
+    assert_select "title", "Details about item Food"
+    assert_select "a[href=?]", event_all_items_path(assigns(:item).event), "Back to all items"
+    assert_select "a[href=?]", event_items_path(assigns(:item).event), {text: "Back to your items"}
+    assert_select "a[href=?]", edit_item_path(assigns(:item)) , {text: "Back to edit item"}
+    assert_select "a[href=?]", new_event_item_path(assigns(:item).event), {text: "Create new item"}
+
+    #Test form and Foundation Grid
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset[disabled]" do
+      assert_select "legend", "Show item details"
+      
+      assert_select "div.row", 10
+      label = "div.row div.field.small-12.medium-4.large-4.columns.end label"
+      input = "div.row div.small-12.medium-8.large-8.columns.end input"
+      error = "div.row div.small-12.medium-8.large-8.columns.end small.error"
+
+      assert_select label, "Name"
+      assert_select input + "#item_name[value=?]", "Food"
+      assert_select label, "Name"
+      assert_select input + "#item_description[value=?]", "Food"
+      assert_select label, "Value date"
+      assert_select input + "#item_value_date[size='10'][value=?]", Date.new(2012, 11, 2).strftime('%Y-%m-%d')
+      assert_select label, "Payer"
+      assert_select input + "#dummy[value=?]", "Lasse Lund"
+      assert_select label, "Base amount"
+      assert_select input + "#item_base_amount[value=?]", "241.3000000000000000000000008"
+      assert_select label, "Base currency"
+      assert_select input + "#item_base_currency[value='EUR']"
+      assert_select label, "Exchange rate"
+      assert_select input + "#item_exchange_rate:match('value', ?)", /0\.13405555555/
+      assert_select label, "Foreign amount"
+      assert_select input + "#item_foreign_amount[value=?]", "1800.0"
+      assert_select "div.small-12.medium-8.large-8.columns.end select#item_foreign_currency" do
+        Money::Currency.all.each do |currency|
+          assert_select "option[value=?]", currency.id.to_s, {text: currency.iso_code.to_s}
+        end
+      end
+      assert_select label, "Beneficiaries"
+      assigns(:item).event.users.each do |participant|
+        assert_select "div.row div.small-12.medium-8.large-8.columns.end label[for=?]", "item_beneficiary_ids_" + participant.id.to_s, {text: participant.short_name}
+        assert_select "div.row div.small-12.medium-8.large-8.columns.end label input#item_beneficiary_ids_" + participant.id.to_s + "[value=?]", participant.id.to_s 
+        if assigns(:item).beneficiaries.include?(participant) then
+          assert_select "div.row div.small-12.medium-8.large-8.columns.end label input#item_beneficiary_ids_" + participant.id.to_s + "[checked=checked]"
+        end
+      end
+    end
+  end
+
+  test "items show page (non payer's display)" do
+    sign_in @user1
+    get :show, id: @item1.id
+    assert_select "title", "Details about item Food"
+    assert_select "a[href=?]", event_all_items_path(assigns(:item).event), "Back to all items"
+    assert_select "a[href=?]", event_items_path(assigns(:item).event), {text: "Back to your items"}
+    assert_select "a[href=?]", edit_item_path(assigns(:item)), false
+    assert_select "a[href=?]", new_event_item_path(assigns(:item).event), {text: "Create new item"}
+
+    #Test form and Foundation Grid
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset[disabled]" do
+      assert_select "legend", "Show item details"
+      
+      assert_select "div.row", 10
+      label = "div.row div.field.small-12.medium-4.large-4.columns.end label"
+      input = "div.row div.small-12.medium-8.large-8.columns.end input"
+      error = "div.row div.small-12.medium-8.large-8.columns.end small.error"
+
+      assert_select label, "Name"
+      assert_select input + "#item_name[value=?]", "Food"
+      assert_select label, "Name"
+      assert_select input + "#item_description[value=?]", "Food"
+      assert_select label, "Value date"
+      assert_select input + "#item_value_date[size='10'][value=?]", Date.new(2012, 11, 2).strftime('%Y-%m-%d')
+      assert_select label, "Payer"
+      assert_select input + "#dummy[value=?]", "Lasse Lund"
+      assert_select label, "Base amount"
+      assert_select input + "#item_base_amount[value=?]", "241.3000000000000000000000008"
+      assert_select label, "Base currency"
+      assert_select input + "#item_base_currency[value='EUR']"
+      assert_select label, "Exchange rate"
+      assert_select input + "#item_exchange_rate:match('value', ?)", /0\.13405555555/
+      assert_select label, "Foreign amount"
+      assert_select input + "#item_foreign_amount[value=?]", "1800.0"
+      assert_select "div.small-12.medium-8.large-8.columns.end select#item_foreign_currency" do
+        Money::Currency.all.each do |currency|
+          assert_select "option[value=?]", currency.id.to_s, {text: currency.iso_code.to_s}
+        end
+      end
+      assert_select label, "Beneficiaries"
+      assigns(:item).event.users.each do |participant|
+        assert_select "div.row div.small-12.medium-8.large-8.columns.end label[for=?]", "item_beneficiary_ids_" + participant.id.to_s, {text: participant.short_name}
+        assert_select "div.row div.small-12.medium-8.large-8.columns.end label input#item_beneficiary_ids_" + participant.id.to_s + "[value=?]", participant.id.to_s 
+        if assigns(:item).beneficiaries.include?(participant) then
+          assert_select "div.row div.small-12.medium-8.large-8.columns.end label input#item_beneficiary_ids_" + participant.id.to_s + "[checked=checked]"
+        end
+      end
+    end
+  end
+
 
 end

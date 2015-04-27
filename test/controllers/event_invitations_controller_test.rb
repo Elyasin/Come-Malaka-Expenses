@@ -33,8 +33,8 @@ class EventInvitationsControllerTest < ActionController::TestCase
       assert_select "legend", "Invite to #{@event.name} event"
       assert_select "div.row", 4
       assert_select "div.row div.field.small-12.medium-4.large-4.columns.end label", "Email"
-      assert_select "div.row div.small-12.medium-8.large-8.columns.end input#user_email[required=?]", "required" 
-      assert_select "div.row div.small-12.medium-8.large-8.columns.end input[pattern=?]", "email" 
+      assert_select "div.row div.small-12.medium-8.large-8.columns.end input#user_email[required=required]" 
+      assert_select "div.row div.small-12.medium-8.large-8.columns.end input[pattern=email]" 
       assert_select "div.row div.small-12.medium-8.large-8.columns.end input[placeholder=?]", "Email"
       assert_select "div.row div.small-12.medium-8.large-8.columns.end small.error", "Email is required. Make sure you type in a valid email."
       assert_select "div.row div.field.small-12.medium-4.large-4.columns.end label", "First name"

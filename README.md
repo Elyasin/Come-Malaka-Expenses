@@ -20,6 +20,7 @@
  		Value objects, Service objects, Form objects, Query objects, View objects, Policy objects, Decorators...
 
  * Tests: Views (functional), Integration Tests, Helper Tests
+ 		Tigthen/Straighten tests: Use strings instead of helpers, use "assigns(...)" instead of instance variables, ...
 
  * Look into CI for HTML/JavaScript: Selenium/PhantomJS, SauceLab, .... ?
 
@@ -47,6 +48,3 @@
 
  * ...
 
-	* Ruby version: 2.2.0 (Contains a [bug] with BigDecimal? Use Rational class?)
-
-[bug]: https://bugs.ruby-lang.org/issues/10850

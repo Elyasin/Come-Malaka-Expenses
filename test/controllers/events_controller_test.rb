@@ -356,7 +356,7 @@ class EventsControllerTest < ActionController::TestCase
     get :index
     assert_select "title", "Your events"
     assert_select "body a", "Create new event"
-    assert_select "body a:match('href', ?)", new_event_path
+    assert_select "body a[href=?]", new_event_path
     assert_select "p", "You don't have any events."
   end
 
@@ -435,8 +435,7 @@ class EventsControllerTest < ActionController::TestCase
     assert_select "title", "Create new event"
     assert_select "p a[href=?]", events_path, {text: "Back to events page"}
     #Test form and Foundation Abide and Grid
-    assert_select "form[data-abide=true]"
-    assert_select "form[novalidate=novalidate]"
+    assert_select "form[data-abide=true][novalidate=novalidate]"
     assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
       assert_select "legend", "Create new event"
       
@@ -502,12 +501,13 @@ class EventsControllerTest < ActionController::TestCase
       assert_select label, "Organizer"
       assert_select input + "#dummy[value=?]", @event.organizer.name
       assert_select label, "Participants"
-      @event.users.each do |user|
+      assigns(:event).users.each do |user|
         assert_select "div.row div.small-12.medium-8.large-8.columns.end label[for=?]", "event_user_ids_" + user.id.to_s, {text: user.name}
         assert_select "div.row div.small-12.medium-8.large-8.columns.end label input#event_user_ids_" + user.id.to_s + "[checked=checked][value=?]", user.id.to_s 
       end
     end
   end
+
 #When items are posted the event currency cannot be modified
 test "edit event page (with posted items)" do
     sign_in @organizer
