@@ -54,7 +54,7 @@ class Item
   end
 
   def cost_per_beneficiary
-    (self.base_amount.to_r / self.beneficiaries.count.to_r).to_f.to_d
+    self.base_amount / self.beneficiaries.count
   end
 
   def apply_exchange_rate
