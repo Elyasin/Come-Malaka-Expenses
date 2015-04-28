@@ -384,7 +384,7 @@ class EventsControllerTest < ActionController::TestCase
     assert_select ul + " li a[href='#{invite_to_event_path(@event)}']", 'Invite to event'
     assert_select ul + " li a[href='#{event_all_items_path(@event)}']", 'All items'
     assert_select ul + " li a[href='#{event_items_path(@event)}']", 'Your items'
-    assert_select ul + " li a[href='#{expense_report_path(@event)}']", 'Expense Report'
+    assert_select ul + " li a[href='#{expense_report_path(@event)}']", 'Expense Summary'
     tbody_td = "div.table-selector table.tablesaw tbody tr td"
     assert_select tbody_td, @event.description
     assert_select tbody_td, @event.from_date.strftime('%d %b %Y')
@@ -410,7 +410,7 @@ class EventsControllerTest < ActionController::TestCase
     assert_select head, "Organizer"
     assert_select head, "Participants*"
     assert_select "div.table-selector table.tablesaw tfoot tr[data-tablesaw-no-labels] td[colspan='7']", "* Hover or click over the text for details"
-    assert_select "div.table-selector table.tablesaw tbody tr td a.dropdown[data-dropdown=action#{@event.id}]", @event.name
+    assert_select "div.table-selector table.tablesaw tbody tr td a.dropdown[data-dropdown=action#{@event.id}]", "Randers"
     ul = "div.table-selector table.tablesaw tbody tr td ul#action#{@event.id}"
     assert_select ul + ".f-dropdown[data-dropdown-content]"
     assert_select ul + " li a[href='#{edit_event_path(@event)}']", false
@@ -419,15 +419,20 @@ class EventsControllerTest < ActionController::TestCase
     assert_select ul + " li a[href='#{invite_to_event_path(@event)}']", false
     assert_select ul + " li a[href='#{event_all_items_path(@event)}']", 'All items'
     assert_select ul + " li a[href='#{event_items_path(@event)}']", 'Your items'
-    assert_select ul + " li a[href='#{expense_report_path(@event)}']", 'Expense Report'
+    assert_select ul + " li a[href='#{expense_report_path(@event)}']", 'Expense Summary'
     tbody_td = "div.table-selector table.tablesaw tbody tr td"
     assert_select tbody_td, @event.description
     assert_select tbody_td, @event.from_date.strftime('%d %b %Y')
     assert_select tbody_td, @event.end_date.strftime('%d %b %Y')
-    assert_select tbody_td + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(@event.event_currency).name, {text: @event.event_currency.upcase}
+    assert_select tbody_td + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(@event.event_currency).name, {text: "EUR"}
     assert_select tbody_td, @event.organizer.short_name
-    user_names = @event.users.map { |u| u.short_name }.join(", ") 
-    assert_select tbody_td + " span.has-tip[data-tooltip][title='#{user_names}']", {text: @event.users.count.to_s}
+    assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Lasse.*/
+    assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Elyasin.*/
+    assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Theo.*/
+    assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Nuno.*/
+    assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Neal.*/
+    assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Juan.*/
+    assert_select tbody_td + " span.has-tip[data-tooltip]", "6"
   end
 
   test "new event page" do
@@ -588,7 +593,7 @@ test "edit event page (without posted items)" do
   test "expense report page" do
     sign_in @organizer
     get :expense_report, event_id: @event.id
-    assert_select "title", "Expense report for " + @event.name + " event"
+    assert_select "title", "Expense summary for " + @event.name + " event"
     assert_select "a[href=?]", events_path, {text: "Back to events page"}
     assert_select "a[href=?]", who_owes_you_path(@event), {text: "Who owes you?"}
     assert_select "a[href=?]", you_owe_whom_path(@event), {text: "You owe whom?"}

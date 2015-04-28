@@ -17,10 +17,10 @@
  * DRY out the code: partials, (mail) view helpers, JavaScript, etc.
 
  * Refactor:
- 		Value objects, Service objects, Form objects, Query objects, View objects, Policy objects, Decorators...
+ 	* Value objects, Service objects, Form objects, Query objects, View objects, Policy objects, Decorators...
 
  * Tests: Integration Tests, Helper Tests
- 		Tigthen/Straighten tests: Use strings instead of helpers, use "assigns(...)" instead of instance variables, ...
+ 	* Tigthen/Straighten tests: Use strings instead of helpers, use "assigns(...)" instead of instance variables, ...
 
  * Look into CI for HTML/JavaScript: Selenium/PhantomJS, SauceLab, .... ?
 
@@ -49,8 +49,4 @@
  * ...
 
  * Incorporate user feedback:
- 	* Provide a link « create a new item » when an item has just been saved
- 	* Set the base amount and currency fields (grey) after the transaction ones
  	* Possibility to enter a global amount for an item and then to split it in a different % to the participants
- 	* When i click on an event, i’d like to get the « create a new item » link
- 	* In the « expense summury », each item could be a link to the related item page

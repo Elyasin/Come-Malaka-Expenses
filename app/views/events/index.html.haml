@@ -25,6 +25,8 @@
 						%td
 							%a.dropdown{"data-dropdown": "#{'action' + event.id}"}= event.name
 							%ul.f-dropdown{id: "#{'action' + event.id}", "data-dropdown-content": true}
+								%li
+									= link_to 'Create new item', new_event_item_path(event.id)
 								- if current_user.can_update?(event)
 									%li
 										= link_to 'Edit', edit_event_path(event)
@@ -40,7 +42,7 @@
 								%li
 									= link_to('Your items', event_items_path(event))
 								%li
-									= link_to('Expense Report', expense_report_path(event))
+									= link_to('Expense Summary', expense_report_path(event))
 						%td= event.description
 						%td= event.from_date.strftime('%d %b %Y')
 						%td= event.end_date.strftime('%d %b %Y')

@@ -1,5 +1,5 @@
 = content_for :title, "Details for " + @item.name.to_s + " item"
-%p= link_to 'Back to your items', event_items_path(@item.event)
+= link_to 'Back to your items', event_items_path(@item.event)
 
 - if @item.errors.any?
   %div#error_explanation
@@ -38,22 +38,6 @@
             = f.select :payer_id, options_from_collection_for_select(@item.event.users, :id, :name, current_user.id)
         .row
           .field.small-12.medium-4.large-4.columns.end
-            = f.label :base_amount, "Base amount"
-          .small-12.medium-8.large-8.columns.end
-            = f.number_field :base_amount, value: @item.base_amount, readonly: true, placeholder: "= Exchange rate * Foreign amount"
-        .row
-          .field.small-12.medium-4.large-4.columns.end
-            = f.label :base_currency, "Base currency"
-          .small-12.medium-8.large-8.columns.end
-            = f.text_field :base_currency, value: @item.event.event_currency.upcase, readonly: true
-        .row
-          .field.small-12.medium-4.large-4.columns.end
-            = f.label :exchange_rate, "Exchange rate"
-          .small-12.medium-8.large-8.columns.end
-            = f.number_field :exchange_rate, placeholder: "Put 0 to fetch currency automatically", required: true, pattern: :exchange_rate
-            %small.error Exchange rate must be a positive number.
-        .row
-          .field.small-12.medium-4.large-4.columns.end
             = f.label :foreign_amount
           .small-12.medium-8.large-8.columns.end
             = f.number_field :foreign_amount, value: @item.foreign_amount, required: true, pattern: :amount
@@ -64,6 +48,22 @@
           .small-12.medium-8.large-8.columns.end
             = f.select :foreign_currency, options_from_collection_for_select(Money::Currency.all, :id, :iso_code, @item.foreign_currency)
             %small.error Please choose a currency.
+        .row
+          .field.small-12.medium-4.large-4.columns.end
+            = f.label :exchange_rate, "Exchange rate"
+          .small-12.medium-8.large-8.columns.end
+            = f.number_field :exchange_rate, placeholder: "Put 0 to fetch currency automatically", required: true, pattern: :exchange_rate
+            %small.error Exchange rate must be a positive number.
+        .row
+          .field.small-12.medium-4.large-4.columns.end
+            = f.label :base_amount, "Base amount"
+          .small-12.medium-8.large-8.columns.end
+            = f.number_field :base_amount, value: @item.base_amount, readonly: true, placeholder: "= Exchange rate * Foreign amount"
+        .row
+          .field.small-12.medium-4.large-4.columns.end
+            = f.label :base_currency, "Base currency"
+          .small-12.medium-8.large-8.columns.end
+            = f.text_field :base_currency, value: @item.event.event_currency.upcase, readonly: true
         .row
           .field.small-12.medium-4.large-4.columns.end
             = f.label :beneficiaries

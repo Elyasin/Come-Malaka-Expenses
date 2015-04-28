@@ -8,4 +8,4 @@
 			%u= "You owe " + payer.short_name + " " + money_format(amount, @event.event_currency) + " in total"
 		%ul
 			- @item_lists[payer].each do |item|
-				%li= "You owe " + payer.short_name + " " + money_format(item.cost_per_beneficiary, @event.event_currency) + " on the " + item.value_date.strftime('%d %b %Y') + " for item " + item.name + " (" + item.description + ")"
+				%li=raw "You owe " + payer.short_name + " " + money_format(item.cost_per_beneficiary, @event.event_currency) + " on the " + item.value_date.strftime('%d %b %Y') + " for item #{link_to(item.name, item_path(item))} (" + item.description + ")"

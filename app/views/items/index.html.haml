@@ -1,6 +1,7 @@
 = content_for :title, "All your items of " + @event.name + " event"
-%p= link_to "Back to events page", events_path
-%p= link_to "Create new item", new_event_item_path
+= link_to "Back to events page", events_path
+%br
+= link_to "Create new item", new_event_item_path
 - if @items.empty?
 	%p You don't have any items.
 - else

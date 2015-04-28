@@ -431,8 +431,8 @@ class ItemsControllerTest < ActionController::TestCase
     sign_in @organizer
     get :index, event_id: @event.id
     assert_select "title", "All your items of Randers event"
-    assert_select "p a[href=?]", events_path, {text: "Back to events page"}
-    assert_select "p a[href=?]", new_event_item_path(@event.id), {text: "Create new item"}
+    assert_select "a[href=?]", events_path, {text: "Back to events page"}
+    assert_select "a[href=?]", new_event_item_path(@event.id), {text: "Create new item"}
     table = "div.table-selector table.tablesaw[role=grid][data-tablesaw-mode=stack]"
     assert_select table + " caption", "Your items of event Randers"
     head = table + " thead tr th"
@@ -469,7 +469,7 @@ class ItemsControllerTest < ActionController::TestCase
     sign_in @organizer
     get :new, event_id: @event.id
     assert_select "title", "Create new item in Randers event"
-    assert_select "p a[href=?]", event_items_path(assigns(:item).event), {text: "Back to your items"}
+    assert_select "a[href=?]", event_items_path(assigns(:item).event), {text: "Back to your items"}
 
     #Test form and Foundation Abide and Grid
     assert_select "form[data-abide=true][novalidate=novalidate]"
@@ -529,7 +529,7 @@ class ItemsControllerTest < ActionController::TestCase
     sign_in @organizer
     get :edit, id: @item1.id
     assert_select "title", "Details for Food item"
-    assert_select "p a[href=?]", event_items_path(assigns(:item).event), {text: "Back to your items"}
+    assert_select "a[href=?]", event_items_path(assigns(:item).event), {text: "Back to your items"}
 
     #Test form and Foundation Abide and Grid
     assert_select "form[data-abide=true][novalidate=novalidate]"
