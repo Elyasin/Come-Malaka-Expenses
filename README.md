@@ -19,7 +19,7 @@
  * Refactor:
  	* Value objects, Service objects, Form objects, Query objects, View objects, Policy objects, Decorators...
 
- * Tests: Integration Tests, Helper Tests
+ * Tests: Integration Tests
  	* Tigthen/Straighten tests: Use strings instead of helpers, use "assigns(...)" instead of instance variables, ...
 
  * Look into CI for HTML/JavaScript: Selenium/PhantomJS, SauceLab, .... ?
