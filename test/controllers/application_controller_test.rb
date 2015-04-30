@@ -3,6 +3,7 @@ require 'test_helper'
 class ApplicationControllerTest < ActionController::TestCase
 
   # testing the hook methods directly
+  # Is there a better/simpler way?
 
   def setup
     super

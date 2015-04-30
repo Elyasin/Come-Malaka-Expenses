@@ -22,7 +22,7 @@ class EventInvitationsControllerTest < ActionController::TestCase
     assert_response :success, "Response must be success"
     assert_template :new, "New page must be rendered"
     # Test the view
-    assert_select 'title', "Invite to " + @event.name + " event"
+    assert_select 'title', "Invite to Randers event"
     assert_select 'body p a', "Back to event"
     assert_select "a[href=?]", events_path
     # Test form and Foundation (Abide, Grid)
@@ -54,7 +54,7 @@ class EventInvitationsControllerTest < ActionController::TestCase
     assert_response :success, "Response must be success"
     assert_template :edit, "Edit page must be rendered"
     # Test the view
-    assert_select 'title', "Accept invitation to " + @event.name + " event"
+    assert_select 'title', "Accept invitation to Randers event"
     # Test form and Foundation (Abide and Grid)
     assert_select "form[data-abide=?]", "true"
     assert_select "form[novalidate=?]", "novalidate"

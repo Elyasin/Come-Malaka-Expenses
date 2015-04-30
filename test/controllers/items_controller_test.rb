@@ -432,7 +432,7 @@ class ItemsControllerTest < ActionController::TestCase
     get :index, event_id: @event.id
     assert_select "title", "All your items of Randers event"
     assert_select "a[href=?]", events_path, {text: "Back to events page"}
-    assert_select "a[href=?]", new_event_item_path(@event.id), {text: "Create new item"}
+    assert_select "a[href=?]", new_event_item_path(assigns(:event).id), {text: "Create new item"}
     table = "div.table-selector table.tablesaw[role=grid][data-tablesaw-mode=stack]"
     assert_select table + " caption", "Your items of event Randers"
     head = table + " thead tr th"
@@ -456,9 +456,9 @@ class ItemsControllerTest < ActionController::TestCase
       assert_select li + " a[href=?][data-confirm][data-method=delete]", item_path(item), "Delete item"
       assert_select body, item.value_date.strftime('%d %b %Y')
       assert_select body, item.description
-      assert_select body + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(item.base_currency).name, money_format(item.base_amount, item.base_currency)
+      assert_select body + " span.has-tip[data-tooltip][title=?]", "Euro", money_format(item.base_amount, item.base_currency)
       assert_select body, item.exchange_rate.to_s
-      assert_select body + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(item.foreign_currency).name, money_format(item.foreign_amount, item.foreign_currency)
+      assert_select body + " span.has-tip[data-tooltip][title=?]", "Danish Krone", money_format(item.foreign_amount, item.foreign_currency)
       assert_select body, item.payer.short_name
       assert_select body + " span.has-tip[data-tooltip][title=?]", item.beneficiaries.map{ |b| b.short_name }.join(', '), item.beneficiaries.count.to_s
       assert_select body, money_format(item.cost_per_beneficiary, item.base_currency)
@@ -492,7 +492,7 @@ class ItemsControllerTest < ActionController::TestCase
       assert_select error, "Please choose a value date for the item."
       assert_select label, "Payer"
       assert_select "div.small-12.medium-8.large-8.columns.end select#item_payer_id" do
-        assert_select "option[selected=selected][value=?]", @organizer.id.to_s, {text: @organizer.name}
+        assert_select "option[selected=selected][value=?]", @organizer.id.to_s, {text: "Lasse Lund"}
         assigns(:item).event.users.each do |participant|
           next unless participant != @organizer
           assert_select "option[value=?]", participant.id.to_s, {text: participant.name}
@@ -501,7 +501,7 @@ class ItemsControllerTest < ActionController::TestCase
       assert_select label, "Base amount"
       assert_select input + "#item_base_amount[readonly=readonly][placeholder=?]", "= Exchange rate * Foreign amount" 
       assert_select label, "Base currency"
-      assert_select input + "#item_base_currency[readonly=readonly][value=?]", assigns(:item).event.event_currency.upcase
+      assert_select input + "#item_base_currency[readonly=readonly][value=?]", "EUR"
       assert_select label, "Exchange rate"
       assert_select input + "#item_exchange_rate[required=required][pattern='exchange_rate'][placeholder=?]", "Put 0 to fetch currency automatically"
       assert_select error, "Exchange rate must be a positive number."
@@ -548,7 +548,7 @@ class ItemsControllerTest < ActionController::TestCase
       assert_select input + "#item_description[required=required][value=?]", "Food"
       assert_select error, "Please describe the item."
       assert_select label, "Value date"
-      assert_select input + "#item_value_date[required=required][size='10'][value=?]", Date.new(2012, 11, 2).strftime('%Y-%m-%d')
+      assert_select input + "#item_value_date[required=required][size='10'][value=?]", "2012-11-02"
       assert_select error, "Please choose a value date for the item."
       assert_select label, "Payer"
       assert_select "div.small-12.medium-8.large-8.columns.end select#item_payer_id" do
@@ -611,7 +611,7 @@ class ItemsControllerTest < ActionController::TestCase
       assert_select label, "Name"
       assert_select input + "#item_description[value=?]", "Food"
       assert_select label, "Value date"
-      assert_select input + "#item_value_date[size='10'][value=?]", Date.new(2012, 11, 2).strftime('%Y-%m-%d')
+      assert_select input + "#item_value_date[size='10'][value=?]", "2012-11-02"
       assert_select label, "Payer"
       assert_select input + "#dummy[value=?]", "Lasse Lund"
       assert_select label, "Base amount"
@@ -661,7 +661,7 @@ class ItemsControllerTest < ActionController::TestCase
       assert_select label, "Name"
       assert_select input + "#item_description[value=?]", "Food"
       assert_select label, "Value date"
-      assert_select input + "#item_value_date[size='10'][value=?]", Date.new(2012, 11, 2).strftime('%Y-%m-%d')
+      assert_select input + "#item_value_date[size='10'][value=?]", "2012-11-02"
       assert_select label, "Payer"
       assert_select input + "#dummy[value=?]", "Lasse Lund"
       assert_select label, "Base amount"
@@ -687,6 +687,5 @@ class ItemsControllerTest < ActionController::TestCase
       end
     end
   end
-
 
 end

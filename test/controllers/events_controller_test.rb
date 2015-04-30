@@ -375,7 +375,7 @@ class EventsControllerTest < ActionController::TestCase
     assert_select head, "Organizer"
     assert_select head, "Participants*"
     assert_select "div.table-selector table.tablesaw tfoot tr[data-tablesaw-no-labels] td[colspan='7']", "* Hover or click over the text for details"
-    assert_select "div.table-selector table.tablesaw tbody tr td a.dropdown[data-dropdown=action#{@event.id}]", @event.name
+    assert_select "div.table-selector table.tablesaw tbody tr td a.dropdown[data-dropdown=action#{@event.id}]", "Randers"
     ul = "div.table-selector table.tablesaw tbody tr td ul#action#{@event.id}"
     assert_select ul + ".f-dropdown[data-dropdown-content]"
     assert_select ul + " li a[href='#{edit_event_path(@event)}']", 'Edit event'
@@ -386,13 +386,17 @@ class EventsControllerTest < ActionController::TestCase
     assert_select ul + " li a[href='#{event_items_path(@event)}']", 'Your event items'
     assert_select ul + " li a[href='#{expense_report_path(@event)}']", 'Expense Summary'
     tbody_td = "div.table-selector table.tablesaw tbody tr td"
-    assert_select tbody_td, @event.description
-    assert_select tbody_td, @event.from_date.strftime('%d %b %Y')
-    assert_select tbody_td, @event.end_date.strftime('%d %b %Y')
-    assert_select tbody_td + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(@event.event_currency).name, {text: @event.event_currency.upcase}
-    assert_select tbody_td, @event.organizer.short_name
-    user_names = @event.users.map { |u| u.short_name }.join(", ") 
-    assert_select tbody_td + " span.has-tip[data-tooltip][title='#{user_names}']", {text: @event.users.count.to_s}
+    assert_select tbody_td, "Come Malaka event in Denmark"
+    assert_select tbody_td, "02 Nov 2012"
+    assert_select tbody_td, "04 Nov 2012"
+    assert_select tbody_td + " span.has-tip[data-tooltip][title=?]", "Euro", {text: "EUR"}
+    assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Lasse.*/
+    assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Elyasin.*/
+    assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Theo.*/
+    assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Nuno.*/
+    assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Neal.*/
+    assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Juan.*/
+    assert_select tbody_td + " span.has-tip[data-tooltip]", "6"
   end
 
   test "participant's index page with events" do
@@ -421,10 +425,10 @@ class EventsControllerTest < ActionController::TestCase
     assert_select ul + " li a[href='#{event_items_path(@event)}']", 'Your event items'
     assert_select ul + " li a[href='#{expense_report_path(@event)}']", 'Expense Summary'
     tbody_td = "div.table-selector table.tablesaw tbody tr td"
-    assert_select tbody_td, @event.description
-    assert_select tbody_td, @event.from_date.strftime('%d %b %Y')
-    assert_select tbody_td, @event.end_date.strftime('%d %b %Y')
-    assert_select tbody_td + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(@event.event_currency).name, {text: "EUR"}
+    assert_select tbody_td, "Come Malaka event in Denmark"
+    assert_select tbody_td, "02 Nov 2012"
+    assert_select tbody_td, "04 Nov 2012"
+    assert_select tbody_td + " span.has-tip[data-tooltip][title=?]", "Euro", {text: "EUR"}
     assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Lasse.*/
     assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Elyasin.*/
     assert_select tbody_td + " span.has-tip[data-tooltip]:match('title', ?)", /.*Theo.*/
@@ -448,22 +452,22 @@ class EventsControllerTest < ActionController::TestCase
       error = "div.small-12.medium-8.large-8.columns.end small.error"
 
       assert_select label, "Name"
-      assert_select input + "#event_name[required=?]", "required" 
+      assert_select input + "#event_name[required=required]"
       assert_select error, "Please name the event."
       assert_select label, "Description"
-      assert_select input + "#event_description[required=?]", "required" 
+      assert_select input + "#event_description[required=required]"
       assert_select error, "Please describe the event."
       assert_select label, "Start date"
-      assert_select input + "#event_from_date[required=?]", "required" 
-      assert_select input + "#event_from_date[size=?]", "10" 
+      assert_select input + "#event_from_date[required=required]"
+      assert_select input + "#event_from_date[size=?]", "10"
       assert_select error, "Please choose a start date for the event."
       assert_select label, "End date"
-      assert_select input + "#event_end_date[required=?]", "required" 
+      assert_select input + "#event_end_date[required=required]"
       assert_select input + "#event_end_date[size=?]", "10" 
       assert_select error, "Please choose an end date for the event."
       assert_select label, "Event currency"
       assert_select "div.small-12.medium-8.large-8.columns.end select#event_event_currency" do
-        assert_select "#event_event_currency[required=?]", "required"
+        assert_select "#event_event_currency[required=required]"
         assert_select "option[value=?]", "", {text: "Select event currency"}
         Money::Currency.all.each do |currency|
           assert_select "option[value=?]", currency.id.to_s, {text: currency.iso_code.to_s}
@@ -473,7 +477,7 @@ class EventsControllerTest < ActionController::TestCase
       assert_select label, "Organizer"
       assert_select "div.small-12.medium-8.large-8.columns.end select#event_organizer_id" do
         assert_select "option[value=?]", @non_participant_user.id.to_s
-        assert_select "option[selected=selected]", @non_participant_user.name
+        assert_select "option[selected=selected]", "Javier Ductor"
       end
       assert_select "div.actions.small-12.medium-8.large-8.columns.end input[value=?]", "Create event"
     end
@@ -482,7 +486,7 @@ class EventsControllerTest < ActionController::TestCase
   test "show event details page" do
     sign_in @organizer
     get :show, id: @event.id
-    assert_select "title", "Details about " + @event.name
+    assert_select "title", "Details about Randers"
     assert_select "p a[href=?]", events_path, {text: "Back to events page"}
     assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
       assert_select "[disabled]"
@@ -493,17 +497,17 @@ class EventsControllerTest < ActionController::TestCase
       input = "div.row div.small-12.medium-8.large-8.columns.end input"
 
       assert_select label, "Name" 
-      assert_select input + "#event_name[value=?]", @event.name
+      assert_select input + "#event_name[value=Randers]"
       assert_select label, "Description"
-      assert_select input + "#event_description[value=?]", @event.description
+      assert_select input + "#event_description[value=?]", "Come Malaka event in Denmark"
       assert_select label, "Start date"
-      assert_select input + "#event_from_date[value=?]", @event.from_date.to_s
+      assert_select input + "#event_from_date[value=?]", "2012-11-02"
       assert_select label, "End date"
-      assert_select input + "#event_end_date[value=?]", @event.end_date.to_s
+      assert_select input + "#event_end_date[value=?]", "2012-11-04"
       assert_select label, "Event currency"
-      assert_select input + "#event_event_currency[value=?]", @event.event_currency
+      assert_select input + "#event_event_currency[value=EUR]"
       assert_select label, "Organizer"
-      assert_select input + "#dummy[value=?]", @event.organizer.name
+      assert_select input + "#dummy[value=?]", "Lasse Lund"
       assert_select label, "Participants"
       assigns(:event).users.each do |user|
         assert_select "div.row div.small-12.medium-8.large-8.columns.end label[for=?]", "event_user_ids_" + user.id.to_s, {text: user.name}
@@ -516,7 +520,7 @@ class EventsControllerTest < ActionController::TestCase
 test "edit event page (with posted items)" do
     sign_in @organizer
     get :edit, id: @event.id
-    assert_select "title", "Edit " + @event.name + " event"
+    assert_select "title", "Edit Randers event"
     assert_select "p a[href=?]", events_path, {text: "Back to events page"}
     #Test form and Foundation Abide and Grid
     assert_select "form[data-abide=true]"
@@ -529,21 +533,21 @@ test "edit event page (with posted items)" do
       error = "div.small-12.medium-8.large-8.columns.end small.error"
 
       assert_select label, "Name"
-      assert_select input + "#event_name[required=?]", "required" 
+      assert_select input + "#event_name[required=required]"
       assert_select error, "Please name the event."
       assert_select label, "Description"
-      assert_select input + "#event_description[required=?]", "required" 
+      assert_select input + "#event_description[required=required]"
       assert_select error, "Please describe the event."
       assert_select label, "Start date"
-      assert_select input + "#event_from_date[required=?]", "required" 
-      assert_select input + "#event_from_date[size=?]", "10" 
+      assert_select input + "#event_from_date[required=required]"
+      assert_select input + "#event_from_date[size=?]", "10"
       assert_select error, "Please choose a start date for the event."
       assert_select label, "End date"
-      assert_select input + "#event_end_date[required=?]", "required" 
-      assert_select input + "#event_end_date[size=?]", "10" 
+      assert_select input + "#event_end_date[required=required]"
+      assert_select input + "#event_end_date[size=?]", "10"
       assert_select error, "Please choose an end date for the event."
       assert_select label, "Event currency"
-      assert_select input + "#event_event_currency[value=?][disabled=disabled]", @event.event_currency.to_s 
+      assert_select input + "#event_event_currency[value=?][disabled=disabled]", "EUR"
       assert_select "div.actions.small-12.medium-8.large-8.columns.end input[value=?]", "Save event"
     end
   end
@@ -553,7 +557,7 @@ test "edit event page (without posted items)" do
     sign_in @organizer
     @event.items = nil
     get :edit, id: @event.id
-    assert_select "title", "Edit " + @event.name + " event"
+    assert_select "title", "Edit Randers event"
     assert_select "p a[href=?]", events_path, {text: "Back to events page"}
     #Test form and Foundation Abide and Grid
     assert_select "form[data-abide=true]"
@@ -566,18 +570,18 @@ test "edit event page (without posted items)" do
       error = "div.small-12.medium-8.large-8.columns.end small.error"
 
       assert_select label, "Name"
-      assert_select input + "#event_name[required=?]", "required" 
+      assert_select input + "#event_name[required=required]"
       assert_select error, "Please name the event."
       assert_select label, "Description"
-      assert_select input + "#event_description[required=?]", "required" 
+      assert_select input + "#event_description[required=required]"
       assert_select error, "Please describe the event."
       assert_select label, "Start date"
-      assert_select input + "#event_from_date[required=?]", "required" 
-      assert_select input + "#event_from_date[size=?]", "10" 
+      assert_select input + "#event_from_date[required=required]"
+      assert_select input + "#event_from_date[size=?]", "10"
       assert_select error, "Please choose a start date for the event."
       assert_select label, "End date"
-      assert_select input + "#event_end_date[required=?]", "required" 
-      assert_select input + "#event_end_date[size=?]", "10" 
+      assert_select input + "#event_end_date[required=required]"
+      assert_select input + "#event_end_date[size=?]", "10"
       assert_select error, "Please choose an end date for the event."
       assert_select label, "Event currency"
       assert_select "div.small-12.medium-8.large-8.columns.end select#event_event_currency" do
@@ -592,15 +596,15 @@ test "edit event page (without posted items)" do
   test "expense report page" do
     sign_in @organizer
     get :expense_report, event_id: @event.id
-    assert_select "title", "Expense summary for " + @event.name + " event"
+    assert_select "title", "Expense summary for Randers event"
     assert_select "a[href=?]", events_path, {text: "Back to events page"}
-    assert_select "a[href=?]", who_owes_you_path(@event), {text: "Who owes you?"}
-    assert_select "a[href=?]", you_owe_whom_path(@event), {text: "You owe whom?"}
+    assert_select "a[href=?]", who_owes_you_path(assigns(:event)), {text: "Who owes you?"}
+    assert_select "a[href=?]", you_owe_whom_path(assigns(:event)), {text: "You owe whom?"}
     #Test table and Foundation Grid
     table = "div.row div.small-12.columns.small-centered.table-selector table.tablesaw"
     assert_select table + "[role=grid][data-tablesaw-mode=stack]" 
     assert_select table + " caption", /Expense Summary\*/
-    assert_select table + " caption span.has-tip[data-tooltip][title=?]", Money::Currency.new(@event.event_currency).name, {text: "(base currency is #{@event.event_currency.upcase})"}
+    assert_select table + " caption span.has-tip[data-tooltip][title=?]", "Euro", {text: "(base currency is EUR)"}
     head = table + " thead tr th"
     assert_select head, "Participant"
     assert_select head, "Total Paid"
@@ -619,9 +623,9 @@ test "edit event page (without posted items)" do
   test "event's all items page (with items)" do
     sign_in @organizer
     get :event_all_items, event_id: @event.id
-    assert_select "title", "All items of " + @event.name + " event"
+    assert_select "title", "All items of Randers event"
     assert_select "a[href=?]", events_path, {text: "Back to events page"}
-    assert_select "a[href=?]", new_event_item_path(@event.id), {text: "Create new item"}
+    assert_select "a[href=?]", new_event_item_path(assigns(:event).id), {text: "Create new item"}
     table = "div.table-selector table.tablesaw[role=grid][data-tablesaw-mode=stack]"
     assert_select table + " caption", "All items of Randers event"
     head = table + " thead tr th"
@@ -647,9 +651,9 @@ test "edit event page (without posted items)" do
       end
       assert_select body, item.value_date.strftime('%d %b %Y')
       assert_select body, item.description
-      assert_select body + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(item.base_currency).name, money_format(item.base_amount, item.base_currency)
+      assert_select body + " span.has-tip[data-tooltip][title=?]", "Euro", money_format(item.base_amount, item.base_currency)
       assert_select body, item.exchange_rate.to_s
-      assert_select body + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(item.foreign_currency).name, money_format(item.foreign_amount, item.foreign_currency)
+      assert_select body + " span.has-tip[data-tooltip][title=?]", "Danish Krone", money_format(item.foreign_amount, item.foreign_currency)
       assert_select body, item.payer.short_name
       assert_select body + " span.has-tip[data-tooltip]:match('title', ?)", /.*Lasse.*/
       assert_select body + " span.has-tip[data-tooltip]:match('title', ?)", /.*Elyasin.*/
@@ -666,9 +670,9 @@ test "edit event page (without posted items)" do
     @event.items = []
     sign_in @organizer
     get :event_all_items, event_id: @event.id
-    assert_select "title", "All items of " + @event.name + " event"
+    assert_select "title", "All items of Randers event"
     assert_select "a[href=?]", events_path, {text: "Back to events page"}
-    assert_select "a[href=?]", new_event_item_path(@event.id), {text: "Create new item"}
+    assert_select "a[href=?]", new_event_item_path(assigns(:event).id), {text: "Create new item"}
     assert_select "p", "You don't have any items."
   end
 
@@ -676,41 +680,39 @@ test "edit event page (without posted items)" do
     sign_in @organizer
     get :who_owes_you, event_id: @event.id
     assert_select "title", "Who owes you?"
-    assert_select "a[href=?]", expense_report_path(@event), {text: "Back to expense summary"}
+    assert_select "a[href=?]", expense_report_path(assigns(:event)), {text: "Back to expense summary"}
 
     ul_header = "ul[style='list-style-type:none'] li u"
     ul_line = "ul[style='list-style-type:none'] ul li"
-    date1 = @event.from_date.strftime('%d %b %Y')
-    date2 = (@event.from_date+1).strftime('%d %b %Y')
 
     assert_select ul_header, "Elyasin owes you €124.00 in total"
-    assert_select ul_line, "Elyasin owes you €40.22 on the " + date1 + " for item Food (Food)"
-    assert_select ul_line, "Elyasin owes you €11.17 on the " + date1 + " for item Gas (Gas)"
-    assert_select ul_line, "Elyasin owes you €11.17 on the " + date1 + " for item Drinks (Drinks)"
-    assert_select ul_line, "Elyasin owes you €36.86 on the " + date1 + " for item Night out (Night out & Misc)"
-    assert_select ul_line, "Elyasin owes you €24.58 on the " + date2 + " for item Night out (Night out & Misc)"
+    assert_select ul_line, "Elyasin owes you €40.22 on the 02 Nov 2012 for item Food (Food)"
+    assert_select ul_line, "Elyasin owes you €11.17 on the 02 Nov 2012 for item Gas (Gas)"
+    assert_select ul_line, "Elyasin owes you €11.17 on the 02 Nov 2012 for item Drinks (Drinks)"
+    assert_select ul_line, "Elyasin owes you €36.86 on the 02 Nov 2012 for item Night out (Night out & Misc)"
+    assert_select ul_line, "Elyasin owes you €24.58 on the 03 Nov 2012 for item Night out (Night out & Misc)"
     assert_select ul_header, "Juan owes you €124.00 in total"
-    assert_select ul_line, "Juan owes you €40.22 on the " + date1 + " for item Food (Food)"
-    assert_select ul_line, "Juan owes you €11.17 on the " + date1 + " for item Gas (Gas)"
-    assert_select ul_line, "Juan owes you €11.17 on the " + date1 + " for item Drinks (Drinks)"
-    assert_select ul_line, "Juan owes you €36.86 on the " + date1 + " for item Night out (Night out & Misc)"
-    assert_select ul_line, "Juan owes you €24.58 on the " + date2 + " for item Night out (Night out & Misc)"
+    assert_select ul_line, "Juan owes you €40.22 on the 02 Nov 2012 for item Food (Food)"
+    assert_select ul_line, "Juan owes you €11.17 on the 02 Nov 2012 for item Gas (Gas)"
+    assert_select ul_line, "Juan owes you €11.17 on the 02 Nov 2012 for item Drinks (Drinks)"
+    assert_select ul_line, "Juan owes you €36.86 on the 02 Nov 2012 for item Night out (Night out & Misc)"
+    assert_select ul_line, "Juan owes you €24.58 on the 03 Nov 2012 for item Night out (Night out & Misc)"
     assert_select ul_header, "Neal owes you €87.14 in total"
-    assert_select ul_line, "Neal owes you €40.22 on the " + date1 + " for item Food (Food)"
-    assert_select ul_line, "Neal owes you €11.17 on the " + date1 + " for item Gas (Gas)"
-    assert_select ul_line, "Neal owes you €11.17 on the " + date1 + " for item Drinks (Drinks)"
-    assert_select ul_line, "Neal owes you €24.58 on the " + date2 + " for item Night out (Night out & Misc)"    
+    assert_select ul_line, "Neal owes you €40.22 on the 02 Nov 2012 for item Food (Food)"
+    assert_select ul_line, "Neal owes you €11.17 on the 02 Nov 2012 for item Gas (Gas)"
+    assert_select ul_line, "Neal owes you €11.17 on the 02 Nov 2012 for item Drinks (Drinks)"
+    assert_select ul_line, "Neal owes you €24.58 on the 03 Nov 2012 for item Night out (Night out & Misc)"    
     assert_select ul_header, "Nuno owes you €124.00 in total"
-    assert_select ul_line, "Nuno owes you €40.22 on the " + date1 + " for item Food (Food)"
-    assert_select ul_line, "Nuno owes you €11.17 on the " + date1 + " for item Gas (Gas)"
-    assert_select ul_line, "Nuno owes you €11.17 on the " + date1 + " for item Drinks (Drinks)"
-    assert_select ul_line, "Nuno owes you €36.86 on the " + date1 + " for item Night out (Night out & Misc)"
-    assert_select ul_line, "Nuno owes you €24.58 on the " + date2 + " for item Night out (Night out & Misc)"
+    assert_select ul_line, "Nuno owes you €40.22 on the 02 Nov 2012 for item Food (Food)"
+    assert_select ul_line, "Nuno owes you €11.17 on the 02 Nov 2012 for item Gas (Gas)"
+    assert_select ul_line, "Nuno owes you €11.17 on the 02 Nov 2012 for item Drinks (Drinks)"
+    assert_select ul_line, "Nuno owes you €36.86 on the 02 Nov 2012 for item Night out (Night out & Misc)"
+    assert_select ul_line, "Nuno owes you €24.58 on the 03 Nov 2012 for item Night out (Night out & Misc)"
     assert_select ul_header, "Theo owes you €87.14 in total"
-    assert_select ul_line, "Theo owes you €40.22 on the " + date1 + " for item Food (Food)"
-    assert_select ul_line, "Theo owes you €11.17 on the " + date1 + " for item Gas (Gas)"
-    assert_select ul_line, "Theo owes you €11.17 on the " + date1 + " for item Drinks (Drinks)"
-    assert_select ul_line, "Theo owes you €24.58 on the " + date2 + " for item Night out (Night out & Misc)"
+    assert_select ul_line, "Theo owes you €40.22 on the 02 Nov 2012 for item Food (Food)"
+    assert_select ul_line, "Theo owes you €11.17 on the 02 Nov 2012 for item Gas (Gas)"
+    assert_select ul_line, "Theo owes you €11.17 on the 02 Nov 2012 for item Drinks (Drinks)"
+    assert_select ul_line, "Theo owes you €24.58 on the 03 Nov 2012 for item Night out (Night out & Misc)"
   end
 
 
@@ -718,14 +720,13 @@ test "edit event page (without posted items)" do
     sign_in @organizer
     get :you_owe_whom, event_id: @event.id
     assert_select "title", "You owe whom?"
-    assert_select "a[href=?]", expense_report_path(@event), {text: "Back to expense summary"}
+    assert_select "a[href=?]", expense_report_path(assigns(:event)), {text: "Back to expense summary"}
 
     ul_header = "ul[style='list-style-type:none'] li u"
     ul_line = "ul[style='list-style-type:none'] ul li"
-    date2 = (@event.from_date+1).strftime('%d %b %Y')
 
     assert_select ul_header, "You owe Juan €1.79 in total"
-    assert_select ul_line, "You owe Juan €1.79 on the " + date2 + " for item Taxi (Taxi)"
+    assert_select ul_line, "You owe Juan €1.79 on the 03 Nov 2012 for item Taxi (Taxi)"
   end
 
 end
