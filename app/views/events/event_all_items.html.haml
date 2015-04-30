@@ -1,6 +1,8 @@
 = content_for :title, "All items of " + @event.name + " event"
-%p= link_to 'Back to events page', events_path
-%p= link_to "Create new item", new_event_item_path
+= link_to 'Back to events page', events_path
+%br
+= link_to "Create new item", new_event_item_path
+%br
 - if @items.empty?
 	%p You don't have any items.
 - else
@@ -38,10 +40,10 @@
 						%td= item.value_date.strftime('%d %b %Y')
 						%td= item.description
 						%td
-							%span.has-tip{"data-tooltip": true, :title => "#{Money::Currency.new(item.base_currency).name}"}= money_format(item.base_amount, item.base_currency)
+							%span.has-tip{"data-tooltip": true, :title => "#{Money::Currency.new(item.foreign_currency).name}"}= money_format(item.foreign_amount, item.foreign_currency)
 						%td= item.exchange_rate
 						%td
-							%span.has-tip{"data-tooltip": true, :title => "#{Money::Currency.new(item.foreign_currency).name}"}= money_format(item.foreign_amount, item.foreign_currency)
+							%span.has-tip{"data-tooltip": true, :title => "#{Money::Currency.new(item.base_currency).name}"}= money_format(item.base_amount, item.base_currency)
 						%td= item.payer.short_name
 						%td
 							%span.has-tip{"data-tooltip": true, :title => "#{item.beneficiaries.map{ |b| b.short_name }.join(', ')}"}= item.beneficiaries.count
