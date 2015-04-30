@@ -637,13 +637,13 @@ test "edit event page (without posted items)" do
     foot = table + " tfoot tr[data-tablesaw-no-labels] td[colspan='9']"
     assert_select foot, /^\* Amounts are rounded for display\n\n\*\* Hover or click over the text for details$/
     body = table + " tbody tr td"
-    @event.items.each do |item|
+    assigns(:items).each do |item|
       assert_select body + " a.dropdown[data-dropdown=?]", "action" + item.id.to_s, {text: item.name}
       li = body + " ul.f-dropdown#action#{item.id.to_s}[data-dropdown-content] li"
-      assert_select li + " a[href=?]", item_path(item), "View details"
+      assert_select li + " a[href=?]", item_path(item), "View item details"
       if item.payer == @organizer then
-        assert_select li + " a[href=?]", edit_item_path(item), "Edit"
-        assert_select li + " a[href=?][data-confirm][data-method=delete]", item_path(item), "Delete"
+        assert_select li + " a[href=?]", edit_item_path(item), "Edit item"
+        assert_select li + " a[href=?][data-confirm][data-method=delete]", item_path(item), "Delete item"
       end
       assert_select body, item.value_date.strftime('%d %b %Y')
       assert_select body, item.description

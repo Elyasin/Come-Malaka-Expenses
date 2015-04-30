@@ -451,9 +451,9 @@ class ItemsControllerTest < ActionController::TestCase
     assigns(:items).each do |item|
       assert_select body + " a.dropdown[data-dropdown=?]", "action" + item.id.to_s, {text: item.name}
       li = body + " ul.f-dropdown#action#{item.id.to_s}[data-dropdown-content] li"
-      assert_select li + " a[href=?]", item_path(item, item.event), "View details"
-      assert_select li + " a[href=?]", edit_item_path(item), "Edit"
-      assert_select li + " a[href=?][data-confirm][data-method=delete]", item_path(item), "Delete"
+      assert_select li + " a[href=?]", item_path(item, item.event), "View item details"
+      assert_select li + " a[href=?]", edit_item_path(item), "Edit item"
+      assert_select li + " a[href=?][data-confirm][data-method=delete]", item_path(item), "Delete item"
       assert_select body, item.value_date.strftime('%d %b %Y')
       assert_select body, item.description
       assert_select body + " span.has-tip[data-tooltip][title=?]", Money::Currency.new(item.base_currency).name, money_format(item.base_amount, item.base_currency)
