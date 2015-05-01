@@ -1,7 +1,6 @@
 = content_for :title, "Invite to " + @event.name + " event"
 %p= link_to "Back to event", events_path
 = form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :post, 'data-abide': true, novalidate: true } do |f|
-  = devise_error_messages!
   = f.hidden_field :event_id
   .row
     .small-12.medium-8.large-6.columns.small-centered

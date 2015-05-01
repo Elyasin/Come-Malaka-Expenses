@@ -19,12 +19,11 @@
  @import "foundation_and_overrides";
 
 .field_with_errors {
-  padding: 2px;
   background-color: red;
-  display: inline;
+  color: white;
 }
 
-div.beta_testing {
+.beta_testing {
   position:absolute;
   top: 50px;
   right:0;

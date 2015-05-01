@@ -6,9 +6,8 @@
 
 ## ToDos:
 
- * Layout devise error messages
-
  * Web/Mail Design/Sitemap/Navigation - Foundation/Responsive
+ 	* Add navigation for small media
 
  * Use Charts to display data (e.g. Who owes you?)
 
