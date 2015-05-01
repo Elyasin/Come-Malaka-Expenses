@@ -142,14 +142,15 @@ class ItemsControllerTest < ActionController::TestCase
       base_amount: 10, base_currency: "EUR", exchange_rate: 1,  
       foreign_amount: 10, foreign_currency: "EUR", payer_id: @organizer.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
-      assert_no_difference('Item.count', message = "Item must not be created") do
-        post :create, event_id: @event.id, item: new_item
-      end
-      assert_response :success, "Response must be success"
-      assert_template :new, "New page must be rendered"
-      assert_equal "Item is invalid. Please correct.", flash[:notice], "Flash[:notice] state that item is invalid"
-      assert_nil flash[:alert], "Flash[:alert] must be empty"
-      assert_not_empty assigns(:item).errors, "Item errors must not be empty"
+    assert_no_difference('Item.count', message = "Item must not be created") do
+      post :create, event_id: @event.id, item: new_item
+    end
+    assert_response :success, "Response must be success"
+    assert_template :new, "New page must be rendered"
+    assert_equal "Item is invalid. Please correct.", flash[:notice], "Flash[:notice] state that item is invalid"
+    assert_nil flash[:alert], "Flash[:alert] must be empty"
+    assert_not_empty assigns(:item).errors, "Item errors must not be empty"
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset div.field.small-12.medium-4.large-4.columns.end .field_with_errors"
   end
 
   test "organizer cannot create invalid item (special case: automatic exchange rate update fails)" do
@@ -167,6 +168,7 @@ class ItemsControllerTest < ActionController::TestCase
     assert_equal "Item is invalid. Please correct.", flash[:notice], "Flash[:notice] state that item is invalid"
     assert_nil flash[:alert], "Flash[:alert] must be empty"
     assert_not_empty assigns(:item).errors, "Item errors must not be empty"
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset div.field.small-12.medium-4.large-4.columns.end .field_with_errors"
   end
 
   test "participant can create valid item with manual exchange currency" do
@@ -287,14 +289,15 @@ class ItemsControllerTest < ActionController::TestCase
       base_amount: 10, base_currency: "EUR", exchange_rate: 1,  
       foreign_amount: 10, foreign_currency: "EUR", payer_id: @organizer.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
-      assert_no_difference('Item.count') do
-        put :update, id: @item3.id, item: new_item
-      end
-      assert_response :success, "Response must be success"
-      assert_template :edit, "New page must be rendered"
-      assert_equal "Item is invalid. Please correct.", flash[:notice], "Flash[:notice] state that item is invalid"
-      assert_nil flash[:alert], "Flash[:alert] must be empty"
-      assert_not_empty assigns(:item).errors, "Item errors must not be empty"
+    assert_no_difference('Item.count') do
+      put :update, id: @item3.id, item: new_item
+    end
+    assert_response :success, "Response must be success"
+    assert_template :edit, "New page must be rendered"
+    assert_equal "Item is invalid. Please correct.", flash[:notice], "Flash[:notice] state that item is invalid"
+    assert_nil flash[:alert], "Flash[:alert] must be empty"
+    assert_not_empty assigns(:item).errors, "Item errors must not be empty"
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset div.field.small-12.medium-4.large-4.columns.end .field_with_errors"
   end
 
   test "organizer cannot update invalid item (special case: automatic exchange rate update fails due to exception)" do
@@ -312,6 +315,7 @@ class ItemsControllerTest < ActionController::TestCase
     assert_equal "Item is invalid. Please correct.", flash[:notice], "Flash[:notice] state that item is invalid"
     assert_nil flash[:alert], "Flash[:alert] must be empty"
     assert_not_empty assigns(:item).errors, "Item errors must not be empty"
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset div.field.small-12.medium-4.large-4.columns.end .field_with_errors"
   end
 
   test "organizer cannot update invalid item (special case: automatic exchange rate update fails due to time out)" do
@@ -329,6 +333,7 @@ class ItemsControllerTest < ActionController::TestCase
     assert_equal "Item is invalid. Please correct.", flash[:notice], "Flash[:notice] state that item is invalid"
     assert_nil flash[:alert], "Flash[:alert] must be empty"
     assert_not_empty assigns(:item).errors, "Item errors must not be empty"
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset div.field.small-12.medium-4.large-4.columns.end .field_with_errors"
   end
 
   test "organizer cannot update invalid item (special case: automatic exchange rate update fails due to Rack time out)" do
@@ -346,6 +351,7 @@ class ItemsControllerTest < ActionController::TestCase
     assert_equal "Item is invalid. Please correct.", flash[:notice], "Flash[:notice] state that item is invalid"
     assert_nil flash[:alert], "Flash[:alert] must be empty"
     assert_not_empty assigns(:item).errors, "Item errors must not be empty"
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset div.field.small-12.medium-4.large-4.columns.end .field_with_errors"
   end
 
   test "participant cannot update item" do

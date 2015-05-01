@@ -131,6 +131,7 @@ class EventsControllerTest < ActionController::TestCase
   	assert_response :success, "Response must be success"
   	assert_template :new, "New page must be rendered"
   	assert_equal "Event is invalid. Please correct.", flash[:notice]
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset div.field.small-12.medium-4.large-4.columns.end .field_with_errors"
   end
 
   test "organizer can edit event" do
@@ -170,6 +171,7 @@ class EventsControllerTest < ActionController::TestCase
   	assert_response :success, "Response must be success"
   	assert_template :edit, "Edit page must be rendered"
   	assert_equal "Event cannot be updated with invalid data. Please correct.", flash[:notice], "Flash[:notice] must state that event is invalid"
+    assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset div.field.small-12.medium-4.large-4.columns.end .field_with_errors"
   end
 
   test "participant cannot update event" do
