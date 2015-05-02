@@ -41,9 +41,7 @@
  * Export functionalities
 
  * Format amount fields on edit/new item pages
-
- * Reduce imported files (SASS, JS/jQuery, ...) -> selected imports
-
+ 
  * ...
 
  * Incorporate user feedback:

@@ -13,10 +13,14 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
-//= require foundation
+//= require foundation/foundation
+//= require foundation/foundation.abide
+//= require foundation/foundation.dropdown
+//= require foundation/foundation.tooltip
+//= require foundation/foundation.topbar
 //= require jquery-ui/datepicker
 //= require turbolinks
-//= require_tree .
+//= require tablesaw.stackonly
 
 
 $(document).ready(function(){
