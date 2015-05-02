@@ -507,7 +507,8 @@ class ItemsControllerTest < ActionController::TestCase
       assert_select label, "Base amount"
       assert_select input + "#item_base_amount[readonly=readonly][placeholder=?]", "= Exchange rate * Foreign amount" 
       assert_select label, "Base currency"
-      assert_select input + "#item_base_currency[readonly=readonly][value=?]", "EUR"
+      assert_select input + "#item_base_currency[type=hidden][value=eur]"
+      assert_select input + "#item_dummy[disabled=disabled][value=EUR]"
       assert_select label, "Exchange rate"
       assert_select input + "#item_exchange_rate[required=required][pattern='exchange_rate'][placeholder=?]", "Put 0 to fetch currency automatically"
       assert_select error, "Exchange rate must be a positive number."
@@ -568,7 +569,7 @@ class ItemsControllerTest < ActionController::TestCase
       assert_select input + "#item_base_amount[readonly=readonly][placeholder=?]", "= Exchange rate * Foreign amount"
       assert_select input + "#item_base_amount[value=?]", "241.3000000000000000000000008"
       assert_select label, "Base currency"
-      assert_select input + "#item_base_currency[readonly=readonly][value='EUR']"
+      assert_select input + "#item_base_currency[disabled=disabled][value=EUR]"
       assert_select label, "Exchange rate"
       assert_select input + "#item_exchange_rate[required=required][pattern='exchange_rate'][placeholder=?]", "Put 0 to fetch currency automatically"
       assert_select input + "#item_exchange_rate:match('value', ?)", /0\.13405555555/

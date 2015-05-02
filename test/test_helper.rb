@@ -45,7 +45,7 @@ class ActiveSupport::TestCase
 		@non_participant_user.save!
 		@event = Event.new(name: "Randers", from_date: Date.new(2012, 11, 2), 
 			end_date: Date.new(2012, 11, 4), description: "Come Malaka event in Denmark", 
-			event_currency: "EUR", organizer: @organizer)
+			event_currency: "eur", organizer: @organizer)
 		@event.add_participant(@organizer)
 		@event.add_participant(@user1)
 		@event.add_participant(@user2)

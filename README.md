@@ -6,8 +6,14 @@
 
 ## ToDos:
 
- * Web/Mail Design/Sitemap/Navigation - Foundation/Responsive
+ * Web/Mail Design/Sitemap/Navigation
  	* Add navigation for small media
+
+ * We need a code style guide (JSHint, CSSLint, Checkstyle, GitHub style guide)...
+
+ * ...and documentation (readme.io)...
+
+ * ...and to be responsive (for those with slow connections)...
 
  * Use Charts to display data (e.g. Who owes you?)
 
@@ -41,7 +47,7 @@
  * Export functionalities
 
  * Format amount fields on edit/new item pages
- 
+
  * ...
 
  * Incorporate user feedback:

@@ -75,8 +75,6 @@ $(document).ready(function(){
     }
   });
 
-  $(document).foundation('interchange', 'reflow');
-
   $(document).foundation('tooltip', 'reflow');
 
 });
