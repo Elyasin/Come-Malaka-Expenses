@@ -13,14 +13,14 @@ Payer: #{@item.payer.name}
 %br
 Base amount: #{money_format(@item.base_amount, @item.base_currency)}
 %br
-Base currency: #{@item.base_currency}
+Base currency: #{@item.base_currency.upcase}
 %small (This is the event currency)
 %br
 Exchange rate: #{@item.exchange_rate}
 %br
 Foreign amount: #{money_format(@item.foreign_amount, @item.foreign_currency)}
 %br
-Foreign currency: #{@item.foreign_currency}
+Foreign currency: #{@item.foreign_currency.upcase}
 %small (This is the item's currency)
 %br
 Beneficiaries: #{@item.beneficiaries.map { |b| b.name }.join(", ") }

@@ -68,7 +68,7 @@ class Item
   private
 
   def get_exchange_rate
-    self.exchange_rate = JSON.parse(open("http://devel.farebookings.com/api/curconversor/" + self.foreign_currency + "/" + self.base_currency + "/1/json").read)[self.base_currency].to_d
+    self.exchange_rate = JSON.parse(open("http://devel.farebookings.com/api/curconversor/" + self.foreign_currency.upcase + "/" + self.base_currency.upcase + "/1/json").read)[self.base_currency.upcase].to_d
     self.rate_changed = true
   end
 

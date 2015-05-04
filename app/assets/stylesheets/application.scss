@@ -11,9 +11,10 @@
  * file per style scope.
  *
  *= require jquery-ui/datepicker
- *= require foundation_and_overrides
  *= require tablesaw.stackonly
  */
+
+@import "foundation_and_overrides";
 
 .field_with_errors {
   background-color: red;

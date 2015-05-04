@@ -98,8 +98,8 @@ class ItemsControllerTest < ActionController::TestCase
   test "organizer can create valid item with manual exchange currency" do
   	sign_in @organizer
     new_item = { name: "New item", value_date: @event.from_date, description: "New description", 
-      base_amount: 10, base_currency: "EUR", exchange_rate: 1,  
-      foreign_amount: 10, foreign_currency: "EUR", payer_id: @organizer.id, 
+      base_amount: 10, base_currency: "eur", exchange_rate: 1,  
+      foreign_amount: 10, foreign_currency: "eur", payer_id: @organizer.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
     assert_difference('Item.count', 1, "Item must be created") do
       post :create, event_id: @event.id, item: new_item
@@ -118,8 +118,8 @@ class ItemsControllerTest < ActionController::TestCase
   test "organizer can create valid item with automatic exchange currency" do
     sign_in @organizer
     new_item = { name: "New item", value_date: @event.from_date, description: "New description", 
-      base_amount: 10, base_currency: "EUR", exchange_rate: "",  
-      foreign_amount: 10, foreign_currency: "EUR", payer_id: @organizer.id, 
+      base_amount: 10, base_currency: "eur", exchange_rate: "",  
+      foreign_amount: 10, foreign_currency: "eur", payer_id: @organizer.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
       stub_request(:get, "http://devel.farebookings.com/api/curconversor/EUR/EUR/1/json").to_return(:status => 200, :body => '{"EUR": 1}')
     assert_difference('Item.count', 1, "Item must not be created") do
@@ -139,8 +139,8 @@ class ItemsControllerTest < ActionController::TestCase
   test "organizer cannot create invalid item" do
   	sign_in @organizer
     new_item = { name: nil, value_date: @event.from_date, description: "New description", 
-      base_amount: 10, base_currency: "EUR", exchange_rate: 1,  
-      foreign_amount: 10, foreign_currency: "EUR", payer_id: @organizer.id, 
+      base_amount: 10, base_currency: "eur", exchange_rate: 1,  
+      foreign_amount: 10, foreign_currency: "eur", payer_id: @organizer.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
     assert_no_difference('Item.count', message = "Item must not be created") do
       post :create, event_id: @event.id, item: new_item
@@ -156,8 +156,8 @@ class ItemsControllerTest < ActionController::TestCase
   test "organizer cannot create invalid item (special case: automatic exchange rate update fails)" do
     sign_in @organizer
     new_item = { name: "New item", value_date: @event.from_date, description: "New description", 
-      base_amount: 10, base_currency: "EUR", exchange_rate: "",  
-      foreign_amount: 10, foreign_currency: "EUR", payer_id: @organizer.id, 
+      base_amount: 10, base_currency: "eur", exchange_rate: "",  
+      foreign_amount: 10, foreign_currency: "eur", payer_id: @organizer.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
     stub_request(:get, "http://devel.farebookings.com/api/curconversor/EUR/EUR/1/json").to_raise(OpenURI::HTTPError.new(nil, ""))
     assert_no_difference('Item.count', "Item must not be created") do
@@ -174,8 +174,8 @@ class ItemsControllerTest < ActionController::TestCase
   test "participant can create valid item with manual exchange currency" do
     sign_in @user1
     new_item = { name: "New item", value_date: @event.from_date, description: "New description", 
-      base_amount: 10, base_currency: "EUR", exchange_rate: 1,  
-      foreign_amount: 10, foreign_currency: "EUR", payer_id: @user1.id, 
+      base_amount: 10, base_currency: "eur", exchange_rate: 1,  
+      foreign_amount: 10, foreign_currency: "eur", payer_id: @user1.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
     assert_difference('Item.count', 1, "Item must not be created") do
       post :create, event_id: @event.id, item: new_item
@@ -194,8 +194,8 @@ class ItemsControllerTest < ActionController::TestCase
   test "participant can create valid item with automatic exchange currency" do
     sign_in @user1
     new_item = { name: "New item", value_date: @event.from_date, description: "New description", 
-      base_amount: 10, base_currency: "EUR", exchange_rate: "",  
-      foreign_amount: 10, foreign_currency: "EUR", payer_id: @user1.id, 
+      base_amount: 10, base_currency: "eur", exchange_rate: "",  
+      foreign_amount: 10, foreign_currency: "eur", payer_id: @user1.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
       stub_request(:get, "http://devel.farebookings.com/api/curconversor/EUR/EUR/1/json").to_return(:status => 200, :body => '{"EUR": 1}')
     assert_difference('Item.count', 1, "Item must not be created") do
@@ -214,8 +214,8 @@ class ItemsControllerTest < ActionController::TestCase
 
   test "non participant cannot create item" do
     new_item = { name: "New item", value_date: @event.from_date, description: "New description", 
-      base_amount: 10, base_currency: "EUR", exchange_rate: "",  
-      foreign_amount: 10, foreign_currency: "EUR", payer_id: @user1.id, 
+      base_amount: 10, base_currency: "eur", exchange_rate: "",  
+      foreign_amount: 10, foreign_currency: "eur", payer_id: @user1.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
       assert_no_difference('Item.count', message = "Item must not be created") do
         post :create, event_id: @event.id, item: new_item
@@ -245,7 +245,7 @@ class ItemsControllerTest < ActionController::TestCase
   test "organizer can update item with manual exchange rate" do
   	sign_in @organizer
     new_item = { name: "Drinks", description: "Drinks", value_date: @event.from_date, 
-      event: @event, base_amount: 67.03, base_currency: "EUR", 
+      event: @event, base_amount: 67.03, base_currency: "eur", 
       exchange_rate: 0.1, foreign_amount: 500, foreign_currency: "DKK", 
       payer: @organizer, beneficiaries: [@organizer, @user1, @user2, @user3, @user4, @user5] }
     assert_no_difference('Item.count') do
@@ -265,7 +265,7 @@ class ItemsControllerTest < ActionController::TestCase
   test "organizer can update item with automatic exchange rate" do
     sign_in @organizer
     new_item = { name: "Drinks", description: "Drinks", value_date: @event.from_date, 
-      event: @event, base_amount: 67.03, base_currency: "EUR", 
+      event: @event, base_amount: 67.03, base_currency: "eur", 
       exchange_rate: "", foreign_amount: 500, foreign_currency: "DKK", 
       payer: @organizer, beneficiaries: [@organizer, @user1, @user2, @user3, @user4, @user5] }
     stub_request(:get, "http://devel.farebookings.com/api/curconversor/DKK/EUR/1/json").to_return(:status => 200, :body => '{"EUR": 0.1}')
@@ -286,8 +286,8 @@ class ItemsControllerTest < ActionController::TestCase
   test "organizer cannot update invalid item" do
     sign_in @organizer
     new_item = { name: nil, value_date: @event.from_date, description: "New description", 
-      base_amount: 10, base_currency: "EUR", exchange_rate: 1,  
-      foreign_amount: 10, foreign_currency: "EUR", payer_id: @organizer.id, 
+      base_amount: 10, base_currency: "eur", exchange_rate: 1,  
+      foreign_amount: 10, foreign_currency: "eur", payer_id: @organizer.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
     assert_no_difference('Item.count') do
       put :update, id: @item3.id, item: new_item
@@ -303,8 +303,8 @@ class ItemsControllerTest < ActionController::TestCase
   test "organizer cannot update invalid item (special case: automatic exchange rate update fails due to exception)" do
     sign_in @organizer
     new_item = { name: "New item", value_date: @event.from_date, description: "New description", 
-      base_amount: 10, base_currency: "EUR", exchange_rate: "",  
-      foreign_amount: 10, foreign_currency: "EUR", payer_id: @organizer.id, 
+      base_amount: 10, base_currency: "eur", exchange_rate: "",  
+      foreign_amount: 10, foreign_currency: "eur", payer_id: @organizer.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
     stub_request(:get, "http://devel.farebookings.com/api/curconversor/EUR/EUR/1/json").to_raise(OpenURI::HTTPError.new(nil, ""))
     assert_no_difference('Item.count') do
@@ -321,8 +321,8 @@ class ItemsControllerTest < ActionController::TestCase
   test "organizer cannot update invalid item (special case: automatic exchange rate update fails due to time out)" do
     sign_in @organizer
     new_item = { name: "New item", value_date: @event.from_date, description: "New description", 
-      base_amount: 10, base_currency: "EUR", exchange_rate: "",  
-      foreign_amount: 10, foreign_currency: "EUR", payer_id: @organizer.id, 
+      base_amount: 10, base_currency: "eur", exchange_rate: "",  
+      foreign_amount: 10, foreign_currency: "eur", payer_id: @organizer.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
     stub_request(:get, "http://devel.farebookings.com/api/curconversor/EUR/EUR/1/json").to_raise(Timeout::Error)
     assert_no_difference('Item.count') do
@@ -339,8 +339,8 @@ class ItemsControllerTest < ActionController::TestCase
   test "organizer cannot update invalid item (special case: automatic exchange rate update fails due to Rack time out)" do
     sign_in @organizer
     new_item = { name: "New item", value_date: @event.from_date, description: "New description", 
-      base_amount: 10, base_currency: "EUR", exchange_rate: "",  
-      foreign_amount: 10, foreign_currency: "EUR", payer_id: @organizer.id, 
+      base_amount: 10, base_currency: "eur", exchange_rate: "",  
+      foreign_amount: 10, foreign_currency: "eur", payer_id: @organizer.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
     stub_request(:get, "http://devel.farebookings.com/api/curconversor/EUR/EUR/1/json").to_raise(Rack::Timeout::RequestTimeoutError)
     assert_no_difference('Item.count') do
@@ -357,8 +357,8 @@ class ItemsControllerTest < ActionController::TestCase
   test "participant cannot update item" do
   	sign_in @user2
     new_item = { name: "New item", value_date: @event.from_date, description: "New description", 
-      base_amount: 10, base_currency: "EUR", exchange_rate: "",  
-      foreign_amount: 10, foreign_currency: "EUR", payer_id: @organizer.id, 
+      base_amount: 10, base_currency: "eur", exchange_rate: "",  
+      foreign_amount: 10, foreign_currency: "eur", payer_id: @organizer.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
       stub_request(:get, "http://devel.farebookings.com/api/curconversor/EUR/EUR/1/json").to_return(:status => 200, :body => '{"EUR": 1}')
     assert_no_difference('Item.count') do
@@ -369,8 +369,8 @@ class ItemsControllerTest < ActionController::TestCase
   
   test "non participant cannot update item" do
     new_item = { name: "New item", value_date: @event.from_date, description: "New description", 
-      base_amount: 10, base_currency: "EUR", exchange_rate: "",  
-      foreign_amount: 10, foreign_currency: "EUR", payer_id: @organizer.id, 
+      base_amount: 10, base_currency: "eur", exchange_rate: "",  
+      foreign_amount: 10, foreign_currency: "eur", payer_id: @organizer.id, 
       beneficiary_ids: [@organizer.id, @user1.id, @user3.id, @user4.id] }
     stub_request(:get, "http://devel.farebookings.com/api/curconversor/EUR/EUR/1/json").to_return(:status => 200, :body => '{"EUR": 1}')
     assert_no_difference('Item.count') do

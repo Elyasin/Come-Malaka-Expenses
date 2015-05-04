@@ -113,7 +113,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "user can create valid event and becomes participant" do
   	test_event = {name: "Test event", from_date: Date.current, end_date: Date.current+3, description: "Test description", 
-  		event_currency: "EUR", organizer_id: @non_participant_user.id}
+  		event_currency: "eur", organizer_id: @non_participant_user.id}
   	assert_difference('Event.count', 1, "Event must be created") do
   		post :create, event: test_event
   	end
@@ -157,7 +157,7 @@ class EventsControllerTest < ActionController::TestCase
   	sign_in @organizer
    	test_event = {name: "Randers", from_date: Date.new(2012, 11, 2), 
 			end_date: Date.new(2012, 11, 4), description: "Come Malaka event in a different country", 
-			event_currency: "EUR", organizer_id: @organizer.id}
+			event_currency: "eur", organizer_id: @organizer.id}
   	put :update, id: @event.id, event: test_event
   	assert_response :redirect, "Response must be redirect"
   	assert_redirected_to events_path, "Redirect must be events_path"
@@ -178,7 +178,7 @@ class EventsControllerTest < ActionController::TestCase
   	sign_in @user1
     test_event = {name: "Randers", from_date: Date.new(2012, 11, 2), 
 			end_date: Date.new(2012, 11, 4), description: "Come Malaka event in a different country", 
-			event_currency: "EUR", organizer_id: @organizer.id}
+			event_currency: "eur", organizer_id: @organizer.id}
   	put :update, id: @event.id, event: test_event
   	assert_response :forbidden, "Response must be forbidden"
   end
@@ -186,7 +186,7 @@ class EventsControllerTest < ActionController::TestCase
   test "non participant cannot update event" do
     test_event = {name: "Randers", from_date: Date.new(2012, 11, 2), 
 			end_date: Date.new(2012, 11, 4), description: "Come Malaka event in a different country", 
-			event_currency: "EUR", organizer_id: @organizer.id}
+			event_currency: "eur", organizer_id: @organizer.id}
   	put :update, id: @event.id, event: test_event
   	assert_response :forbidden, "Response must be forbidden"
   end

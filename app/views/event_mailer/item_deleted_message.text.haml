@@ -10,9 +10,9 @@ Name: #{@item.name}
 Value Date: #{@item.value_date.strftime('%d %b %Y')}
 Description: #{@item.description}
 Base amount: #{money_format(@item.base_amount, @item.base_currency)}
-Base currency: #{@item.base_currency} (This is the event currency)
+Base currency: #{@item.base_currency.upcase} (This is the event currency)
 Exchange rate: #{@item.exchange_rate}
 Foreign amount: #{money_format(@item.foreign_amount, @item.foreign_currency)}
-Foreign currency: #{@item.foreign_currency} (This is the item's currency)
+Foreign currency: #{@item.foreign_currency.upcase} (This is the item's currency)
 Beneficiaries: #{@item.beneficiaries.map { |b| b.name }.join(", ") }
 Cost per beneficiary: #{money_format(@item.cost_per_beneficiary, @item.base_currency)} (This amount is in base currency)
