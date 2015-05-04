@@ -67,7 +67,7 @@ gem 'html2haml', group: :development
 gem 'mongoid_money_field'
 
 #Database cleaner for testing
-gem 'database_cleaner', "~> 1.3.0", group: :test
+gem 'database_cleaner', group: :test
 
 #mocking external requests
 gem 'webmock', group: :test
@@ -88,10 +88,10 @@ gem 'puma'
 gem "rack-timeout"
 
 #Foundation for Rails apps
-gem 'foundation-rails', "5.5.1.0"
+gem 'foundation-rails', github: "zurb/foundation-rails"
 
-#App Performance Monitoring for Heroku
-gem 'newrelic_rpm', group: :production
+#for JavaScript testing
+gem 'jasmine-rails', group: [:development, :test]
+gem 'jasmine-jquery-rails', group: [:development, :test]
 
-#Connect Travis CI with CodeClimate
 gem "codeclimate-test-reporter", group: :test, require: nil
