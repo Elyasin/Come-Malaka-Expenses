@@ -88,7 +88,7 @@ gem 'puma'
 gem "rack-timeout"
 
 #Foundation for Rails apps
-gem 'foundation-rails', github: "zurb/foundation-rails"
+gem 'foundation-rails'
 
 #for JavaScript testing
 gem 'jasmine-rails', group: [:development, :test]
