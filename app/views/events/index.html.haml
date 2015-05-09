@@ -1,5 +1,9 @@
 = content_for :title, "Your events"
-= link_to "Create new event", new_event_path
+
+- content_for :menu do
+	%li= link_to "Create new event", new_event_path
+end
+
 - if @events.empty?
 	%p You don't have any events.
 - else
@@ -32,7 +36,7 @@
 										= link_to 'Edit event', edit_event_path(event)
 								- if current_user.can_delete?(event)
 									%li
-										= link_to('Delete event', event_path(event), :data => {:confirm => 'Are you sure you want to delete event #{event.name}?'}, :method => :delete)
+										= link_to('Delete event', event_path(event), :data => {:confirm => "Are you sure you want to delete event #{event.name}?"}, :method => :delete)
 								%li= link_to('View event details', event_path(event))
 								- if current_user.can_update?(event)
 									%li

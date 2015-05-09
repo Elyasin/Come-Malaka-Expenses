@@ -1,5 +1,8 @@
 = content_for :title, "Create new event"
-%p= link_to 'Back to events page', events_path
+
+- content_for :menu do
+  %li= link_to 'Back to events page', events_path
+end
 
 - if @event.errors.any?
   %div#error_explanation

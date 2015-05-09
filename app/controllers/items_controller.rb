@@ -50,7 +50,7 @@ class ItemsController < ApplicationController
     event = item.event
     item.destroy if authorize_action_for item
     EventMailer.item_deleted_message(item).deliver_now!
-    redirect_to event_items_path(event_id: event.id), :notice => "Item deleted."
+    redirect_to event_all_items_path(event_id: event.id), :notice => "Item deleted."
   end
 
   def show

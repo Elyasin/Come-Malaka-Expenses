@@ -18,6 +18,7 @@
 //= require foundation/foundation.dropdown
 //= require foundation/foundation.tooltip
 //= require foundation/foundation.topbar
+//= require foundation/foundation.offcanvas
 //= require jquery-ui/datepicker
 //= require turbolinks
 //= require tablesaw.stackonly
@@ -76,5 +77,6 @@ $(document).ready(function(){
   });
 
   $(document).foundation('tooltip', 'reflow');
+  $(document).foundation('offcanvas', 'reflow');
 
 });

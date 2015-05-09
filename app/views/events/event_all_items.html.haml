@@ -1,50 +1,66 @@
 = content_for :title, "All items of " + @event.name + " event"
-= link_to 'Back to events page', events_path
-%br
-= link_to "Create new item", new_event_item_path
-%br
+
+-content_for :menu do
+  %li= link_to 'Back to events page', events_path
+  %li
+    %label= @event.name
+  %li= link_to "Create new item", new_event_item_path(@event)
+  - if current_user.can_update?(@event)
+    %li= link_to("Invite to event", invite_to_event_path(@event)) 
+  %li= link_to "View event details", event_path(@event)
+  - if current_user.can_update?(@event)
+    %li= link_to("Edit event", edit_event_path(@event))
+  - if current_user.can_delete?(@event)
+    %li= link_to("Delete event", event_path(@event), method: :delete, :data => {:confirm => "Are you sure you want to delete event #{@event.name}?"}) 
+  %li= link_to "All event items", event_all_items_path(@event)
+  %li= link_to "Your event items", event_items_path(@event)
+  %li= link_to "Expense summary", expense_report_path(@event)
+  %li= link_to "Who owes you?", who_owes_you_path(@event)
+  %li= link_to "You owe whom?", you_owe_whom_path(@event)
+end
+
 - if @items.empty?
-	%p You don't have any items.
+  %p You don't have any items.
 - else
-	.table-selector
-		%table.tablesaw{role: :grid, "data-tablesaw-mode": :stack}
-			%caption All items of #{@event.name} event
-			%thead
-				%tr
-					%th Name
-					%th Date
-					%th Description
-					%th Base amount*
-					%th Exchange rate
-					%th Foreign amount*
-					%th Payer
-					%th Beneficiaries**
-					%th Cost per beneficiary
-			%tfoot
-				%tr{"data-tablesaw-no-labels": true}
-					%td{colspan: 9}
-						* Amounts are rounded for display
-						%br
-						** Hover or click over the text for details
-			%tbody
-				- @items.each do |item|
-					%tr
-						%td
-							%a.dropdown{"data-dropdown": "#{'action' + item.id}"}= item.name
-							%ul.f-dropdown{id: "#{'action' + item.id}", "data-dropdown-content": true}
-								%li= link_to 'View item details', item_path(item)
-								- if current_user.can_update?(item)
-									%li= link_to 'Edit item', edit_item_path(item)
-								- if current_user.can_delete?(item)
-									%li= link_to("Delete item", item_path(item), method: :delete, data: {confirm: "Are you sure you want to delete item #{item.name} at the #{item.value_date.strftime('%d %b %Y')}?"})
-						%td= item.value_date.strftime('%d %b %Y')
-						%td= item.description
-						%td
-							%span.has-tip{"data-tooltip": true, :title => "#{Money::Currency.new(item.foreign_currency).name}"}= money_format(item.foreign_amount, item.foreign_currency)
-						%td= item.exchange_rate
-						%td
-							%span.has-tip{"data-tooltip": true, :title => "#{Money::Currency.new(item.base_currency).name}"}= money_format(item.base_amount, item.base_currency)
-						%td= item.payer.short_name
-						%td
-							%span.has-tip{"data-tooltip": true, :title => "#{item.beneficiaries.map{ |b| b.short_name }.join(', ')}"}= item.beneficiaries.count
-						%td= money_format(item.cost_per_beneficiary, item.base_currency)
+  .table-selector
+    %table.tablesaw{role: :grid, "data-tablesaw-mode": :stack}
+      %caption All items of #{@event.name} event
+      %thead
+        %tr
+          %th Name
+          %th Date
+          %th Description
+          %th Base amount*
+          %th Exchange rate
+          %th Foreign amount*
+          %th Payer
+          %th Beneficiaries**
+          %th Cost per beneficiary
+      %tfoot
+        %tr{"data-tablesaw-no-labels": true}
+          %td{colspan: 9}
+            * Amounts are rounded for display
+            %br
+            ** Hover or click over the text for details
+      %tbody
+        - @items.each do |item|
+          %tr
+            %td
+              %a.dropdown{"data-dropdown": "#{'action' + item.id}"}= item.name
+              %ul.f-dropdown{id: "#{'action' + item.id}", "data-dropdown-content": true}
+                %li= link_to 'View item details', item_path(item)
+                - if current_user.can_update?(item)
+                  %li= link_to 'Edit item', edit_item_path(item)
+                - if current_user.can_delete?(item)
+                  %li= link_to("Delete item", item_path(item), method: :delete, data: {confirm: "Are you sure you want to delete item #{item.name} at the #{item.value_date.strftime('%d %b %Y')}?"})
+            %td= item.value_date.strftime('%d %b %Y')
+            %td= item.description
+            %td
+              %span.has-tip{"data-tooltip": true, :title => "#{Money::Currency.new(item.foreign_currency).name}"}= money_format(item.foreign_amount, item.foreign_currency)
+            %td= item.exchange_rate
+            %td
+              %span.has-tip{"data-tooltip": true, :title => "#{Money::Currency.new(item.base_currency).name}"}= money_format(item.base_amount, item.base_currency)
+            %td= item.payer.short_name
+            %td
+              %span.has-tip{"data-tooltip": true, :title => "#{item.beneficiaries.map{ |b| b.short_name }.join(', ')}"}= item.beneficiaries.count
+            %td= money_format(item.cost_per_beneficiary, item.base_currency)

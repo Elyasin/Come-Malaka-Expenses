@@ -17,14 +17,26 @@ class EventInvitationsControllerTest < ActionController::TestCase
     sign_out @organizer
   end
 
-  test "view new invite page" do
+  test "view new invitation page" do
     get :new, event_id: @event.id
     assert_response :success, "Response must be success"
     assert_template :new, "New page must be rendered"
+
     # Test the view
     assert_select 'title', "Invite to Randers event"
-    assert_select 'body p a', "Back to event"
-    assert_select "a[href=?]", events_path
+    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events page"
+    assert_select ".left-off-canvas-menu ul li label", assigns(:event).name
+    assert_select ".left-off-canvas-menu ul li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".left-off-canvas-menu ul li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "All event items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Your event items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+
     # Test form and Foundation (Abide, Grid)
     assert_select "form[data-abide=true]"
     assert_select "form[novalidate=novalidate]"

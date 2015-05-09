@@ -16,6 +16,20 @@
 
 @import "foundation_and_overrides";
 
+body,html {
+  height: 100%;
+  width: 100%;
+}
+
+.off-canvas-wrap,.inner-wrap {
+  min-height: 100%;
+}
+
+.off-canvas-wrap {
+  height: 100%;
+  overflow-y: auto;
+}
+
 .field_with_errors {
   background-color: red;
   color: white;
@@ -23,7 +37,7 @@
 
 .beta_testing {
   position:absolute;
-  top: 50px;
+  top: 50;
   right:0;
   -ms-transform: rotate(7deg); /* IE 9 */
   -webkit-transform: rotate(7deg); /* Chrome, Safari, Opera */

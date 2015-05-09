@@ -1,11 +1,28 @@
 = content_for :title, "You owe whom?"
-= link_to "Back to expense summary", expense_report_path(@event)
-%br
-%br
+
+-content_for :menu do
+  %li= link_to 'Back to events page', events_path
+  %li
+    %label= @event.name
+  %li= link_to "Create new item", new_event_item_path(@event)
+  - if current_user.can_update?(@event)
+    %li= link_to("Invite to event", invite_to_event_path(@event)) 
+  %li= link_to "View event details", event_path(@event)
+  - if current_user.can_update?(@event)
+    %li= link_to("Edit event", edit_event_path(@event)) 
+  - if current_user.can_delete?(@event)
+    %li= link_to("Delete event", event_path(@event), method: :delete, :data => {:confirm => "Are you sure you want to delete event #{@event.name}?"}) 
+  %li= link_to "All event items", event_all_items_path(@event)
+  %li= link_to "Your event items", event_items_path(@event)
+  %li= link_to "Expense summary", expense_report_path(@event)
+  %li= link_to "Who owes you?", who_owes_you_path(@event)
+  %li= link_to "You owe whom?", you_owe_whom_path(@event)
+end
+
 %ul{style: "list-style-type:none"}
-	- @total_amounts.each do |payer, amount|
-		%li
-			%u= "You owe " + payer.short_name + " " + money_format(amount, @event.event_currency) + " in total"
-		%ul
-			- @item_lists[payer].each do |item|
-				%li=raw "You owe " + payer.short_name + " " + money_format(item.cost_per_beneficiary, @event.event_currency) + " on the " + item.value_date.strftime('%d %b %Y') + " for item #{link_to(item.name, item_path(item))} (" + item.description + ")"
+  - @total_amounts.each do |payer, amount|
+    %li
+      %u= "You owe " + payer.short_name + " " + money_format(amount, @event.event_currency) + " in total"
+    %ul
+      - @item_lists[payer].each do |item|
+        %li=raw "You owe " + payer.short_name + " " + money_format(item.cost_per_beneficiary, @event.event_currency) + " on the " + item.value_date.strftime('%d %b %Y') + " for item #{link_to(item.name, item_path(item))} (" + item.description + ")"

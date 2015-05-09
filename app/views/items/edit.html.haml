@@ -1,9 +1,38 @@
 = content_for :title, "Details for " + @item.name.to_s + " item"
-= link_to "Back to events page", events_path
-%br
-= link_to "Back to all items", event_all_items_path(@item.event)
-%br
-= link_to 'Back to your items', event_items_path(@item.event)
+
+-content_for :menu do
+  %li= link_to "Back to all items", event_all_items_path(@item.event)
+  %li= link_to "Back to your items", event_items_path(@item.event)
+  %li= link_to 'Back to events page', events_path
+  %li
+    %label= @item.name.to_s + " item"
+  %li= link_to "View item details", item_path(@item)
+  - if current_user.can_update?(@item)
+    %li= link_to("Edit item", edit_item_path(@item)) 
+  - if current_user.can_delete?(@item)
+    %li= link_to("Delete item", item_path(@item), method: :delete, data: {confirm: "Are you sure you want to delete item #{@item.name} at the #{@item.value_date.strftime('%d %b %Y')}?"}) 
+  %li
+    %label= @item.event.name
+  %li= link_to "Create new item", new_event_item_path(@item.event)
+  %li.has-submenu
+    = link_to "#{@item.event.name} event", nil
+    %ul.left-submenu
+      %li.back= link_to "Back", nil
+      %li
+        %label= @item.event.name + " event"
+      - if current_user.can_update?(@item.event)
+        %li= link_to("Invite to event", invite_to_event_path(@item.event)) 
+      %li= link_to "View event details", event_path(@item.event)
+      - if current_user.can_update?(@item.event)
+        %li= link_to("Edit event", edit_event_path(@item.event)) 
+      - if current_user.can_delete?(@item.event)
+        %li= link_to("Delete event", event_path(@item.event), method: :delete, :data => {:confirm => "Are you sure you want to delete event #{@item.event.name}?"}) 
+      %li= link_to "All event items", event_all_items_path(@item.event)
+      %li= link_to "Your event items", event_items_path(@item.event)
+      %li= link_to "Expense summary", expense_report_path(@item.event)
+      %li= link_to "Who owes you?", who_owes_you_path(@item.event)
+      %li= link_to "You owe whom?", you_owe_whom_path(@item.event)
+end
 
 - if @item.errors.any?
   %div#error_explanation

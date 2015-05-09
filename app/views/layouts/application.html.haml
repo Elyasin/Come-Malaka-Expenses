@@ -10,35 +10,78 @@
 		= javascript_include_tag 'application', 'data-turbolinks-track' => true
 		= csrf_meta_tags
 	%body
-		%div.beta_testing BETA VERSION
 
-		%div.fixed.sticky
-			%nav.top-bar.hide-for-small{"data-topbar": true, role: :navigation, "data-options": "sticky-on: [medium, large]"}
-				%ul.title-area
-					%li.name
-						%h1=link_to "Come Malaka!", nil
-					%li.toggle-topbar.menu-icon
-						%a{href: '#'}
+
+		<!-- Use off-canvas for small screens and topbar for others -->
+		%div.off-canvas-wrap{"data-offcanvas" => ""}
+			%div.inner-wrap
+
+
+				<!-- Hide topbar for small screens -->
+				%div.fixed.sticky
+					%nav.top-bar.hide-for-small{"data-topbar": true, role: :navigation, "data-options": "sticky-on: [medium, large]"}
+						%ul.title-area
+							%li.name
+								%h1=link_to "Come Malaka!", nil
+							%li.toggle-topbar.menu-icon
+								%a{href: '#'}
+									%span
+						%section.top-bar-section
+							%ul.right
+								-if user_signed_in?
+									%li.has-dropdown
+										= link_to current_user.name, nil
+										%ul.dropdown
+											%li= link_to "Account profile", edit_user_registration_path
+											%li= link_to "Not you? Sign out", destroy_user_session_path, method: :delete
+								-else
+									%li= link_to "Sign in", new_user_session_path
+									%li.divide
+									%li= link_to "Sign up", new_user_registration_path
+
+
+				<!-- Use tab-bar for small screens -->
+				%nav.tab-bar.show-for-small
+					%section.left-small
+						%a.left-off-canvas-toggle.menu-icon{href: "#"}
 							%span
-				%section.top-bar-section
-					%ul.right
+					%section.middle.tab-bar-section
+						%h1.title Come Malaka!
+					%section.right-small
+						%a.right-off-canvas-toggle.menu-icon{href: "#"}
+							%span
+				<!-- define off-canvas menus -->
+				%aside.left-off-canvas-menu
+					%ul.off-canvas-list
+						%li
+							%label Menu
+						=content_for?(:menu) ? yield(:menu) : ""
+				%aside.right-off-canvas-menu
+					%ul.off-canvas-list
 						-if user_signed_in?
-							%li.has-dropdown
-								= link_to current_user.name, nil
-								%ul.dropdown
-									%li= link_to "Account profile", edit_user_registration_path
-									%li= link_to "Not you? Sign out", destroy_user_session_path, method: :delete
+							%li
+								%label= link_to current_user.name, nil
+							%li= link_to "Account profile", edit_user_registration_path
+							%li= link_to "Not you? Sign out", destroy_user_session_path, method: :delete
 						-else
 							%li= link_to "Sign in", new_user_session_path
 							%li.divide
 							%li= link_to "Sign up", new_user_registration_path
-		%div.user_nav
-		- if !notice.blank?
-			.alert-box.warning.radius{"data-alert" => ""}
-				= notice
-				%a.close{:href => "#"} &times;
-		- if !alert.blank?
-			.alert-box.alert.radius{"data-alert" => ""}
-				= alert
-				%a.close{:href => "#"} &times;
-		= yield
+
+
+				<!-- main content goes here -->
+				%section.main-section
+					- if !notice.blank?
+						.alert-box.warning.radius{"data-alert" => ""}
+							= notice
+							%a.close{:href => "#"} &times;
+					- if !alert.blank?
+						.alert-box.alert.radius{"data-alert" => ""}
+							= alert
+							%a.close{:href => "#"} &times;
+					%div.beta_testing BETA VERSION
+					= yield
+
+
+				<!-- to exit the off-canvas when displayed -->
+				%a.exit-off-canvas
