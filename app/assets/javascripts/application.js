@@ -76,7 +76,11 @@ $(document).ready(function(){
     }
   });
 
+  $(document).foundation('dropdown', 'reflow');
   $(document).foundation('tooltip', 'reflow');
   $(document).foundation('offcanvas', 'reflow');
+  $(document).foundation('topbar', 'reflow');
+  $(document).foundation('abide', 'reflow');
+
 
 });

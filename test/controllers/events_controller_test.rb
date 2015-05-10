@@ -166,7 +166,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "organizer tries to update event with invalid data and is sent back to edit page" do
   	sign_in @organizer
-   	test_event = {name: nil}
+   	test_event = {name: ""}
   	put :update, id: @event.id, event: test_event
   	assert_response :success, "Response must be success"
   	assert_template :edit, "Edit page must be rendered"
@@ -204,11 +204,12 @@ class EventsControllerTest < ActionController::TestCase
 
   test "organizer must fail to delete an event that contains items" do
   	sign_in @organizer
+    @request.env['HTTP_REFERER'] = 'http://foo.com'
   	assert_no_difference('Event.count', "Event must not be deleted") do
 	  	delete :destroy, id: @event.id
   	end	
   	assert_response :redirect, "Response must be redirect"
-  	assert_redirected_to events_path, "Redirect must be events_path"
+  	assert_redirected_to "http://foo.com", "Redirect must be back (to HTTP_REFERER)"
   	assert_equal "Event cannot be deleted. Posted items exist.", flash[:notice], "Flash[:notice] must state that event cannot be deleted due to existing items"
   end
 
@@ -444,7 +445,7 @@ class EventsControllerTest < ActionController::TestCase
   test "new event page" do
     get :new
     assert_select "title", "Create new event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events page"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
     #Test form and Foundation Abide and Grid
     assert_select "form[data-abide=true][novalidate=novalidate]"
     assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
@@ -490,18 +491,27 @@ class EventsControllerTest < ActionController::TestCase
     sign_in @organizer
     get :show, id: @event.id
     assert_select "title", "Details about Randers"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events page"
-    assert_select ".left-off-canvas-menu ul li label", assigns(:event).name
-    assert_select ".left-off-canvas-menu ul li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_path(assigns(:event)), "View event details"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
-    assert_select ".left-off-canvas-menu ul li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "All event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Your event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_path, "Create new event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li label", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu a[href='#']", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li label", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+
     assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
       assert_select "[disabled]"
       assert_select "legend", "View event details"
@@ -535,18 +545,28 @@ test "edit event page (with posted items)" do
     sign_in @organizer
     get :edit, id: @event.id
     assert_select "title", "Edit Randers event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events page"
-    assert_select ".left-off-canvas-menu ul li label", assigns(:event).name
-    assert_select ".left-off-canvas-menu ul li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_path(assigns(:event)), "View event details"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
-    assert_select ".left-off-canvas-menu ul li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "All event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Your event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_path, "Create new event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li label", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu a[href='#']", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li label", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+
+
     #Test form and Foundation Abide and Grid
     assert_select "form[data-abide=true]"
     assert_select "form[novalidate=novalidate]"
@@ -583,18 +603,28 @@ test "edit event page (without posted items)" do
     @event.items = nil
     get :edit, id: @event.id
     assert_select "title", "Edit Randers event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events page"
-    assert_select ".left-off-canvas-menu ul li label", assigns(:event).name
-    assert_select ".left-off-canvas-menu ul li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_path(assigns(:event)), "View event details"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
-    assert_select ".left-off-canvas-menu ul li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "All event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Your event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_path, "Create new event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li label", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu a[href='#']", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li label", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+
+
     #Test form and Foundation Abide and Grid
     assert_select "form[data-abide=true]"
     assert_select "form[novalidate=novalidate]"
@@ -633,18 +663,29 @@ test "edit event page (without posted items)" do
     sign_in @organizer
     get :expense_report, event_id: @event.id
     assert_select "title", "Expense summary for Randers event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events page"
-    assert_select ".left-off-canvas-menu ul li label", assigns(:event).name
-    assert_select ".left-off-canvas-menu ul li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_path(assigns(:event)), "View event details"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
-    assert_select ".left-off-canvas-menu ul li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "All event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Your event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_path, "Create new event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li label", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu a[href='#']", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li label", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+
+
+
     #Test table and Foundation Grid
     table = "div.row div.small-12.columns.small-centered.table-selector table.tablesaw"
     assert_select table + "[role=grid][data-tablesaw-mode=stack]" 
@@ -669,18 +710,27 @@ test "edit event page (without posted items)" do
     sign_in @organizer
     get :event_all_items, event_id: @event.id
     assert_select "title", "All items of Randers event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events page"
-    assert_select ".left-off-canvas-menu ul li label", assigns(:event).name
-    assert_select ".left-off-canvas-menu ul li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_path(assigns(:event)), "View event details"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
-    assert_select ".left-off-canvas-menu ul li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "All event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Your event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_path, "Create new event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li label", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu a[href='#']", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li label", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+
     table = "div.table-selector table.tablesaw[role=grid][data-tablesaw-mode=stack]"
     assert_select table + " caption", "All items of Randers event"
     head = table + " thead tr th"
@@ -726,18 +776,27 @@ test "edit event page (without posted items)" do
     sign_in @organizer
     get :event_all_items, event_id: @event.id
     assert_select "title", "All items of Randers event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events page"
-    assert_select ".left-off-canvas-menu ul li label", assigns(:event).name
-    assert_select ".left-off-canvas-menu ul li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_path(assigns(:event)), "View event details"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
-    assert_select ".left-off-canvas-menu ul li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "All event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Your event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_path, "Create new event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li label", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu a[href='#']", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li label", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+
     assert_select "p", "You don't have any items."
   end
 
@@ -745,18 +804,27 @@ test "edit event page (without posted items)" do
     sign_in @organizer
     get :who_owes_you, event_id: @event.id
     assert_select "title", "Who owes you?"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events page"
-    assert_select ".left-off-canvas-menu ul li label", assigns(:event).name
-    assert_select ".left-off-canvas-menu ul li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_path(assigns(:event)), "View event details"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
-    assert_select ".left-off-canvas-menu ul li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "All event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Your event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_path, "Create new event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li label", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu a[href='#']", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li label", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+
 
     ul_header = "ul[style='list-style-type:none'] li u"
     ul_line = "ul[style='list-style-type:none'] ul li"
@@ -796,18 +864,27 @@ test "edit event page (without posted items)" do
     sign_in @organizer
     get :you_owe_whom, event_id: @event.id
     assert_select "title", "You owe whom?"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events page"
-    assert_select ".left-off-canvas-menu ul li label", assigns(:event).name
-    assert_select ".left-off-canvas-menu ul li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_path(assigns(:event)), "View event details"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
-    assert_select ".left-off-canvas-menu ul li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "All event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Your event items"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
-    assert_select ".left-off-canvas-menu ul li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
+    assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_path, "Create new event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li label", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu a[href='#']", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li label", "Expense Reports"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.has-submenu li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
+    assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+
 
     ul_header = "ul[style='list-style-type:none'] li u"
     ul_line = "ul[style='list-style-type:none'] ul li"

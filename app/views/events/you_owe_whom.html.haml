@@ -1,22 +1,72 @@
 = content_for :title, "You owe whom?"
 
 -content_for :menu do
-  %li= link_to 'Back to events page', events_path
-  %li
-    %label= @event.name
-  %li= link_to "Create new item", new_event_item_path(@event)
-  - if current_user.can_update?(@event)
-    %li= link_to("Invite to event", invite_to_event_path(@event)) 
-  %li= link_to "View event details", event_path(@event)
-  - if current_user.can_update?(@event)
-    %li= link_to("Edit event", edit_event_path(@event)) 
-  - if current_user.can_delete?(@event)
-    %li= link_to("Delete event", event_path(@event), method: :delete, :data => {:confirm => "Are you sure you want to delete event #{@event.name}?"}) 
-  %li= link_to "All event items", event_all_items_path(@event)
-  %li= link_to "Your event items", event_items_path(@event)
-  %li= link_to "Expense summary", expense_report_path(@event)
-  %li= link_to "Who owes you?", who_owes_you_path(@event)
-  %li= link_to "You owe whom?", you_owe_whom_path(@event)
+  %li= link_to "Back to all items", event_all_items_path(@event)
+  %li= link_to "Back to your items", event_items_path(@event)
+  %li= link_to 'Back to events', events_path
+  %li.has-submenu
+    %a{href: "#"}= @event.name + " event"
+    %ul.left-submenu
+      %li.back
+        %a{href: "#"} Back
+      %li= link_to "Create new event", new_event_path
+      %li
+        %label= @event.name + " event"
+      - if current_user.can_update?(@event)
+        %li= link_to("Invite to event", invite_to_event_path(@event)) 
+      %li= link_to "View event details", event_path(@event)
+      - if current_user.can_update?(@event)
+        %li= link_to("Edit event", edit_event_path(@event)) 
+      - if current_user.can_delete?(@event)
+        %li= link_to("Delete event", event_path(@event), method: :delete, :data => {:confirm => "Are you sure you want to delete event #{@event.name}?"}) 
+      %li.has-submenu
+        %a{href: "#"} Expense Reports
+        %ul.left-submenu
+          %li.back
+            %a{href: "#"} Back
+          %li
+            %label Expense Reports
+          %li= link_to "Expense summary", expense_report_path(@event)
+          %li= link_to "Who owes you?", who_owes_you_path(@event)
+          %li= link_to "You owe whom?", you_owe_whom_path(@event)
+  %li.has-submenu
+    %a{href: "#"}= @event.name + " items"
+    %ul.left-submenu
+      %li.back
+        %a{href: "#"} Back
+      %li= link_to "Create new item", new_event_item_path(@event)
+end
+
+- content_for :topbar do
+  <!-- Index pages -->
+  %li.has-dropdown
+    %a{href: "#"} Back to ...
+    %ul.dropdown
+      %li= link_to "... events", events_path
+      %li= link_to "... all items (#{@event.name})", event_all_items_path(@event)
+      %li= link_to "... your items (#{@event.name})", event_items_path(@event)
+  <!-- Event pages -->
+  %li.has-dropdown
+    %a{href: "#"}= @event.name + " event"
+    %ul.dropdown
+      - if current_user.can_update?(@event)
+        %li= link_to("Invite to event", invite_to_event_path(@event))
+      %li= link_to "View event details", event_path(@event)
+      - if current_user.can_update?(@event)
+        %li= link_to "Edit event", edit_event_path(@event)
+      - if current_user.can_delete?(@event)
+        %li= link_to("Delete event", event_path(@event), method: :delete, :data => {:confirm => "Are you sure you want to delete event #{@event.name}?"})
+      %li.has-dropdown
+        %a{href: "#"} Expense Reports
+        %ul.dropdown
+          %li= link_to "Expense summary", expense_report_path(@event)
+          %li= link_to "Who owes you?", who_owes_you_path(@event)
+          %li.active= link_to "You owe whom?", you_owe_whom_path(@event)
+  <!-- Item pages -->
+  %li.has-dropdown
+    %a{href: "#"}= @event.name + " items"
+    %ul.dropdown
+      %li= link_to "Create item", new_event_item_path(@event)
 end
 
 %ul{style: "list-style-type:none"}
