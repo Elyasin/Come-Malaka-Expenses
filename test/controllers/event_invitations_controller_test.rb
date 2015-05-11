@@ -24,6 +24,8 @@ class EventInvitationsControllerTest < ActionController::TestCase
 
     # Test the view
     assert_select 'title', "Invite to Randers event"
+
+    # Test off-canvas menu
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
@@ -44,6 +46,25 @@ class EventInvitationsControllerTest < ActionController::TestCase
     assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+
+    # Test top-bar menu
+    assert_select ".title-area li.name  h1  a[href='#']", "Come Malaka!"
+    assert_select ".top-bar-section li a[href=?]", new_event_path, "Create new event"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Back to ..."
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", events_path, "... events"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_all_items_path(assigns(:event)), "... all items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_items_path(assigns(:event)), "... your items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.active a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown a[href='#']", "Expense Reports"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers items"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
 
     # Test form and Foundation (Abide, Grid)
     assert_select "form[data-abide=true]"

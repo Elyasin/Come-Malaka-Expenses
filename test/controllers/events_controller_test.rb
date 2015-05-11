@@ -365,10 +365,18 @@ class EventsControllerTest < ActionController::TestCase
   test "organizer's index page with events" do
     sign_in @organizer
     get :index
+    
+    # Test off-canvas menu
     assert_select ".left-off-canvas-menu ul li a[href=?]", new_event_path, "Create new event"
     assert_select "div.table-selector table.tablesaw[align=center]" 
     assert_select "div.table-selector table.tablesaw[data-tablesaw-mode=stack]"
     assert_select "div.table-selector table.tablesaw caption", "Your events"
+
+    # Test top-bar menu
+    assert_select ".title-area li.name  h1  a[href='#']", "Come Malaka!"
+    assert_select ".top-bar-section ul.right li a[href=?]", new_event_path, "Create new event"
+
+    # Test table 
     head = "div.table-selector table.tablesaw thead tr th"
     assert_select head, "Event"
     assert_select head, "Description"
@@ -405,7 +413,15 @@ class EventsControllerTest < ActionController::TestCase
   test "participant's index page with events" do
     sign_in @user1
     get :index
+
+    # Test off-canvas menu
     assert_select ".left-off-canvas-menu ul li a[href=?]", new_event_path, "Create new event"
+
+    # Test top-bar menu
+    assert_select ".title-area li.name  h1  a[href='#']", "Come Malaka!"
+    assert_select ".top-bar-section ul.right li a[href=?]", new_event_path, "Create new event"
+
+    # Test table
     assert_select "div.table-selector table.tablesaw[align=center]" 
     assert_select "div.table-selector table.tablesaw[data-tablesaw-mode=stack]"
     assert_select "div.table-selector table.tablesaw caption", "Your events"
@@ -445,8 +461,17 @@ class EventsControllerTest < ActionController::TestCase
   test "new event page" do
     get :new
     assert_select "title", "Create new event"
+    
+    # Test off-canvas menu
     assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
-    #Test form and Foundation Abide and Grid
+    assert_select ".left-off-canvas-menu ul li a[href=?]", new_event_path, "Create new event"
+    
+    # Test top-bar menu
+    assert_select ".title-area li.name  h1  a[href='#']", "Come Malaka!"
+    assert_select ".top-bar-section ul.right li a[href=?]", events_path, "Back to events"
+    assert_select ".top-bar-section ul.right li a[href=?]", new_event_path, "Create new event"
+
+    # Test form and Foundation Abide and Grid
     assert_select "form[data-abide=true][novalidate=novalidate]"
     assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
       assert_select "legend", "Create new event"
@@ -490,6 +515,8 @@ class EventsControllerTest < ActionController::TestCase
   test "show event details page" do
     sign_in @organizer
     get :show, id: @event.id
+
+    # Test off-canvas menu
     assert_select "title", "Details about Randers"
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
@@ -512,6 +539,26 @@ class EventsControllerTest < ActionController::TestCase
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
 
+    # Test top-bar menu
+    assert_select ".title-area li.name  h1  a[href='#']", "Come Malaka!"
+    assert_select ".top-bar-section li a[href=?]", new_event_path, "Create new event"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Back to ..."
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", events_path, "... events"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_all_items_path(assigns(:event)), "... all items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_items_path(assigns(:event)), "... your items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.active a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown a[href='#']", "Expense Reports"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers items"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+
+    # Test Grid and Form
     assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
       assert_select "[disabled]"
       assert_select "legend", "View event details"
@@ -545,6 +592,8 @@ test "edit event page (with posted items)" do
     sign_in @organizer
     get :edit, id: @event.id
     assert_select "title", "Edit Randers event"
+
+    # Test off-canvas menu
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
@@ -566,6 +615,24 @@ test "edit event page (with posted items)" do
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
 
+    # Test top-bar menu
+    assert_select ".title-area li.name  h1  a[href='#']", "Come Malaka!"
+    assert_select ".top-bar-section li a[href=?]", new_event_path, "Create new event"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Back to ..."
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", events_path, "... events"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_all_items_path(assigns(:event)), "... all items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_items_path(assigns(:event)), "... your items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.active a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown a[href='#']", "Expense Reports"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers items"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
 
     #Test form and Foundation Abide and Grid
     assert_select "form[data-abide=true]"
@@ -602,6 +669,8 @@ test "edit event page (without posted items)" do
     sign_in @organizer
     @event.items = nil
     get :edit, id: @event.id
+
+    # Test off-canvas menu
     assert_select "title", "Edit Randers event"
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
@@ -624,8 +693,26 @@ test "edit event page (without posted items)" do
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
 
+    # Test top-bar menu
+    assert_select ".title-area li.name  h1  a[href='#']", "Come Malaka!"
+    assert_select ".top-bar-section li a[href=?]", new_event_path, "Create new event"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Back to ..."
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", events_path, "... events"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_all_items_path(assigns(:event)), "... all items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_items_path(assigns(:event)), "... your items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.active a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown a[href='#']", "Expense Reports"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers items"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
 
-    #Test form and Foundation Abide and Grid
+    # Test form and Foundation Abide and Grid
     assert_select "form[data-abide=true]"
     assert_select "form[novalidate=novalidate]"
     assert_select "form div.row div.small-12.medium-8.large-6.columns.small-centered fieldset" do
@@ -662,6 +749,8 @@ test "edit event page (without posted items)" do
   test "expense report page" do
     sign_in @organizer
     get :expense_report, event_id: @event.id
+
+    # Test off-canvas menu
     assert_select "title", "Expense summary for Randers event"
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
@@ -684,7 +773,24 @@ test "edit event page (without posted items)" do
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
 
-
+    # Test top-bar menu
+    assert_select ".title-area li.name  h1  a[href='#']", "Come Malaka!"
+    assert_select ".top-bar-section li a[href=?]", new_event_path, "Create new event"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Back to ..."
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", events_path, "... events"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_all_items_path(assigns(:event)), "... all items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_items_path(assigns(:event)), "... your items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown a[href='#']", "Expense Reports"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li.active a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers items"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
 
     #Test table and Foundation Grid
     table = "div.row div.small-12.columns.small-centered.table-selector table.tablesaw"
@@ -710,6 +816,8 @@ test "edit event page (without posted items)" do
     sign_in @organizer
     get :event_all_items, event_id: @event.id
     assert_select "title", "All items of Randers event"
+
+    # Test off-canvas menu
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
@@ -730,6 +838,25 @@ test "edit event page (without posted items)" do
     assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+
+    # Test top-bar menu
+    assert_select ".title-area li.name  h1  a[href='#']", "Come Malaka!"
+    assert_select ".top-bar-section li a[href=?]", new_event_path, "Create new event"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Back to ..."
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", events_path, "... events"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.active a[href=?]", event_all_items_path(assigns(:event)), "... all items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_items_path(assigns(:event)), "... your items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown a[href='#']", "Expense Reports"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers items"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
 
     table = "div.table-selector table.tablesaw[role=grid][data-tablesaw-mode=stack]"
     assert_select table + " caption", "All items of Randers event"
@@ -776,6 +903,8 @@ test "edit event page (without posted items)" do
     sign_in @organizer
     get :event_all_items, event_id: @event.id
     assert_select "title", "All items of Randers event"
+
+    # Test off-canvas menu
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
@@ -796,6 +925,26 @@ test "edit event page (without posted items)" do
     assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+
+    # Test top-bar menu
+    assert_select ".title-area li.name  h1  a[href='#']", "Come Malaka!"
+    assert_select ".top-bar-section li a[href=?]", new_event_path, "Create new event"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Back to ..."
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", events_path, "... events"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.active a[href=?]", event_all_items_path(assigns(:event)), "... all items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_items_path(assigns(:event)), "... your items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown a[href='#']", "Expense Reports"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers items"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+
 
     assert_select "p", "You don't have any items."
   end
@@ -804,6 +953,8 @@ test "edit event page (without posted items)" do
     sign_in @organizer
     get :who_owes_you, event_id: @event.id
     assert_select "title", "Who owes you?"
+
+    # Test off-canvas menu
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
@@ -825,6 +976,24 @@ test "edit event page (without posted items)" do
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
 
+    # Test top-bar menu
+    assert_select ".title-area li.name  h1  a[href='#']", "Come Malaka!"
+    assert_select ".top-bar-section li a[href=?]", new_event_path, "Create new event"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Back to ..."
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", events_path, "... events"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_all_items_path(assigns(:event)), "... all items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_items_path(assigns(:event)), "... your items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown a[href='#']", "Expense Reports"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li.active a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers items"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
 
     ul_header = "ul[style='list-style-type:none'] li u"
     ul_line = "ul[style='list-style-type:none'] ul li"
@@ -864,6 +1033,8 @@ test "edit event page (without posted items)" do
     sign_in @organizer
     get :you_owe_whom, event_id: @event.id
     assert_select "title", "You owe whom?"
+
+    # Test off-canvas menu
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_all_items_path(assigns(:event)), "Back to all items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", event_items_path(assigns(:event)), "Back to your items"
     assert_select ".left-off-canvas-menu ul li a[href=?]", events_path, "Back to events"
@@ -884,6 +1055,25 @@ test "edit event page (without posted items)" do
     assert_select ".left-off-canvas-menu ul li.has-submenu a[href='#']", "Randers event"
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li.back a[href='#']", "Back"
     assert_select ".left-off-canvas-menu ul li.has-submenu ul.left-submenu li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
+
+    # Test top-bar menu
+    assert_select ".title-area li.name  h1  a[href='#']", "Come Malaka!"
+    assert_select ".top-bar-section li a[href=?]", new_event_path, "Create new event"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Back to ..."
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", events_path, "... events"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_all_items_path(assigns(:event)), "... all items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_items_path(assigns(:event)), "... your items (#{assigns(:event).name})"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", invite_to_event_path(assigns(:event)), "Invite to event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", event_path(assigns(:event)), "View event details"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", edit_event_path(assigns(:event)), "Edit event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?][data-method=delete]", event_path(assigns(:event)), "Delete event"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown a[href='#']", "Expense Reports"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", expense_report_path(assigns(:event)), "Expense summary"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li a[href=?]", who_owes_you_path(assigns(:event)), "Who owes you?"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li.has-dropdown ul.dropdown li.active a[href=?]", you_owe_whom_path(assigns(:event)), "You owe whom?"
+    assert_select ".top-bar-section li.has-dropdown a[href='#']", "Randers items"
+    assert_select ".top-bar-section li.has-dropdown ul.dropdown li a[href=?]", new_event_item_path(assigns(:event)), "Create new item"
 
 
     ul_header = "ul[style='list-style-type:none'] li u"
