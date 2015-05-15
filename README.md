@@ -7,7 +7,6 @@
 ## ToDos:
 
  * Web/Mail Design/Sitemap/Navigation
- 	* Add navigation for small media
 
  * We need a code style guide (JSHint, CSSLint, Checkstyle, GitHub style guide)...
 
