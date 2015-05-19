@@ -46,6 +46,8 @@ gem 'spring', group: :development
 
 #Mongoid for MongoDB
 gem "mongoid", "~> 4.0.0"
+#Mongoid Paranoia for soft deletion
+gem "mongoid_paranoia"
 
 #Authentication
 gem "devise"
