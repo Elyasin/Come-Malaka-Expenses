@@ -70,4 +70,27 @@ class UserTest < ActiveSupport::TestCase
 		assert_not @user1.has_role?(:event_user), "Deleted user must have default role revoked"
 	end
 
+  test "soft deletion of user" do
+    @user2.soft_delete
+    assert_not_nil @user2.deleted_at, "User 2 (soft deleted)  must have delete at field set"
+  end
+
+  test "user active for authentication (not soft deleted)" do
+    assert @user2.active_for_authentication?, "User 2 must be active for authentication"
+  end
+
+  test "user not active for authentication (soft deleted)" do
+    @user2.deleted_at = Time.current
+    assert_not @user2.active_for_authentication?, "User 2 must not be active for authentication"
+  end
+
+  test "soft deleted user sees 'inactive message'" do
+    @user2.deleted_at = Time.current
+    assert_equal :deleted_account, @user2.inactive_message
+  end
+
+  test "active user does not see 'inactive message'" do
+    assert_equal :inactive, @user2.inactive_message
+  end
+
 end

@@ -49,9 +49,27 @@ class User
   #Event ID for invitation
   #field :event_id, type: BSON::ObjectId
   belongs_to :event
-
+  #delete_at field for soft delete
+  field :deleted_at, type: Date
+ 
   index( {invitation_token: 1}, {:background => true} )
   index( {invitation_by_id: 1}, {:background => true} )
+
+
+  # instead of deleting, indicate the user requested a delete & timestamp it  
+  def soft_delete  
+    update_attribute(:deleted_at, Time.current)  
+  end  
+
+  # ensure user account is active  
+  def active_for_authentication?  
+    super && !deleted_at  
+  end  
+
+  # provide a custom message for a deleted account   
+  def inactive_message   
+    !deleted_at ? super : :deleted_account  
+  end 
 
 
   def short_name
