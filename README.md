@@ -27,8 +27,6 @@
 
  * Look into CI for HTML/JavaScript: Selenium/PhantomJS, SauceLab, .... ?
 
- * Soft delete a user (Mongoid Paranoid?)
-
  * Notification stream for user
 
  * Search engine for events/items
