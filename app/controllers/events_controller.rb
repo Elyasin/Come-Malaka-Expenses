@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
 
-	before_action :authenticate_user!
+  before_action :authenticate_user!
 
   ensure_authorization_performed
 
@@ -12,22 +12,22 @@ class EventsController < ApplicationController
   end
 
 
-  def new																			
-  	@event = Event.new(from_date: Date.current, end_date: Date.current+3.days, organizer_id: current_user.id)
+  def new
+    @event = Event.new(from_date: Date.current, end_date: Date.current+3.days, organizer_id: current_user.id)
     authorize_action_for @event
   end
 
 
   def create
-  	@event = Event.create(event_params)
+    @event = Event.create(event_params)
     @event.add_participant current_user
     if @event.invalid? then
       flash[:notice] = "Event is invalid. Please correct."
       render :new and return
     end
     @event.save
-  	flash[:notice] = "Event created."
-  	redirect_to events_path
+    flash[:notice] = "Event created."
+    redirect_to events_path
   end
 
 
