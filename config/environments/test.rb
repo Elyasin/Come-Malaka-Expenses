@@ -45,4 +45,8 @@ Rails.application.configure do
 
   #Future behaviour of Rails 5 will be random
   config.active_support.test_order = :random
+
+  
+  Mongo::Logger.logger.level = ::Logger::FATAL
+
 end

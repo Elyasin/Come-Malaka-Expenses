@@ -70,9 +70,6 @@ class EventsControllerTest < ActionController::TestCase
     assert_template :index, "Index page must be rendered"
     assert_not_nil assigns(:events), "Events must be assigned"
     assert_equal 1, assigns(:events).length, "Event participant must see event"
-    puts
-    puts assigns(:events)[0].name
-    puts
   end
 
   test "participant can see events page" do
@@ -81,9 +78,6 @@ class EventsControllerTest < ActionController::TestCase
     assert_response :success, "Response must be success"
     assert_template :index, "Index page must be rendered"
     assert_not_nil assigns(:events), "Events must be assigned"
-    puts
-    puts assigns(:events)[0].name
-    puts
     assert_equal 1, assigns(:events).length, "Event participant must see event"
   end
 
