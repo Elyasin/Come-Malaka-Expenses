@@ -18,7 +18,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "unauthenticated user for any event controller action must be redirected to sign in page" do
 
-  	sign_out @non_participant_user
+    sign_out @non_participant_user
 
     get :index
     assert_response :redirect, "Response must be redirect"
@@ -63,14 +63,17 @@ class EventsControllerTest < ActionController::TestCase
     assert_redirected_to new_user_session_path, "Redirect must be new_user_session_path"
   end
 
-	test "organizer can see events page" do
+  test "organizer can see events page" do
     sign_in @organizer
-		get :index
-		assert_response :success, "Response must be success"
+    get :index
+    assert_response :success, "Response must be success"
     assert_template :index, "Index page must be rendered"
-		assert_not_nil assigns(:events), "Events must be assigned"
+    assert_not_nil assigns(:events), "Events must be assigned"
     assert_equal 1, assigns(:events).length, "Event participant must see event"
-	end
+    puts
+    puts assigns(:events)[0].name
+    puts
+  end
 
   test "participant can see events page" do
     sign_in @user1
@@ -78,6 +81,9 @@ class EventsControllerTest < ActionController::TestCase
     assert_response :success, "Response must be success"
     assert_template :index, "Index page must be rendered"
     assert_not_nil assigns(:events), "Events must be assigned"
+    puts
+    puts assigns(:events)[0].name
+    puts
     assert_equal 1, assigns(:events).length, "Event participant must see event"
   end
 
@@ -90,10 +96,10 @@ class EventsControllerTest < ActionController::TestCase
 
   test "organizer can see new page" do
     sign_in @organizer
-  	get :new
-  	assert_response :success, "Response must be success"
+    get :new
+    assert_response :success, "Response must be success"
     assert_template :new, "New page must be rendered"
-  	assert_not_nil assigns(:event), "Event must be assigned"
+    assert_not_nil assigns(:event), "Event must be assigned"
   end
 
   test "participant can see new page" do

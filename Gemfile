@@ -15,6 +15,8 @@ gem 'coffee-rails'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer',  platforms: :ruby
 
+gem 'libv8', '3.16.14.12'
+
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Use jquery ui as the JavaScript Library
@@ -43,11 +45,8 @@ gem 'spring', group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-
 #Mongoid for MongoDB
-gem "mongoid", "~> 4.0.0"
-#Mongoid Paranoia for soft deletion
-gem "mongoid_paranoia"
+gem 'mongoid'
 
 #Authentication
 gem "devise"
