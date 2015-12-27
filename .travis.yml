@@ -1,13 +1,19 @@
 language: ruby
 rvm:
 - 2.2.0
-services: mongodb
+
+services:
+  - mongodb
+  - postgresql
+
 addons:
+  postgresql: "9.4"
   apt:
     sources:
     - mongodb-3.0-precise
     packages:
     - mongodb-org-server
+
 deploy:
   provider: heroku
   api_key:
@@ -15,6 +21,8 @@ deploy:
   app: come-malaka-expenses
   on:
     repo: Elyasin/Come-Malaka-Expenses
+
 before_script:
   - sleep 15
-#  - mongo come_malaka_test --eval 'db.createUser( { user: "tester",pwd: "tester",roles: [ { role: "readWrite", db: "come_malaka_test" } ] } );'
+  - psql -c "create role tester with createdb login password 'tester'" -U postgres
+  - mongo come_malaka_test --eval 'db.createUser( { user: "tester",pwd: "tester",roles: [ { role: "readWrite", db: "come_malaka_test" } ] } );'
