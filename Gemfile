@@ -45,6 +45,9 @@ gem 'spring', group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+#PostgreSQL
+gem 'pg'
+
 #Mongoid for MongoDB
 gem 'mongoid'
 

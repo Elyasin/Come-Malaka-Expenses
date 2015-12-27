@@ -1,0 +1,18 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: come_malaka_development
+  host: localhost
+  pool: 5
+  username: developer
+  password: <%= ENV['DEV_DB'] %> 
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: come_malaka_test
+  host: localhost
+  pool: 5
+  username: tester
+  password: <%= ENV['TEST_DB'] %> 
+

@@ -142,6 +142,7 @@ GEM
       mini_portile2 (~> 2.0.0.rc2)
     origin (2.1.1)
     orm_adapter (0.5.0)
+    pg (0.18.4)
     phantomjs (1.9.8.0)
     puma (2.15.3)
     rack (1.6.4)
@@ -253,6 +254,7 @@ DEPENDENCIES
   libv8 (= 3.16.14.12)
   mongoid
   mongoid_money_field
+  pg
   puma
   rack-timeout
   rails
