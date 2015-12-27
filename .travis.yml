@@ -25,3 +25,4 @@ deploy:
 before_script:
   - sleep 15
   - psql -c "create role tester with createdb login password 'tester'" -U postgres
+  - rake db:setup
