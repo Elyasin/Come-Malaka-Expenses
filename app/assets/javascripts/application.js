@@ -13,12 +13,7 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
-//= require foundation/foundation
-//= require foundation/foundation.abide
-//= require foundation/foundation.dropdown
-//= require foundation/foundation.tooltip
-//= require foundation/foundation.topbar
-//= require foundation/foundation.offcanvas
+//= require foundation
 //= require jquery-ui/datepicker
 //= require turbolinks
 //= require tablesaw.stackonly
@@ -84,3 +79,4 @@ $(document).ready(function(){
 
 
 });
+

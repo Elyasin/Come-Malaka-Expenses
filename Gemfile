@@ -91,11 +91,11 @@ gem 'puma'
 #Applying time out poclicies for Heroku
 gem "rack-timeout"
 
-#Foundation for Rails apps
-gem 'foundation-rails'
-
 #for JavaScript testing
 gem 'jasmine-rails', group: [:development, :test]
 gem 'jasmine-jquery-rails', group: [:development, :test]
 
 gem "codeclimate-test-reporter", group: :test, require: nil
+
+#Foundation for Rails apps
+gem 'foundation-rails'
