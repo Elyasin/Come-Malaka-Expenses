@@ -19,7 +19,7 @@ deploy:
     repo: Elyasin/Come-Malaka-Expenses
 
 before_script:
-  - sleep 15
-  - psql -c "create role tester with createdb login password 'tester'" -U postgres
-  - sleep 30
-  - bundle exec rake db:setup
+- sleep 15
+- mongo come_malaka_test --eval "db.createUser({user:'tester',pwd:'tester',roles:['readWrite']});"
+- psql -c "create role tester with createdb login password 'tester'" -U postgres
+- bundle exec rake db:setup
