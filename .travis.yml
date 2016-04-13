@@ -10,7 +10,7 @@ addons:
   postgresql: "9.4"
   apt:
     sources:
-    - mongodb-3.0-trusty
+    - mongodb-3.0-precise
     packages:
     - mongodb-org-server
 
@@ -25,4 +25,5 @@ deploy:
 before_script:
   - sleep 15
   - psql -c "create role tester with createdb login password 'tester'" -U postgres
+  - sleep 15
   - bundle exec rake db:setup
