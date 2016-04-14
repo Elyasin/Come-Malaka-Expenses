@@ -98,4 +98,4 @@ gem 'jasmine-jquery-rails', group: [:development, :test]
 gem "codeclimate-test-reporter", group: :test, require: nil
 
 #Foundation for Rails apps
-gem 'foundation-rails'
+gem 'foundation-rails', '~> 5.0'
