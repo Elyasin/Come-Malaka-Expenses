@@ -142,15 +142,16 @@ test:
 
 production:
    clients:
-     database: heroku_app34049352
-     hosts:
-       - ds045531.mongolab.com:45531
-     options:
-       read:
-         mode: :primary
-         user: 'staging'
-         password: <%= ENV['PROD_DB'] %>
-         roles:
-           - 'readWrite'
-         authSource: heroku_app34049352
-         max_pool_size: 10
+     default:
+       database: heroku_app34049352
+       hosts:
+         - ds045531.mongolab.com:45531
+       options:
+         read:
+           mode: :primary
+           user: 'staging'
+           password: <%= ENV['PROD_DB'] %>
+           roles:
+             - 'readWrite'
+           authSource: heroku_app34049352
+           max_pool_size: 10
