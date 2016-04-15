@@ -149,9 +149,9 @@ production:
        options:
          read:
            mode: :primary
-           user: 'staging'
-           password: <%= ENV['PROD_DB'] %>
-           roles:
-             - 'readWrite'
-           authSource: heroku_app34049352
-           max_pool_size: 10
+         user: 'staging'
+         password: <%= ENV['PROD_DB'] %>
+         roles:
+           - 'readWrite'
+         authSource: heroku_app34049352
+         max_pool_size: 10
