@@ -53,6 +53,8 @@ gem 'mongoid'
 
 #Authentication
 gem "devise"
+#Simple Token Authentication
+gem 'simple_token_authentication'
 #Invitation functionlity
 gem "devise_invitable"
 

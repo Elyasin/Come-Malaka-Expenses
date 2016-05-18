@@ -8,6 +8,9 @@ class User
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable#, :confirmable
 
+  acts_as_token_authenticatable
+  field :authentication_token
+
   ## First and last name
   field :first_name,         type: String, default: ""
   field :last_name,          type: String, default: ""
