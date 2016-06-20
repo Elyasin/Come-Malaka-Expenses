@@ -4,6 +4,8 @@
 
 **This app is still in beta. Feel free to feed back or to join.**
 
+User of 3rd party software for development and testing: mailcatch
+
 ## ToDos:
 
  * Web/Mail Design/Sitemap/Navigation
