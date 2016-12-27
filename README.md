@@ -56,7 +56,7 @@ Uses of 3rd party software for development and testing: mailcatch
 
 # License information
 
-The source code is licensed under the MIT license.
+The source code is licensed under the MIT license (see below). The documentation is licensed under the Creative Commons license identified by CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/legalcode)
 
 ##MIT License
 
