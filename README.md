@@ -4,7 +4,7 @@
 
 **This app is still in beta. Feel free to feed back or to join.**
 
-User of 3rd party software for development and testing: mailcatch
+Uses of 3rd party software for development and testing: mailcatch
 
 ## ToDos:
 
@@ -54,7 +54,11 @@ User of 3rd party software for development and testing: mailcatch
 
 
 
-MIT License
+# License information
+
+The source code is licensed under the MIT license.
+
+##MIT License
 
 Copyright (c) 2016 Elyasin Shaladi
 
