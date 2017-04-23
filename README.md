@@ -8,6 +8,8 @@ Uses of 3rd party software for development and testing: mailcatch
 
 ## ToDos:
 
+ * Change to Numeric model (MondoDB 3.4+ introduced Decimal BSON type)
+ 
  * Web/Mail Design/Sitemap/Navigation
 
  * We need a code style guide (JSHint, CSSLint, Checkstyle, GitHub style guide)...
