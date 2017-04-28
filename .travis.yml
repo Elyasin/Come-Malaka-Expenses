@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-- 2.2.0
+- 2.3.1
 
 addons:
   postgresql: "9.4"
@@ -29,4 +29,3 @@ before_script:
 
 after_success:
   - bundle exec codeclimate-test-reporter
-
