@@ -51,7 +51,7 @@ class User
   field :invitation_limit, type: Integer
   #Event ID for invitation
   #field :event_id, type: BSON::ObjectId
-  belongs_to :event
+  belongs_to :event, optional: true
   #delete_at field for soft delete
   field :deleted_at, type: Date
  

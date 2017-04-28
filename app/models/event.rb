@@ -20,15 +20,15 @@ class Event
 
 
   def event_dates
-    self.errors[:from_date] = " must not be blank" if self.from_date.blank?
-    self.errors[:end_date] = " must not be blank" if self.end_date.blank?
+    self.errors.add(:from_date, " must not be blank") if self.from_date.blank?
+    self.errors.add(:end_date, " must not be blank") if self.end_date.blank?
     if !(self.from_date.blank? or self.end_date.blank?) then
-      self.errors[:base] = "'From date' must be before 'To Date'" unless (self.from_date <= self.end_date)
+      self.errors.add(:base, "'From date' must be before 'To Date'") unless (self.from_date <= self.end_date)
     end
   end
 
   def event_currency_not_modified
-    self.errors[:event_currency] = " cannot be modified. Event contains items." if (!self.items.empty? and self.event_currency_changed?)
+    self.errors.add(:event_currency, " cannot be modified. Event contains items.") if (!self.items.empty? and self.event_currency_changed?)
   end
 
   # returns false if user already participant

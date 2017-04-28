@@ -56,7 +56,7 @@ class EventsController < ApplicationController
       flash[:notice] = "Event deleted."
     else
       flash[:notice] = "Event cannot be deleted. Posted items exist."
-      redirect_to(:back) and return
+      redirect_back(fallback_location: root_path) and return
     end
 	  redirect_to events_path
   end

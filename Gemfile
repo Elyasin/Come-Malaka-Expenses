@@ -51,6 +51,10 @@ gem 'pg'
 #Mongoid for MongoDB
 gem 'mongoid'
 
+#Implements currencies for rails
+gem 'mongoid_money_field'
+
+
 #Authentication
 gem "devise"
 #Simple Token Authentication
@@ -69,9 +73,6 @@ gem "haml-rails"
 #Used to convert HTML/ERB into HAML
 gem 'html2haml', group: :development
 
-#Implements currencies for rails
-gem 'mongoid_money_field'
-
 #Database cleaner for testing
 gem 'database_cleaner', group: :test
 
@@ -85,7 +86,7 @@ gem 'simplecov', "~> 0.9.0", :require => false, :group => :test
 gem 'rails_12factor', group: :production
 
 #Ensuring Ruby version on Heroku
-ruby "2.2.0"
+ruby "2.3.1"
 
 #Using Puma web server
 gem 'puma'
@@ -100,4 +101,7 @@ gem 'jasmine-jquery-rails', group: [:development, :test]
 gem "codeclimate-test-reporter", group: :test, require: nil
 
 #Foundation for Rails apps
-gem 'foundation-rails', '~> 5.0'
+gem 'foundation-rails', '~> 5.5'
+
+#to be removed - take controller internals out of controller tests
+gem 'rails-controller-testing'

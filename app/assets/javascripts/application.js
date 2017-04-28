@@ -11,13 +11,10 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery.turbolinks
 //= require jquery_ujs
+//= require jquery-ui/widgets/datepicker
 //= require foundation
-//= require jquery-ui/datepicker
-//= require turbolinks
 //= require tablesaw.stackonly
-
 
 $(document).ready(function(){
 
@@ -62,11 +59,11 @@ $(document).ready(function(){
 	});
 
   $(document).foundation({
-  	abide: {
-    	patterns: {
-      	password: 			/^(.){8,}$/,
-      	amount:					/^[1-9]\d*(\.\d+)?$/,
-      	exchange_rate:	/^\d*(\.\d+)?$/
+    abide: {
+      patterns: {
+        password: 			/^(.){8,}$/,
+        amount:					/^[1-9]\d*(\.\d+)?$/,
+        exchange_rate:	/^\d*(\.\d+)?$/
       }
     }
   });
@@ -77,7 +74,4 @@ $(document).ready(function(){
   $(document).foundation('topbar', 'reflow');
   $(document).foundation('abide', 'reflow');
 
-
 });
-
-

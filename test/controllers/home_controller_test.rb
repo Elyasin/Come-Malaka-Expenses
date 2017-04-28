@@ -4,7 +4,7 @@ class HomeControllerTest < ActionController::TestCase
 
   # this works because user was created in test helper and thus has a token
   test "index with token authentication via query params" do
-    get :index, { user_email: @organizer.email, user_token: @organizer.authentication_token }
+    get :index, params: { user_email: @organizer.email, user_token: @organizer.authentication_token }
     assert_response :redirect
     assert_redirected_to events_path, "User must be redirected to events_path"
   end

@@ -125,6 +125,9 @@ development:
 
     # Ensure all times are UTC in the app side. (default: false)
     # use_utc: false
+
+    # Set belongs_to relations to optional in Rails app
+    belongs_to_required_by_default: false
 test:
   clients:
     default:
@@ -139,19 +142,22 @@ test:
         roles:
           - 'readWrite'
         authSource: come_malaka_test
-
+  options:
+    belongs_to_required_by_default: false
 production:
-   clients:
-     default:
-       database: heroku_app34049352
-       hosts:
-         - ds045531.mongolab.com:45531
-       options:
-         read:
-           mode: :primary
-         user: 'staging'
-         password: <%= ENV['PROD_DB'] %>
-         roles:
-           - 'dbOwner'
-         authSource: heroku_app34049352
-         max_pool_size: 10
+  clients:
+    default:
+      database: heroku_app34049352
+      hosts:
+        - ds045531.mongolab.com:45531
+      options:
+        read:
+          mode: :primary
+        user: 'staging'
+        password: <%= ENV['PROD_DB'] %>
+        roles:
+          - 'dbOwner'
+        authSource: heroku_app34049352
+        max_pool_size: 10
+  options:
+    belongs_to_required_by_default: false

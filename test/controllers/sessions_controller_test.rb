@@ -21,7 +21,7 @@ class SessionsControllerTest < ActionController::TestCase
   test "user cannot log in when account is cancelled" do 
     @user2.deleted_at = Time.current
     @user2.save 
-    post :create, user: { email: "user2@event.com", password: "user2345", remember_me: '0' } 
+    post :create, params: { user: { email: "user2@event.com", password: "user2345", remember_me: '0' } }
     assert_response :redirect#, "Response must be a redirect" 
     assert_redirected_to new_user_session_path, "Redirect must be new_user_session_path" 
     assert_equal "Your account is deactivated. Contact support to re-activate your account.", flash[:alert] 

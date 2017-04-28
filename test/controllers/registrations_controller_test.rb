@@ -18,7 +18,7 @@ class RegistrationsControllerTest < ActionController::TestCase
   end
 
   test "user cancels account" do
-    delete :destroy, id: @user2.id
+    delete :destroy, params: { id: @user2.id }
     assert_response :redirect, "Response must be redirect"
     assert_redirected_to root_path,"Redirect must be root_path (welcome homepage)"
     assert_equal "Bye! Your account has been successfully cancelled. We hope to see you again soon.", flash[:notice]

@@ -24,16 +24,16 @@ class EventsControllerTest < ActionController::TestCase
     assert_response :redirect, "Response must be redirect"
     assert_redirected_to new_user_session_path, "Redirect must be new_user_session_path"
 
-    get :show, id: @event.id
+    get :show, params: { id: @event.id }
     assert_response :redirect, "Response must be redirect"
     assert_redirected_to new_user_session_path, "Redirect must be new_user_session_path"
 
-    get :edit, id: @event.id
+    get :edit, params: { id: @event.id }
     assert_response :redirect, "Response must be redirect"
     assert_redirected_to new_user_session_path, "Redirect must be new_user_session_path"
 
     assert_no_difference('Event.count', "Event must not be created") do
-      put :update, id: @event.id
+      put :update, params: { id: @event.id }
     end
     assert_response :redirect, "Response must be redirect"
     assert_redirected_to new_user_session_path, "Redirect must be new_user_session_path"
@@ -49,16 +49,16 @@ class EventsControllerTest < ActionController::TestCase
     assert_redirected_to new_user_session_path, "Redirect must be new_user_session_path"
 
     assert_no_difference('Event.count', "Event must not be created") do
-      delete :destroy, id: @event.id
+      delete :destroy, params: { id: @event.id }
     end
     assert_response :redirect, "Response must be redirect"
     assert_redirected_to new_user_session_path, "Redirect must be new_user_session_path"
 
-    get :event_all_items, event_id: @event.id
+    get :event_all_items, params: { event_id: @event.id }
     assert_response :redirect, "Response must be redirect"
     assert_redirected_to new_user_session_path, "Redirect must be new_user_session_path"
 
-    get :expense_report, event_id: @event.id
+    get :expense_report, params: { event_id: @event.id }
     assert_response :redirect, "Response must be redirect"
     assert_redirected_to new_user_session_path, "Redirect must be new_user_session_path"
   end
@@ -115,7 +115,7 @@ class EventsControllerTest < ActionController::TestCase
   	test_event = {name: "Test event", from_date: Date.current, end_date: Date.current+3, description: "Test description", 
   		event_currency: "eur", organizer_id: @non_participant_user.id}
   	assert_difference('Event.count', 1, "Event must be created") do
-  		post :create, event: test_event
+  		post :create, params: { event: test_event }
   	end
   	assert_response :redirect, "Response must be redirect"
   	assert_equal "Event created.", flash[:notice], "Flash[:notice] must state that event was created"
@@ -127,7 +127,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "user tries to create event with invalid data and is sent back to new page" do
   	test_event = {name: nil}
-  	post :create, event: test_event
+  	post :create, params: { event: test_event }
   	assert_response :success, "Response must be success"
   	assert_template :new, "New page must be rendered"
   	assert_equal "Event is invalid. Please correct.", flash[:notice]
@@ -136,7 +136,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "organizer can edit event" do
   	sign_in @organizer
-  	get :edit, id: @event.id
+  	get :edit, params: { id: @event.id }
   	assert_response :success, "Response must be success"
   	assert_template :edit, "Edit page must be rendered"
   	assert assigns(:event), "Event must be assigned"
@@ -144,12 +144,12 @@ class EventsControllerTest < ActionController::TestCase
 
   test "participant cannot edit event" do
   	sign_in @user1
-  	get :edit, id: @event.id
+  	get :edit, params: { id: @event.id }
   	assert_response :forbidden, "Response must be forbidden"
   end
 
   test "non participant cannot edit event" do
-  	get :edit, id: @event.id
+  	get :edit, params: { id: @event.id }
   	assert_response :forbidden, "Response must be forbidden"
   end
 
@@ -158,7 +158,7 @@ class EventsControllerTest < ActionController::TestCase
    	test_event = {name: "Randers", from_date: Date.new(2012, 11, 2), 
 			end_date: Date.new(2012, 11, 4), description: "Come Malaka event in a different country", 
 			event_currency: "eur", organizer_id: @organizer.id}
-  	put :update, id: @event.id, event: test_event
+  	put :update, params: { id: @event.id, event: test_event }
   	assert_response :redirect, "Response must be redirect"
   	assert_redirected_to events_path, "Redirect must be events_path"
   	assert_equal "Event updated.", flash[:notice], "Flash[:notice] must state that event was updated"
@@ -167,7 +167,7 @@ class EventsControllerTest < ActionController::TestCase
   test "organizer tries to update event with invalid data and is sent back to edit page" do
   	sign_in @organizer
    	test_event = {name: ""}
-  	put :update, id: @event.id, event: test_event
+  	put :update, params: { id: @event.id, event: test_event }
   	assert_response :success, "Response must be success"
   	assert_template :edit, "Edit page must be rendered"
   	assert_equal "Event cannot be updated with invalid data. Please correct.", flash[:notice], "Flash[:notice] must state that event is invalid"
@@ -179,7 +179,7 @@ class EventsControllerTest < ActionController::TestCase
     test_event = {name: "Randers", from_date: Date.new(2012, 11, 2), 
 			end_date: Date.new(2012, 11, 4), description: "Come Malaka event in a different country", 
 			event_currency: "eur", organizer_id: @organizer.id}
-  	put :update, id: @event.id, event: test_event
+  	put :update, params: { id: @event.id, event: test_event }
   	assert_response :forbidden, "Response must be forbidden"
   end
 
@@ -187,7 +187,7 @@ class EventsControllerTest < ActionController::TestCase
     test_event = {name: "Randers", from_date: Date.new(2012, 11, 2), 
 			end_date: Date.new(2012, 11, 4), description: "Come Malaka event in a different country", 
 			event_currency: "eur", organizer_id: @organizer.id}
-  	put :update, id: @event.id, event: test_event
+  	put :update, params: { id: @event.id, event: test_event }
   	assert_response :forbidden, "Response must be forbidden"
   end
 
@@ -195,7 +195,7 @@ class EventsControllerTest < ActionController::TestCase
   	sign_in @organizer
   	@event.items = [] #make event deletable by removing its items
   	assert_difference('Event.count', -1, "Event must be deleted") do
-	  	delete :destroy, id: @event.id
+	  	delete :destroy, params: { id: @event.id }
   	end	
   	assert_response :redirect, "Response must be redirect"
   	assert_redirected_to events_path, "Redirect must be events_path"
@@ -206,7 +206,7 @@ class EventsControllerTest < ActionController::TestCase
   	sign_in @organizer
     @request.env['HTTP_REFERER'] = 'http://foo.com'
   	assert_no_difference('Event.count', "Event must not be deleted") do
-	  	delete :destroy, id: @event.id
+	  	delete :destroy, params: { id: @event.id }
   	end	
   	assert_response :redirect, "Response must be redirect"
   	assert_redirected_to "http://foo.com", "Redirect must be back (to HTTP_REFERER)"
@@ -217,7 +217,7 @@ class EventsControllerTest < ActionController::TestCase
   	sign_in @user1
   	@event.items = [] #make event deletable by removing its items
     assert_no_difference('Event.count', "Event must not be deleted") do
-      delete :destroy, id: @event.id
+      delete :destroy, params: { id: @event.id }
     end
     assert_response :forbidden, "Response must be forbidden"
   end
@@ -225,53 +225,53 @@ class EventsControllerTest < ActionController::TestCase
   test "non participant cannot delete event" do
   	@event.items = [] #make event deletable by removing its items
     assert_no_difference('Event.count', "Event must not be deleted") do
-      delete :destroy, id: @event.id
+      delete :destroy, params: { id: @event.id }
     end
     assert_response :forbidden, "Response must be forbidden"
   end
 
   test "organizer can display event" do
   	sign_in @organizer
-  	get :show, id: @event.id
+  	get :show, params: { id: @event.id }
   	assert_response :success, "Response must be success"
   	assert assigns(:event), "Event must be assigned"
   end
 
   test "event participant can display event" do
   	sign_in @user1
-  	get :show, id: @event.id
+  	get :show, params: { id: @event.id }
   	assert_response :success, "Response must be success"
   	assert assigns(:event), "Event must be assigned"
   end
 
   test "non participant cannot display event" do
-  	get :show, id: @event.id
+  	get :show, params: { id: @event.id }
   	assert_response :forbidden, "Response must be forbidden"
   end
 
   test "organizer can see all event items" do
   	sign_in @organizer
-  	get :event_all_items, event_id: @event.id
+  	get :event_all_items, params: { event_id: @event.id }
   	assert_response :success, "Response must be success"
   	assert assigns(:items), "Items must be assigned"
   end
 
   test "participant can see all event items" do
   	sign_in @user1
-  	get :event_all_items, event_id: @event.id
+  	get :event_all_items, params: { event_id: @event.id }
   	assert_response :success, "Response must be success"
   	assert assigns(:items), "Items must be assigned"
   end
 
   test "non participant cannot see all event items" do
-  	get :event_all_items, event_id: @event.id
+  	get :event_all_items, params: { event_id: @event.id }
   	assert_response :forbidden, "Response must be forbidden"
   	assert_nil assigns(:items), "Items must not be assigned"
   end
 
   test "organizer can see expense report" do
   	sign_in @organizer
-  	get :expense_report, event_id: @event.id
+  	get :expense_report, params: { event_id: @event.id }
   	assert_response :success, "Response must be success"
   	assert assigns(:event), "Event must be assigned"
   	assert assigns(:participants), "Participants must be assigned"
@@ -280,14 +280,14 @@ class EventsControllerTest < ActionController::TestCase
 
   test "participant can see expense report" do
   	sign_in @user1
-  	get :expense_report, event_id: @event.id
+  	get :expense_report, params: { event_id: @event.id }
   	assert_response :success, "Response must be success"
   	assert assigns(:event), "Event must be assigned"
   	assert assigns(:participants), "Participants must be assigned"
   	assert assigns(:items), "Items must be assigned"  end
 
   test "non participant cannot see expense report" do
-  	get :expense_report, event_id: @event.id
+  	get :expense_report, params: { event_id: @event.id }
   	assert_response :forbidden, "Response must be forbidden"
   	assert_nil assigns(:participants), "Participants must not be assigned"
   	assert_nil assigns(:items), "Items must not be assigned"
@@ -295,7 +295,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "organizer can see Who owes you? details" do
     sign_in @organizer
-    get :who_owes_you, event_id: @event.id
+    get :who_owes_you, params: { event_id: @event.id }
     assert_response :success, "Response must be success"
     assert assigns(:event), "Event must be assigned"
     assert_not_empty assigns(:total_amounts), "Total amounts must not be empty"
@@ -304,7 +304,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "participant (payer) can see Who owes you? details" do
     sign_in @user4
-    get :who_owes_you, event_id: @event.id
+    get :who_owes_you, params: { event_id: @event.id }
     assert_response :success, "Response must be success"
     assert assigns(:event), "Event must be assigned"
     assert_not_empty assigns(:total_amounts), "Total amount must not be empty"
@@ -313,7 +313,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "participant (non payer) can see Who owes you? details" do
     sign_in @user1
-    get :who_owes_you, event_id: @event.id
+    get :who_owes_you, params: { event_id: @event.id }
     assert_response :success, "Response must be success"
     assert assigns(:event), "Event must be assigned"
     assert_empty assigns(:total_amounts), "Total amount must be empty"
@@ -321,7 +321,7 @@ class EventsControllerTest < ActionController::TestCase
   end
 
   test "non participant cannot see Who owes you? details" do
-    get :who_owes_you, event_id: @event.id
+    get :who_owes_you, params: { event_id: @event.id }
     assert_response :forbidden, "Response must be forbidden"
     assert_nil assigns(:total_amounts), "Total amounts must be emtpy"
     assert_nil assigns(:item_lists), "Item lists must be empty"
@@ -329,7 +329,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "organizer can see you owe whom? details" do
     sign_in @organizer
-    get :you_owe_whom, event_id: @event.id
+    get :you_owe_whom, params: { event_id: @event.id }
     assert_response :success, "Response must be success"
     assert assigns(:event), "Event must be assigned"
     assert_not_empty assigns(:total_amounts), "Total amounts must not be empty"
@@ -338,7 +338,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "participant (payer and beneficiary) can see you owe whom? details" do
     sign_in @user5
-    get :you_owe_whom, event_id: @event.id
+    get :you_owe_whom, params: { event_id: @event.id }
     assert_response :success, "Response must be success"
     assert assigns(:event), "Event must be assigned"
     assert_not_empty assigns(:total_amounts), "Total amounts must not be empty"
@@ -346,7 +346,7 @@ class EventsControllerTest < ActionController::TestCase
   end
 
   test "non participant cannot see you owe whom? details" do
-    get :you_owe_whom, event_id: @event.id
+    get :you_owe_whom, params: { event_id: @event.id }
     assert_response :forbidden, "Response must be forbidden"
     assert_nil assigns(:total_amounts), "Total amounts must be emtpy"
     assert_nil assigns(:item_lists), "Item lists must be empty"
@@ -514,7 +514,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "show event details page" do
     sign_in @organizer
-    get :show, id: @event.id
+    get :show, params: { id: @event.id }
 
     # Test off-canvas menu
     assert_select "title", "Details about Randers"
@@ -590,7 +590,7 @@ class EventsControllerTest < ActionController::TestCase
 #When items are posted the event currency cannot be modified
 test "edit event page (with posted items)" do
     sign_in @organizer
-    get :edit, id: @event.id
+    get :edit, params: { id: @event.id }
     assert_select "title", "Edit Randers event"
 
     # Test off-canvas menu
@@ -668,7 +668,7 @@ test "edit event page (with posted items)" do
 test "edit event page (without posted items)" do
     sign_in @organizer
     @event.items = nil
-    get :edit, id: @event.id
+    get :edit, params: { id: @event.id }
 
     # Test off-canvas menu
     assert_select "title", "Edit Randers event"
@@ -748,7 +748,7 @@ test "edit event page (without posted items)" do
 
   test "expense report page" do
     sign_in @organizer
-    get :expense_report, event_id: @event.id
+    get :expense_report, params: { event_id: @event.id }
 
     # Test off-canvas menu
     assert_select "title", "Expense summary for Randers event"
@@ -814,7 +814,7 @@ test "edit event page (without posted items)" do
 
   test "event's all items page (with items)" do
     sign_in @organizer
-    get :event_all_items, event_id: @event.id
+    get :event_all_items, params: { event_id: @event.id }
     assert_select "title", "All items of Randers event"
 
     # Test off-canvas menu
@@ -901,7 +901,7 @@ test "edit event page (without posted items)" do
   test "event's all items page (without items)" do
     @event.items = []
     sign_in @organizer
-    get :event_all_items, event_id: @event.id
+    get :event_all_items, params: { event_id: @event.id }
     assert_select "title", "All items of Randers event"
 
     # Test off-canvas menu
@@ -951,7 +951,7 @@ test "edit event page (without posted items)" do
 
   test "who owes you page" do
     sign_in @organizer
-    get :who_owes_you, event_id: @event.id
+    get :who_owes_you, params: { event_id: @event.id }
     assert_select "title", "Who owes you?"
 
     # Test off-canvas menu
@@ -1031,7 +1031,7 @@ test "edit event page (without posted items)" do
 
   test "you owe whom page" do
     sign_in @organizer
-    get :you_owe_whom, event_id: @event.id
+    get :you_owe_whom, params: { event_id: @event.id }
     assert_select "title", "You owe whom?"
 
     # Test off-canvas menu

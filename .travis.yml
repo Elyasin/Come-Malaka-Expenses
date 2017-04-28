@@ -4,6 +4,8 @@ rvm:
 
 addons:
   postgresql: "9.4"
+  code_climate:
+    repo_token: 4c4a4fd1f96cc88b1faf699a76980d60dc9defa35e6db87572c197411506e4f7
 
 deploy:
   provider: heroku
@@ -24,3 +26,7 @@ before_script:
   - mongo come_malaka_test --eval "db.createUser({user:'tester',pwd:'tester',roles:['readWrite']});"
   - psql -c "create role tester with createdb login password 'tester'" -U postgres
   - bundle exec rake db:setup
+
+after_success:
+  - bundle exec codeclimate-test-reporter
+

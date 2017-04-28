@@ -18,7 +18,7 @@ class EventInvitationsControllerTest < ActionController::TestCase
   end
 
   test "view new invitation page" do
-    get :new, event_id: @event.id
+    get :new, params: { event_id: @event.id }
     assert_response :success, "Response must be success"
     assert_template :new, "New page must be rendered"
 
@@ -91,7 +91,7 @@ class EventInvitationsControllerTest < ActionController::TestCase
     new_participant = User.invite!(:email => "new_participant@event.com", event_id: @event.id) do |u|
       u.skip_invitation = true
     end
-    get :edit, invitation_token: new_participant.raw_invitation_token
+    get :edit, params: { invitation_token: new_participant.raw_invitation_token }
     assert_response :success, "Response must be success"
     assert_template :edit, "Edit page must be rendered"
     # Test the view
@@ -116,7 +116,7 @@ class EventInvitationsControllerTest < ActionController::TestCase
 
   test "create an invitation for a new user" do
     assert_difference('ActionMailer::Base.deliveries.size', +1, message = "An invitation email must be created") do
-      post :create, event_id: @event.id, user: {email: "new_user@event.com", first_name: "New", last_name: "User", event_id: @event.id}
+      post :create, params: {event_id: @event.id, user: {email: "new_user@event.com", first_name: "New", last_name: "User", event_id: @event.id}}
     end    
     assert_response :redirect, "Response must be redirect"
     assert_redirected_to events_path, "Redirect must be events_path"
@@ -131,7 +131,7 @@ class EventInvitationsControllerTest < ActionController::TestCase
 
   test "create an invitation for an existing non participant" do
     assert_difference('ActionMailer::Base.deliveries.size', 1, message = "An invitation email must be created for existing user") do
-      post :create, event_id: @event.id, user: { email: "user6@event.com", event_id: @event.id }
+      post :create, params: { event_id: @event.id, user: { email: "user6@event.com", event_id: @event.id } }
     end
     assert_response :redirect, "Response must be redirect"
     assert_redirected_to events_path, "Redirect must be events_path"
@@ -151,7 +151,7 @@ class EventInvitationsControllerTest < ActionController::TestCase
 
   test "create an invitation for an existing/pending participant" do
     assert_no_difference('ActionMailer::Base.deliveries.size', message = "No invitation must be created for existing participant or pending invitation") do
-      post :create, event_id: @event.id, user: { email: "user5@event.com", event_id: @event.id }
+      post :create, params: { event_id: @event.id, user: { email: "user5@event.com", event_id: @event.id } }
     end
     assert_response :redirect, "Response must be redirect"
     assert_redirected_to events_path, "Redirect must be events_path"

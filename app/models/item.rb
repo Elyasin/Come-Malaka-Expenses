@@ -61,7 +61,7 @@ class Item
     get_exchange_rate() if (self.exchange_rate.blank? or self.exchange_rate.to_d == 0.to_d)
     self.base_amount = self.foreign_amount * self.exchange_rate
   rescue StandardError, Exception
-    self.errors[:exchange_rate] = " cannot be retrieeved (Timed Out). If problem persists try to type a rate manually."
+    self.errors.add(:exchange_rate, " cannot be retrieeved (Timed Out). If problem persists try to type a rate manually.")
     self.rate_changed = false
   end
 
