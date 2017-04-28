@@ -21,7 +21,7 @@ before_script:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get update
   - sudo apt-get install libstdc++6
-  - sudo apt-get install -y mongodb-org=3.0.7 mongodb-org-server=3.0.7 mongodb-org-shell=3.0.7 mongodb-org-mongos=3.0.7 mongodb-org-tools=3.0.7
+  - sudo apt-get install -y mongodb-org=3.2.11 mongodb-org-server=3.2.11 mongodb-org-shell=3.2.11 mongodb-org-mongos=3.2.11 mongodb-org-tools=3.2.11
   - sleep 15
   - mongo come_malaka_test --eval "db.createUser({user:'tester',pwd:'tester',roles:['readWrite']});"
   - psql -c "create role tester with createdb login password 'tester'" -U postgres
