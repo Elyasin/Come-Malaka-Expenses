@@ -12,14 +12,18 @@ class EventInvitationsController < Devise::InvitationsController
 
 		if user.exists? then
 			@invitee = user.first
-			if @event.add_participant(@invitee)
+      if @event.contains @invitee then
+        flash[:notice] = "#{@invitee.name} is already participant"
+			elsif ((@invitee.invitation_token? and @invitee.invitation_accepted?) or 
+                !@invitee.invitation_token?) and 
+                @event.add_participant(@invitee) then
 				flash[:notice] = "#{@invitee.name} had been added to the event."
 				EventMailer.invitation_message(@event, @invitee).deliver_now
 			else
-				flash[:notice] = "#{@invitee.name} is already participant of event or pending invitation acceptance."
+				flash[:notice] = "#{@invitee.name} is pending invitation acceptance of an event."
 			end
-			redirect_to events_path
-		else
+		  redirect_to events_path
+		else # new user, so create one
 			super
 		end	
 	end

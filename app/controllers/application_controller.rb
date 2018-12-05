@@ -5,17 +5,28 @@ class ApplicationController < ActionController::Base
 
   acts_as_token_authentication_handler_for User
 
+  # override devise paths
   def after_sign_in_path_for(resource_or_scope)
-  	events_path
-	end
+    events_path
+  end
 
   def after_sign_out_path_for(resource_or_scope)
-  	root_path
-	end
+    root_path
+  end
 
   def after_sign_up_path_for(resource_or_scope)
-  	events_path
-	end
+    events_path
+  end
+
+  # override devise invitable paths
+  def after_invite_path_for(inviter, invitee = nil)
+    events_path
+  end
+
+  def after_accept_path_for(resource)
+    events_path
+  end
+
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 

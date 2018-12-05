@@ -17,6 +17,10 @@ class EventInvitationsControllerTest < ActionController::TestCase
     sign_out @organizer
   end
 
+
+
+
+
   test "view new invitation page" do
     get :new, params: { event_id: @event.id }
     assert_response :success, "Response must be success"
@@ -86,6 +90,11 @@ class EventInvitationsControllerTest < ActionController::TestCase
     end
   end
 
+
+
+
+
+
   test "view accept invitation page" do
     sign_out @organizer
     new_participant = User.invite!(:email => "new_participant@event.com", event_id: @event.id) do |u|
@@ -114,6 +123,10 @@ class EventInvitationsControllerTest < ActionController::TestCase
     end
   end
 
+
+
+
+
   test "create an invitation for a new user" do
     assert_difference('ActionMailer::Base.deliveries.size', +1, message = "An invitation email must be created") do
       post :create, params: {event_id: @event.id, user: {email: "new_user@event.com", first_name: "New", last_name: "User", event_id: @event.id}}
@@ -128,6 +141,10 @@ class EventInvitationsControllerTest < ActionController::TestCase
     assert_match /Accept invitation: #{accept_user_invitation_url(host: "localhost:3000")}/, invite_email.text_part.body.to_s, "Accept invitation link is incorrect"
     assert_match /If you don't want to accept the invitation, please ignore this email.\nYour account won't be created until you access the link above and set your password./, invite_email.text_part.body.to_s, "Invitation ignore sentence is incorrect"
   end
+
+
+
+
 
   test "create an invitation for an existing non participant" do
     assert_difference('ActionMailer::Base.deliveries.size', 1, message = "An invitation email must be created for existing user") do
@@ -149,13 +166,35 @@ class EventInvitationsControllerTest < ActionController::TestCase
     assert_match /You can access the event with this link: #{event_url(assigns(:event), host: "localhost:3000")}/, invite_email.text_part.body.to_s, "Email body is incorrect"
   end
 
-  test "create an invitation for an existing/pending participant" do
+
+
+
+
+  test "create an invitation for user who already is participant" do
     assert_no_difference('ActionMailer::Base.deliveries.size', message = "No invitation must be created for existing participant or pending invitation") do
       post :create, params: { event_id: @event.id, user: { email: "user5@event.com", event_id: @event.id } }
     end
     assert_response :redirect, "Response must be redirect"
     assert_redirected_to events_path, "Redirect must be events_path"
-    assert_equal "Neal Mundy is already participant of event or pending invitation acceptance.", flash[:notice], "flash[:notice] must state that user is already participant or pending invitation"
+    assert_equal "Neal Mundy is already participant", flash[:notice], "flash[:notice] must state that user is already participant"
   end
+
+
+
+  test "create an invitation for participant already invited to another event" do
+    assert_difference('ActionMailer::Base.deliveries.size', 1, message = "An invitation email must be created for existing user") do
+      post :create, params: { event_id: @event.id, user: { email: "a_user@event.com", event_id: @event.id , first_name: 'Max', last_name: 'Müller'} }
+    end
+    an_event = Event.new(name: "Thessaloniki", from_date: Date.new(2013, 5, 1), end_date: Date.new(2013, 5, 3),
+      description: "Come Malaka event in Greece", event_currency: "eur", organizer: @organizer)
+    assert an_event.save!
+    assert_no_difference('ActionMailer::Base.deliveries.size', message = "No invitation must be created for participant pending another event invitation") do
+      post :create, params: { event_id: an_event.id, user: { email: "a_user@event.com", event_id: an_event.id } }
+    end
+    assert_response :redirect, "Response must be redirect"
+    assert_redirected_to events_path, "Redirect must be events_path"
+    assert_equal "Max Müller is pending invitation acceptance of an event.", flash[:notice], "flash[:notice] must state that user is pending another invitation" 
+  end
+
 
 end

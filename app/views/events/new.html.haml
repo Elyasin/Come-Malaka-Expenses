@@ -3,12 +3,10 @@
 - content_for :menu do
   %li= link_to 'Back to events', events_path
   %li= link_to "Create new event", new_event_path
-end
 
 - content_for :topbar do
   %li= link_to "Back to events", events_path
   %li= link_to "Create new event", new_event_path
-end
 
 - if @event.errors.any?
   %div#error_explanation

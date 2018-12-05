@@ -41,6 +41,10 @@ class Event
     true
   end
 
+  def contains(user)
+    return self.users.include? user
+  end
+
   # returns items that were paid by participant (base amount)
   def paid_expense_items_by participant
     self.items.where(payer_id: participant.id)

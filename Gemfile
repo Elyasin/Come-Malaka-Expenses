@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 gem 'dotenv-rails', :groups => [:development, :test]
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails'
+gem 'rails', '~> 5.0.0'
 # Use SCSS for stylesheets
 gem 'sass-rails'
 # Use Uglifier as compressor for JavaScript assets
@@ -56,11 +56,11 @@ gem 'mongoid_money_field'
 
 
 #Authentication
-gem "devise"
+gem "devise"#, '~> 4.2'
 #Simple Token Authentication
-gem 'simple_token_authentication'
+gem 'simple_token_authentication', '~> 1.0'
 #Invitation functionlity
-gem "devise_invitable"
+gem "devise_invitable"#, '~> 1.7.0'
 
 #Authorization
 gem 'authority'

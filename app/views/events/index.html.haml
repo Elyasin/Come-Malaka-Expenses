@@ -2,11 +2,9 @@
 
 - content_for :menu do
 	%li= link_to "Create new event", new_event_path
-end
 
 - content_for :topbar do
 	%li= link_to "Create new event", new_event_path	
-end
 
 - if @events.empty?
 	%p You don't have any events.

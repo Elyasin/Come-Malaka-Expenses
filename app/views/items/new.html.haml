@@ -37,7 +37,6 @@
       %li
         %label= @item.event.name + " event"
       %li= link_to "Create new item", new_event_item_path(@item.event)
-end
 
 - content_for :topbar do
   %li= link_to "Create new event", new_event_path
@@ -70,7 +69,6 @@ end
     %a{href: "#"}= @item.event.name + " items"
     %ul.dropdown
       %li.active= link_to "Create new item", new_event_item_path(@item.event)
-end
 
 - if @item.errors.any?
   %div#error_explanation

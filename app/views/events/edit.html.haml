@@ -35,7 +35,6 @@
       %li.back
         %a{href: "#"} Back
       %li= link_to "Create new item", new_event_item_path(@event)
-end
 
 - content_for :topbar do
   <!-- Index pages -->
@@ -68,7 +67,6 @@ end
     %a{href: "#"}= @event.name + " items"
     %ul.dropdown
       %li= link_to "Create new item", new_event_item_path(@event)
-end
 
 - if @event.errors.any?
   %div#error_explanation

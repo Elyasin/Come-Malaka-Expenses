@@ -5,6 +5,10 @@ class EventTest < ActiveSupport::TestCase
 	#Test data initialized in test_helper.rb#setup
 	#and truncated while teardown
 
+  test "has participant" do
+    assert @event.contains(@organizer), "Event does not have the organizer as participant? That's wrong."
+  end
+
 	test "do not save event without name" do
 		@event.name = nil
 		assert_not @event.save, "Event must have name"

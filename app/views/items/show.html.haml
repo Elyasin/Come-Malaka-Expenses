@@ -44,7 +44,6 @@
         %li= link_to("Edit item", edit_item_path(@item))
       - if current_user.can_delete?(@item)
         %li= link_to("Delete item", item_path(@item), method: :delete, data: {confirm: "Are you sure you want to delete item #{@item.name} at the #{@item.value_date.strftime('%d %b %Y')}?"})
-end
 
 - content_for :topbar do
   <!-- Index pages -->
@@ -82,7 +81,6 @@ end
         %li= link_to("Edit item", edit_item_path(@item)) 
       - if current_user.can_delete?(@item)
         %li= link_to("Delete item", item_path(@item), method: :delete, data: {confirm: "Are you sure you want to delete item #{@item.name} at the #{@item.value_date.strftime('%d %b %Y')}?"})
-end
 
 = form_for @item do |f|
   .row
