@@ -280,7 +280,7 @@ DEPENDENCIES
   rolify
   sass-rails
   sdoc (~> 0.4.0)
-  simple_token_authentication (~> 1.0)
+  simple_token_authentication
   simplecov (~> 0.9.0)
   spring
   therubyracer

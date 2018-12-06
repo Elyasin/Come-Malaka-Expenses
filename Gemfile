@@ -58,7 +58,7 @@ gem 'mongoid_money_field'
 #Authentication
 gem "devise"#, '~> 4.2'
 #Simple Token Authentication
-gem 'simple_token_authentication', '~> 1.0'
+gem 'simple_token_authentication'#, '~> 1.0'
 #Invitation functionlity
 gem "devise_invitable"#, '~> 1.7.0'
 

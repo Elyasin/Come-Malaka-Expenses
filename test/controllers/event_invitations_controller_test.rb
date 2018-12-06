@@ -143,9 +143,6 @@ class EventInvitationsControllerTest < ActionController::TestCase
   end
 
 
-
-
-
   test "create an invitation for an existing non participant" do
     assert_difference('ActionMailer::Base.deliveries.size', 1, message = "An invitation email must be created for existing user") do
       post :create, params: { event_id: @event.id, user: { email: "user6@event.com", event_id: @event.id } }
@@ -167,9 +164,6 @@ class EventInvitationsControllerTest < ActionController::TestCase
   end
 
 
-
-
-
   test "create an invitation for user who already is participant" do
     assert_no_difference('ActionMailer::Base.deliveries.size', message = "No invitation must be created for existing participant or pending invitation") do
       post :create, params: { event_id: @event.id, user: { email: "user5@event.com", event_id: @event.id } }
@@ -178,7 +172,6 @@ class EventInvitationsControllerTest < ActionController::TestCase
     assert_redirected_to events_path, "Redirect must be events_path"
     assert_equal "Neal Mundy is already participant", flash[:notice], "flash[:notice] must state that user is already participant"
   end
-
 
 
   test "create an invitation for participant already invited to another event" do
