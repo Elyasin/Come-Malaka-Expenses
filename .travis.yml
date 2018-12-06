@@ -21,7 +21,7 @@ before_script:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get update
   - sudo apt-get install -y --allow-downgrades mongodb-org=3.2.11 mongodb-org-server=3.2.11 mongodb-org-shell=3.2.11 mongodb-org-mongos=3.2.11 mongodb-org-tools=3.2.11
-  - sleep 15
+  - sleep 30
   - mongo come_malaka_test --eval "db.createUser({user:'tester',pwd:'tester',roles:['readWrite']});"
   - psql -c "create role tester with createdb login password 'tester'" -U postgres
   - bundle exec rake db:setup
