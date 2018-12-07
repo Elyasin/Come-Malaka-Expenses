@@ -3,7 +3,7 @@ class Event
   include Authority::Abilities
   resourcify
 
-  #uses EventAuthorzier by default
+  # uses EventAuthorzier by default
 
   field :name, type: String
   field :from_date, type: Date
