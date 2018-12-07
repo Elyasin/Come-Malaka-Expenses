@@ -41,6 +41,7 @@ class Event
     true
   end
 
+  # false if user not a particpant of event
   def contains(user)
     return self.users.include? user
   end
