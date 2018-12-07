@@ -34,7 +34,7 @@ class Event
   # returns false if user already participant
   # otherwise returns true
   def add_participant(user)
-    return false if self.users.include?(user)
+    return false if self.contains(user)
     user.add_role(:event_participant, self) unless user.has_role?(:event_participant, self)
     self.users << user
     self.items.each do |item| item.initialize_role_for user end
