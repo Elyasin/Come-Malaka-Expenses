@@ -80,7 +80,8 @@ gem 'database_cleaner', group: :test
 gem 'webmock', group: :test
 
 #coverage for test suites
-gem 'simplecov', "~> 0.9.0", :require => false, :group => :test
+#gem 'simplecov', "~> 0.9.0", :require => false, :group => :test
+gem 'simplecov', :require => false, :group => :test
 
 #Enabling features on Heroku
 gem 'rails_12factor', group: :production

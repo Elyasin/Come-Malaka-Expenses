@@ -2,9 +2,7 @@ require 'simplecov'
 SimpleCov.start 'rails' do
 	add_group 'Views', 'app/views'
 	add_group 'Authorizers', 'app/authorizers'
-  formatter SimpleCov::Formatter::MultiFormatter[
-    SimpleCov::Formatter::HTMLFormatter
-  ]
+  formatter SimpleCov::Formatter::MultiFormatter.new(SimpleCov::Formatter::HTMLFormatter)
 end
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
