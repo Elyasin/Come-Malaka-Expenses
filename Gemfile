@@ -99,8 +99,6 @@ gem "rack-timeout"
 gem 'jasmine-rails', group: [:development, :test]
 gem 'jasmine-jquery-rails', group: [:development, :test]
 
-gem "codeclimate-test-reporter", group: :test, require: nil
-
 #Foundation for Rails apps
 gem 'foundation-rails', '~> 5.5'
 
