@@ -1,3 +1,4 @@
+dist: trusty
 language: ruby
 rvm:
 - 2.3.1
@@ -16,14 +17,13 @@ deploy:
     repo: Elyasin/Come-Malaka-Expenses
 
 before_script:
+  - sudo apt-get purge mongodb*
   - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
   - echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
   - sudo apt-get update
   - sudo apt-get install -y mongodb-org=3.6.6 mongodb-org-server=3.6.6 mongodb-org-shell=3.6.6 mongodb-org-mongos=3.6.6 mongodb-org-tools=3.6.6
-  - sleep 15 
-  - echo "--------------"
-  - cat /etc/mongod.conf
-  - echo "--------------"
+  - sudo service mondod start
+  - sleep 15
   - psql -c "create role tester with createdb login password 'tester'" -U postgres
   - bundle exec rake db:setup
 
