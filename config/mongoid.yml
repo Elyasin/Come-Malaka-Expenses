@@ -27,7 +27,7 @@ development:
         user: 'developer'
 
         # The password of the user for authentication.
-        password: 'developer'
+        password: <%= ENV['DEV_DB'] %>
 
         # The user's database roles.
         roles:
