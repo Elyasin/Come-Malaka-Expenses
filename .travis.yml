@@ -21,6 +21,9 @@ before_script:
   - sudo apt-get update
   - sudo apt-get install -y mongodb-org=3.6.6 mongodb-org-server=3.6.6 mongodb-org-shell=3.6.6 mongodb-org-mongos=3.6.6 mongodb-org-tools=3.6.6
   - sleep 15 
+  - echo "--------------"
+  - cat /etc/mongod.conf
+  - echo "--------------"
   - psql -c "create role tester with createdb login password 'tester'" -U postgres
   - bundle exec rake db:setup
 
