@@ -20,3 +20,5 @@
 
 #Ignore coverage test results
 coverage
+#Ignore CodeClimate test reporter
+cc-test-reporter

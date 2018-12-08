@@ -1,11 +1,12 @@
+env:
+  global:
+    - CC_TEST_REPORTER_ID=$CODECLIMATE_REPO_TOKEN
 language: ruby
 rvm:
 - 2.3.1
 
 addons:
   postgresql: "9.4"
-  code_climate:
-    repo_token: 4c4a4fd1f96cc88b1faf699a76980d60dc9defa35e6db87572c197411506e4f7
 
 deploy:
   provider: heroku
@@ -16,6 +17,9 @@ deploy:
     repo: Elyasin/Come-Malaka-Expenses
 
 before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
   - sudo apt-get purge mongodb*
   - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
   - echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
@@ -26,6 +30,5 @@ before_script:
   - psql -c "create role tester with createdb login password 'tester'" -U postgres
   - bundle exec rake db:setup
 
-
-after_success:
-  - bundle exec codeclimate-test-reporter
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
