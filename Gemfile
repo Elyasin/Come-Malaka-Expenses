@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 gem 'dotenv-rails', :groups => [:development, :test]
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.0'
+gem 'rails'
 # Use SCSS for stylesheets
 gem 'sass-rails'
 # Use Uglifier as compressor for JavaScript assets
@@ -87,7 +87,7 @@ gem 'simplecov', :require => false, :group => :test
 gem 'rails_12factor', group: :production
 
 #Ensuring Ruby version on Heroku
-ruby "2.3.1"
+ruby "2.7.0"
 
 #Using Puma web server
 gem 'puma'
