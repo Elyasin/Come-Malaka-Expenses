@@ -5,8 +5,6 @@ class Item
 
   #uses ItemAuthorizer by default
 
-  require 'open-uri'
-
 	field :name, type: String
 	field :value_date, type: Date
 	field :description, type: String
@@ -68,7 +66,7 @@ class Item
   private
 
   def get_exchange_rate
-    self.exchange_rate = JSON.parse(open("http://devel.farebookings.com/api/curconversor/" + self.foreign_currency.upcase + "/" + self.base_currency.upcase + "/1/json").read)[self.base_currency.upcase].to_d
+    self.exchange_rate = JSON.parse(URI.open("http://devel.farebookings.com/api/curconversor/" + self.foreign_currency.upcase + "/" + self.base_currency.upcase + "/1/json").read)[self.base_currency.upcase].to_d
     self.rate_changed = true
   end
 
