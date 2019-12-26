@@ -112,4 +112,7 @@ class User
     self.revoke :event_user
   end
 
+  # Alias to avoid Method not found error due to upgrade
+  alias will_save_change_to_email? email_changed?
+
 end
