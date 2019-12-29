@@ -29,7 +29,7 @@ before_script:
   - mongod --fork --port 27017 --dbpath /tmp/mongodb --logpath /tmp/mongodb.log
   - sleep 10
   - mongo --port 27017 < bootstrap_create_admin.js
-  - mongod --shutdown
+  - mongod --shutdown --dbpath /tmp/mongodb
   - mongod --fork --auth --port 27017 --dbpath /tmp/mongodb --logpath /tmp/mongodb.log
   - sleep 10
   - mongo --port 27017 -u "myUserAdmin" -p "abc123" --authenticationDatabase "admin" < bootstrap_create_tester.js
