@@ -26,11 +26,11 @@ before_script:
   - sudo apt-get update
   - sudo apt-get install -y mongodb-org=3.6.12 mongodb-org-server=3.6.12 mongodb-org-shell=3.6.12 mongodb-org-mongos=3.6.12 mongodb-org-tools=3.6.12
   - mkdir -p /tmp/mongodb
-  - mongod --port 27017 --dbpath /tmp/mongodb &
+  - mongod --fork --port 27017 --dbpath /tmp/mongodb --logpath /tmp/mongodb.log
   - sleep 10
   - mongo --port 27017 < bootstrap_create_admin.js
-  - mongod shutdown
-  - mongod --auth --port 27017 --dbpath /tmp/mongodb &
+  - mongod --shutdown
+  - mongod --fork --auth --port 27017 --dbpath /tmp/mongodb --logpath /tmp/mongodb.log
   - sleep 10
   - mongo --port 27017 -u "myUserAdmin" -p "abc123" --authenticationDatabase "admin" < bootstrap_create_tester.js
   - psql -c "create role tester with createdb login password 'tester'" -U postgres
