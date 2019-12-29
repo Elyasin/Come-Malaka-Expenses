@@ -25,9 +25,9 @@ before_script:
   - echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
   - sudo apt-get update
   - sudo apt-get install -y mongodb-org=3.6.12 mongodb-org-server=3.6.12 mongodb-org-shell=3.6.12 mongodb-org-mongos=3.6.12 mongodb-org-tools=3.6.12
-  - mongod --port 27017 --dbpath /var/lib/mongodb
+  - sudo mongod --port 27017 --dbpath /var/lib/mongodb
   - mongo --port 27017 < bootstrap_create_admin.js
-  - mongod --auth --port 27017 --dbpath /var/lib/mongodb
+  - sudo mongod --auth --port 27017 --dbpath /var/lib/mongodb
   - mongo --port 27017 -u "myUserAdmin" -p "abc123" --authenticationDatabase "admin" < bootstrap_create_tester.js
   - psql -c "create role tester with createdb login password 'tester'" -U postgres
   - bundle exec rake db:setup
