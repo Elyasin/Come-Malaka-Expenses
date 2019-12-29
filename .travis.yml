@@ -26,7 +26,7 @@ before_script:
   - sudo apt-get update
   - sudo apt-get install -y mongodb-org=3.6.12 mongodb-org-server=3.6.12 mongodb-org-shell=3.6.12 mongodb-org-mongos=3.6.12 mongodb-org-tools=3.6.12
   - sleep 15
-  - systemctl list-unit-files | grep mongod
+  - sudo systemctl start mongod
   - sudo systemctl status mongod
   - mongo < bootstrap_mongo_test_db.js
   - psql -c "create role tester with createdb login password 'tester'" -U postgres
