@@ -27,10 +27,10 @@ before_script:
   - sudo apt-get install -y mongodb-org=3.6.12 mongodb-org-server=3.6.12 mongodb-org-shell=3.6.12 mongodb-org-mongos=3.6.12 mongodb-org-tools=3.6.12
   - sudo systemctl start mongod
   - sudo systemctl status mongod
-  - cat /etc/mongod.conf
-  - sudo cat /var/log/mongodb/mongod.log
   - sleep 15
+  - cat /etc/mongod.conf
   - mongo < bootstrap_mongo_test_db.js
+  - sudo cat /var/log/mongodb/mongod.log
   - psql -c "create role tester with createdb login password 'tester'" -U postgres
   - bundle exec rake db:setup
 
